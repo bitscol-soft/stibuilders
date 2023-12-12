@@ -1,0 +1,75 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="box">
+                        {% if messages %}
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							{% for message in messages %}
+							<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+							<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+							</p>
+							{% endfor %}
+						</div>
+						{% endif %}
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Service List</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table id="data-table" class="table
+                                    table-striped
+                                    text-center"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Service Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in get_service %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{data.service_name}}</td>
+                                            <td>
+                                                <a href="/service-edit/{{data.pk}}/" class="btn btn-success btn-sm mr-5"> 
+                                                    <i class="fa fa-pencil mr-5"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="/service-delete/{{data.pk}}/" class="btn btn-danger btn-sm mr-5"> 
+                                                    <i class="fa fa-trash mr-5"></i>
+                                                    Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock %}
+            

@@ -1,0 +1,307 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+
+    <div class="content-wrapper">
+        <div class="container-full">
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            {% if messages %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {% for message in messages %}
+                                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+                                <p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+                                </p>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4> Update Property Project </h4>
+                                    </div>
+    
+                                </div>
+                                <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="project-name"
+                                                    class="form-label">Project Name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    placeholder="Project
+                                                    Name"
+                                                    name="project_name"
+                                                    id="project-name" value="{{get_property_project.project_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="developer_name"
+                                                    class="form-label"> Developer Name </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    placeholder="Project
+                                                    Location"
+                                                    id="developer_name"
+                                                    name="developer_name" value="{{get_property_project.developer_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="address"
+                                                    class="form-label"> Address </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="address"
+                                                    name="address" value="{{get_property_project.address}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="project-type"
+                                                    class="form-label">Project Type</label>
+                                                <select
+                                                    name="project_type"
+                                                    id="project-type"
+                                                    class="form-control">
+                                                    {% for data in projecttype %}
+                                                    {% if get_property_project.project_type_id == data.id %}
+                                                    <option value="{{data.pk}}" hidden> {{data.property_type}} </option>
+                                                    {% else %}
+                                                    <option value="{{data.pk}}">{{data.property_type}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="total_apartment"
+                                                    class="form-label"> Total Apartments </label>
+                                                <input type="number" id="total_apartment" name="total_apartment" value="{{get_property_project.total_apartment}}" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="land_size"
+                                                    class="form-label">Land Size</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="land_size" value="{{get_property_project.land_size}}"
+                                                    id="land_size">
+                                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="total_units"
+                                                    class="form-label"> Total Unit </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    name="total_units"
+                                                    id="total_units" value="{{get_property_project.total_units}}">
+                                                    
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="lift"
+                                                    class="form-label"> Lift </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    name="lift"
+                                                    id="lift" value="{{get_property_project.lift}}">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="stairs"
+                                                    class="form-label"> Stairs </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    name="stairs"
+                                                    id="stairs" value="{{get_property_project.stairs}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="face"
+                                                    class="form-label">Face</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="face"
+                                                    id="face"
+                                                    placeholder="Face" value="{{get_property_project.face}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="plot_no"
+                                                    class="form-label">Plot
+                                                    NO</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="plot_no" value="{{get_property_project.plot_no}}"
+                                                    id="plot_no"
+                                                    placeholder="Plot
+                                                    NO">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="block-no"
+                                                    class="form-label">Block
+                                                    NO</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="block_no"
+                                                    id="block-no"
+                                                    placeholder="BlockNo" value="{{get_property_project.block_no}}">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="road_size"
+                                                    class="form-label">Road Size
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="road_size"
+                                                    id="road_size" value="{{get_property_project.road_size}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="parking_ability"
+                                                    class="form-label"> Parking Avaiality
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="parking_ability"
+                                                    id="parking_ability" value="{{get_property_project.parking_ability}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+    </div>
+    
+    <script>
+        function show(input) {
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#stImg').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+{% endblock %}

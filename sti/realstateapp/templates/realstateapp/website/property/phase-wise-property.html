@@ -1,0 +1,106 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+
+        <!-- Header Start -->
+        <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                    <h1 class="display-5 animated fadeIn mb-4 text-white"> Phase Wise Property List </h1> 
+                        <nav aria-label="breadcrumb animated fadeIn">
+                        <ol class="breadcrumb text-uppercase justify-content-center">
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Home</a></li>
+                            <li class="breadcrumb-item text-white" aria-current="page">Phase Wise Property</li>
+                        </ol>
+                    </nav>
+                </div>
+                <!-- <div class="col-md-6 animated fadeIn">
+                    <img class="img-fluid" src="img/header.jpg" alt="">
+                </div> -->
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+        <!-- Property List Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-0 gx-5 align-items-end">
+                    <div class="col-lg-12">
+                        <div class="text-center mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
+                            <h1 class="mb-3">{{getphase.phase_name}}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div class="row g-4">
+                            {% for data in get_property %}
+                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="property-item rounded overflow-hidden">
+                                    <div class="position-relative overflow-hidden">
+                                        <a href="/property/{{data.property_id}}/details/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height:200px;width:100%" alt=""></a>
+                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> 
+                                            {% if data.property_catagory == "1" %} Upcoming {% endif %}
+                                            {% if data.property_catagory == "2" %} Ongoing {% endif %}
+                                            {% if data.property_catagory == "3" %} Completed {% endif %}
+                                        </div>
+                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3"> {{data.sales_type}} </div>
+                                    </div>
+                                    <div class="p-4 pb-0" style="height:160px;">
+                                         <h5 class="text-primary mb-3">   <span>  মূল্য:    </span>   {{data.selling_price}}  টাকা  </h5>
+                                        <a class="d-block h5 mb-2" href="/property/{{data.property_id}}/details/">{{data.property_name}}</a>
+                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{data.address}}</p>
+                                    </div>
+                                    <div class="d-flex border-top">
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.property_area}}</small>
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- Property List End -->
+
+
+        <!-- Author Message Start -->
+        <div class="container-xxl py-5 author-message">
+            <div class="container">
+                <div class="bg-light rounded p-3">
+                    <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="position-relative">
+                                     <img class="img-fluid rounded w-100" src="/static/realstateapp/media/{{get_mess.image}}" alt="">
+                                    <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
+                                        <a class="btn btn-square mx-1" href="{{get_mess.facebook_link}}"><i class="fab fa-facebook-f"></i></a>
+                                        <a class="btn btn-square mx-1" href="{{get_mess.twitter_link}}"><i class="fab fa-twitter"></i></a>
+                                        <a class="btn btn-square mx-1" href="{{get_mess.instragram_link}}"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                                <div class="text-center p-4 mt-3">
+                                    <h5 class="fw-bold mb-0">{{get_mess.name}}</h5>
+                                    <small>{{get_mess.designation}}</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                                <div class="mb-4" id="mess">
+                                    <h1 class="mb-3"> <span style="font-size:2rem;">Message From</span>  <br> <span class="text-primary">{{get_mess.designation}}</span></h1>
+                                    <p>{{get_mess.message|safe}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Author Message End -->
+        
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+	  <div class="container-full">
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(226,19,110);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/property.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Total Property </h3>
+						  <h4 class="text-white" style="font-size: 14px !important;">{{get_property}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(5, 100, 124);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/Land-Sharing.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Total Land </h3>
+						  <h4 class="text-white" style="font-size: 14px !important;">{{get_plot}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(9, 59, 153);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/project.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Total Project </h3>
+						  <h4 class="text-white" style="font-size: 13px important;">{{get_total}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(226,19,110);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/upcoming.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Upcoming Property </h3>
+						  <h4 class="text-white" style="font-size: 14px !important;">{{get_up}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(5, 100, 124);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/ongoing.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Ongoing Property  </h3>
+						  <h4 class="text-white" style="font-size: 14px !important;">{{get_on}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+				<div class="col-xxxl-3 col-xl-3 col-12">
+					<a class="box box-body mb-5" href="#" style="background-color: rgb(8, 72, 168);">
+					  <div class="d-flex align-items-center">
+						<img class="me-15 avatar avatar-lg bg-primary-light rounded-circle" src="/static/realstateapp/dashboard/icons/complete.png" alt="...">
+						<div class="text-start">
+						  <h3 class="text-white mb-0 fs-26" style="font-size: 15px !important;"> Complete Property </h3>
+						  <h4 class="text-white" style="font-size: 13px important;">{{get_com}}</h4>
+						</div>
+					  </div>
+					</a>
+				</div>
+			</div>				
+		</section>
+		<!-- /.content -->
+	  </div>
+  </div>
+  <!-- /.content-wrapper -->
+
+
+{% endblock %}

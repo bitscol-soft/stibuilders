@@ -1,0 +1,145 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        {% if messages %}
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							{% for message in messages %}
+							<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+							<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+							</p>
+							{% endfor %}
+						</div>
+						{% endif %}
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2> Client Feedback Add </h2>
+                                </div>
+
+                            </div>
+
+                            <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                <div id="base-info">
+                                    <div class="row">
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="name"
+                                                    class="form-label">
+                                                    Client Name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="name"
+                                                    id="name">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="profession"
+                                                    class="form-label"> profession / designation
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="profession"
+                                                    name="profession">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="testimonial"
+                                                    class="form-label"> Feedback
+                                                    </label>
+                                                <textarea name="testimonial" id="testimonial" cols="1" rows="4" class="form-control"></textarea>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <table class="table table-bordered" style="margin-bottom:0px;">
+                                                    <tr>
+                                                        <td>
+                                                            <label> image </label>
+                                                            <input type="file" onchange="show(this)" name="image"  id="image">
+                                                        </td>
+                                                        <td>
+                                                            <div class="std_images"> <img src="" alt="" id="stImg" style="width:50px;height: 50px;"> </div> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

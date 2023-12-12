@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from multipurposethemes.com/admin/doclinic-admin-template/main/auth_login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 16:04:03 GMT -->
+<head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="icon" href="https://multipurposethemes.com/admin/doclinic-admin-template/images/favicon.ico">-->
+    <link rel="icon" href="/static/realstateapp/media/{{get_profile.logo}}">
+
+    <title>{{get_profile.company_name}} </title>
+  
+	<!-- Vendors Style-->
+	<link rel="stylesheet" href="{% static 'realstateapp/dashboard/css/vendors_css.css' %}">
+	  
+	<!-- Style-->  
+	<link rel="stylesheet" href="{% static 'realstateapp/dashboard/css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'realstateapp/dashboard/css/skin_color.css' %}">	
+
+</head>
+	
+<body class="hold-transition theme-primary bg-img" style="background-image: url(/static/realstateapp/dashboard/img/bg-1.jpg)">
+	
+	<div class="container h-p100">
+		<div class="row align-items-center justify-content-md-center h-p100">	
+			
+			<div class="col-12">
+				<div class="row justify-content-center g-0">
+					<div class="col-lg-5 col-md-5 col-12">
+						<div class="bg-white rounded10 shadow-lg">
+							<div class="content-top-agile p-20 pb-0">
+								<h2 class="text-primary">Let's Get Started</h2>
+								<p class="mb-0">Sign in to continue to {{get_profile.company_name}}.</p>							
+							</div>
+							<div class="p-40">
+								<form action="" method="POST"> {% csrf_token %}
+									<div class="form-group">
+										<div class="input-group mb-3">
+											<span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
+											<input type="text" name="user_mobile" class="form-control ps-15 bg-transparent" placeholder="your mobile">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="input-group mb-3">
+											<span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
+											<input type="password" name="user_password" class="form-control ps-15 bg-transparent" placeholder="Password">
+										</div>
+									</div>
+									  <div class="row">
+										<div class="col-12 text-center">
+										  <button type="submit" class="btn btn-danger mt-10">SIGN IN</button>
+										</div>
+										<!-- /.col -->
+									  </div>
+								</form>	
+							</div>						
+						</div>
+			
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Vendor JS -->
+	<script src="{% static 'realstateapp/dashboard/js/vendors.min.js' %}"></script>
+	<script src="{% static 'realstateapp/dashboard/js/pages/chat-popup.js' %}"></script>
+    <script src="{% static 'realstateapp/dashboard/assets/icons/feather-icons/feather.min.js' %}"></script>	
+
+</body>
+</html>

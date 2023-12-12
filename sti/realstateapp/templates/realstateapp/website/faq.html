@@ -1,0 +1,58 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+    <!-- Header Start -->
+    <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+            <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                <h3 class="display-5 animated fadeIn mb-4 text-white"> FREQUENTLY ASKED QUESTIONS </h3> 
+                    <nav aria-label="breadcrumb animated fadeIn">
+                    <ol class="breadcrumb text-uppercase justify-content-center">
+                        <li class="breadcrumb-item"><a href="/" class="text-white">Home</a></li>
+                        <li class="breadcrumb-item text-white" aria-current="page"> <a href="/frequently-question/"> some-questions-answer </a> </li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- <div class="col-md-6 animated fadeIn">
+                <img class="img-fluid" src="img/header.jpg" alt="">
+            </div> -->
+        </div>
+    </div>
+    <!-- Header End -->
+        
+
+        <!-- property area -->
+        <div class="content-area recent-property" style="background-color: #FCFCFC; padding-bottom: 55px;">
+            <div class="container">    
+
+                <div class="row">
+                    <div class="col-md-12 col-md-offset-1 col-sm-12 text-center page-title">
+                        <h3> FREQUENTLY ASKED QUESTIONS </h3>
+                        <br>
+                    </div>
+                </div>
+                {% for data in get_faq %}
+                <div class="row row-feat">
+                    <div class="col-md-12">
+                        <div class="accordion accordion-flush" id="{{data.answer}}">
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="#{{data.answer}}" style="margin-bottom:30px;">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                {{data.question}}
+                              </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="{{data.answer}}" data-bs-parent="#{{data.id}}">
+                              <div class="accordion-body"> {{data.answer}}</div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+                
+        </div>
+
+
+{% endblock %}

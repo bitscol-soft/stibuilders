@@ -1,0 +1,255 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+
+
+        <!-- Header Start -->
+        <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                    <h1 class="display-5 animated fadeIn mb-4 text-white">About Us</h1> 
+                        <nav aria-label="breadcrumb animated fadeIn">
+                        <ol class="breadcrumb text-uppercase justify-content-center">
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Pages</a></li>
+                            <li class="breadcrumb-item text-white" aria-current="page">About</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+        <!-- About Start -->
+        <div class="container-xxl py-5 bg-light">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-12 wow fadeIn text-center" data-wow-delay="0.1s">
+                        <h1 class="mb-4"><span class="text-primary">{{get_profile.company_name}}</span></h1>
+                        <h2 class="heading-after">Leading Real Estate Company in Bangladesh</h2>
+                        <p class="md-4 mt-5"> {{get_profile.about|safe}}</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About End -->
+
+        <!-- Fatilities Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-12 wow fadeIn text-center" data-wow-delay="0.1s">
+                        <h1 class="mb-4 heading-after">Home for Peace</h1>
+                        <p class="md-4 mt-5"><strong>{{get_profile.company_name}}</strong> started its journey in {{get_profile.staring_year}} with a clear objective of providing modern homes to the city dwellers. Since the very beginning, we have been working with sincere efforts to build and provide apartments with all the latest facilities in the industry. We provide you with Home for Peace with superior design, reliable construction materials, and enhanced usability.</p>
+                    </div>
+                </div>
+                <div class="row g-5 align-items-center mt-1">
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <h1 class="mb-4">By “Home for Peace”, We Mean:</h1>
+                        <p><i class="fa fa-check text-primary me-3"></i>Peace of mind</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Comfort of living</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Integrated safety and security</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Subtle designs that create the ultimate joy of living</p>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                        <h1 class="mb-4">How We Build Home for Peace for You</h1>
+                        <p><i class="fa fa-check text-primary me-3"></i>Reliable construction materials that enhance the safety of the building against natural forces like earthquakes.</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>The expert engineers ensure designs that are comfortable for today’s families.</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Our engineers focus on the high-usability of the entire space.</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>The latest facilities in your living space keep you satisfied.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fatilities End -->
+
+        <!-- Specality Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                            <img class="img-fluid w-100" src="/static/realstateapp/media/{{get_quality.image}}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn" id="quality_certified" data-wow-delay="0.5s">
+                        <h2 class="mb-4">{{get_quality.quality_title}}</h2>
+                        <p class="mb-4" style="text-align: justify;">{{get_quality.quality_text}}</p>
+                       
+                        <h2 class="mb-4">{{get_certified.certified_title}}</h2>
+                        <p class="mb-4" style="text-align: justify;"> {{get_certified.certified_text}} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Specality End -->
+
+
+        <!-- Author Message Start -->
+        {% if get_mess %}
+        <div class="container-xxl py-5 author-message">
+            <div class="container">
+                <div class="bg-light rounded p-3">
+                    <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="position-relative">
+                                    <img class="img-fluid rounded w-100 h-200" src="/static/realstateapp/media/{{get_mess.image}}" alt="">
+                                    <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
+                                        <a class="btn btn-square mx-1" href="{{get_mess.facebook_link}}"><i class="fab fa-facebook-f"></i></a>
+                                        <a class="btn btn-square mx-1" href="{{get_mess.twitter_link}}"><i class="fab fa-twitter"></i></a>
+                                        <a class="btn btn-square mx-1" href="{{get_mess.instragram_link}}"><i class="fab fa-instagram"></i></a>
+                                    </div>
+                                </div>
+                                <div class="text-center p-4 mt-3">
+                                    <h5 class="fw-bold mb-0">{{get_mess.name}} </h5>
+                                    <small>{{get_mess.designation}}</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                                <div class="mb-4" id="mess">
+                                    <h1 class="mb-3"> <span style="font-size:2rem;">Message From</span>  <br> <span class="text-primary">{{get_mess.designation}}</span></h1>
+                                    <p style="text-align:justify;">{{get_mess.message}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Author Message End -->
+
+
+        <!-- Team Start -->
+        {% if get_team %}
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3 heading-after">Our Management Team</h1>
+                </div>
+                <div class="row g-4">
+                    {% for data in get_team %}
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="team-item rounded overflow-hidden">
+                            <div class="position-relative">
+                                {% if data.member_image %}
+                                <img style="height:280px;" class="img-fluid" src="/static/realstateapp/media/{{data.member_image}}" alt="">
+                                {% else %}
+                                <img style="height:280px;" class="img-fluid" src="/static/realstateapp/website/img/noimage.jpg" alt="">
+                                {% endif %}
+                                <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
+                                    <a class="btn btn-square mx-1" href="{{data.facebook_link}}"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-square mx-1" href="{{data.twitter_link}}"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-square mx-1" href="{{data.instragram_link}}"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="text-center p-4 mt-3">
+                                <h5 class="fw-bold mb-0">{{data.member_name}}</h5>
+                                <small>{{data.member_disignation}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Team End -->
+        
+
+        <!-- Gallery Start -->
+        {% if gallery %}
+        <div class="container-xxl py-5 bg-light">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3 heading-after gallery-heading-after">Gallery</h1>
+                </div>
+                <div class="row g-4">
+                    {% for data in gallery %}
+                    <div class="col-md-3">
+                        <a href="/static/realstateapp/media/{{data.picture}}" data-lightbox="image-1" data-title="Property Title"><img src="/static/realstateapp/media/{{data.picture}}" alt="" style="height: 150px;width:100%;" class="img-fluid"></a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Gallery End -->
+
+
+        <!-- News Start -->
+        <!-- <div class="container-xxl py-5 news-section">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3 heading-after gallery-heading-after">News</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="team-item rounded overflow-hidden">
+                            <img src="/static/realstateapp/img/property-5.jpg" alt="" class="img-fluid">
+                            <div class="text-center p-4 mt-3">
+                                <h5 class="fw-bold mb-0">News Title</h5>
+                                <p class="mt-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <a href="/news-detail/" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="team-item rounded overflow-hidden">
+                            <img src="/static/realstateapp/img/property-6.jpg" alt="" class="img-fluid">
+                            <div class="text-center p-4 mt-3">
+                                <h5 class="fw-bold mb-0">News Title</h5>
+                                <p class="mt-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <a href="news-detail.html" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="team-item rounded overflow-hidden">
+                            <img src="/static/realstateapp/img/property-2.jpg" alt="" class="img-fluid">
+                            <div class="text-center p-4 mt-3">
+                                <h5 class="fw-bold mb-0">News Title</h5>
+                                <p class="mt-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <a href="news-detail.html" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="team-item rounded overflow-hidden">
+                            <img src="/static/realstateapp/img/property-1.jpg" alt="" class="img-fluid">
+                            <div class="text-center p-4 mt-3">
+                                <h5 class="fw-bold mb-0">News Title</h5>
+                                <p class="mt-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <a href="news-detail.html" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center  mx-auto mb-5 wow fadeInUp mt-5"><a href="news.html" class="btn btn-primary">See All</a></div>
+            </div>
+        </div> -->
+        <!-- News End -->
+
+        <!-- Affiliation and Suppliers Start -->
+        {% if get_supplier %}
+        <div class="container-xxl py-5 affiliation-section">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3 text-white heading-after heading-after-white">Affiliations & Suppliers</h1>
+                </div>
+                <div class="row affiliation-items">
+                    {% for data in get_supplier %}
+                    <div class="col-md-2 col-3">
+                        <img src="/static/realstateapp/media/{{data.logo}}" alt="" class="img-fluid">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Affiliation and Suppliers End -->
+        
+{% endblock %}

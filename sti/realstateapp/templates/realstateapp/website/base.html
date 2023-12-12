@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="utf-8">
+    <title>{{get_profile.company_name}} | Leading Real Estate Company in Dhaka, Bangladesh</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="/static/realstateapp/media/{{get_profile.logo}}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'realstateapp/website/lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'realstateapp/website/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'realstateapp/website/lib/range-slider/jquery.range.css' %}" rel="stylesheet">
+    <link href="{% static 'realstateapp/website/lib/light-slider/lightslider.css' %}" rel="stylesheet">
+  
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'realstateapp/website/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'realstateapp/website/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+        
+        <!-- Topbar Start -->
+        <div class="container-fluid d-flex justify-content-between top-bar" style="background-color: #0e2e50!important;">
+            <div class="topbar-left">
+                <a href="#" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fa fa-map-marker-alt me-2 text-white"></i></span>{{get_profile.address}}</a>
+                <a href="#" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fa fa-phone-alt me-2 text-white"></i></span>{{get_profile.mobile}}<span class="text-primary"><i style="margin-left:10px;" class="fa fa-phone-alt me-2 text-white"></i></span>{{get_profile.mobile1}}</a>
+                {% comment %} <a href="#" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fa fa-phone-alt me-2 text-white"></i></span>{{get_profile.phone1}}</a> {% endcomment %}
+                <a href="#" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fa fa-envelope-open me-2 text-white"></i></span>{{get_profile.email}}</a>
+            </div>
+            <div class="topbar-right">
+                <a href="{{get_profile.facebook_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-facebook-f me-2 text-white"></i></span></a>
+                <a href="{{get_profile.twitter_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-twitter me-2 text-white"></i></span></a>
+                <a href="{{get_profile.whatsapp_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-whatsapp me-2 text-white"></i></span></a>
+                <a href="{{get_profile.instragram_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-instagram me-2 text-white"></i></span></a>
+                <a href="{{get_profile.youtube_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-youtube me-2 text-white"></i></span></a>
+                {% comment %} <a href="{{get_profile.linkedin_link}}" class="btn text-white" aria-hidden="true"><span class="text-primary"><i class="fab fa-linkedin me-2 text-white"></i></span></a> {% endcomment %}
+            </div>
+        </div>
+        <!-- Topbar End -->
+   
+   
+
+        <!-- Navbar Start -->
+        <div class="container-fluid nav-bar bg-white"> 
+            
+            <nav class="navbar navbar-expand-lg navbar-light py-0 px-4">
+                <a href="/" class="navbar-brand d-flex align-items-center text-center">
+                    
+                        <a class="navbar-brand" style="margin-left: -23px;" href="/"><img src="/static/realstateapp/media/{{get_profile.logo}}" style="height:60px" alt="logo"></a>
+                    
+                    <h4 class="m-0 text-dark" style="font-size: 18px;">{{get_profile.company_name}}</h4>
+                </a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto">
+                        <a href="/" class="nav-item nav-link active">Home</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">About</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                <a href="/about-us/" class="dropdown-item"> <span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> About Us</a>
+                                <a href="/client-testimonial/" class="dropdown-item"> <span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> Testimonial</a>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
+                            <div class="dropdown-menu rounded-0 m-0 property-submenu">
+                                <div class="row">
+                                    <div class="col-md-4 col-12">
+                                        <h6>Phases</h6>
+                                        {% for data_property in get_phase %}
+                                        <a href="/Phase-wise/{{data_property.pk}}/property-list/" class="submenu-item"><span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> {{data_property.phase_name}} </a>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <h6>Types</h6>
+                                        {% for property in add_property %}
+                                        <a href="/type-wise/{{property.pk}}/property-list/" class="submenu-item"><span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> {{property.property_type}} </a>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <h6>Locations</h6>
+                                        {% for get_location in get %}
+                                        <a href="/location-wise/{{get_location.pk}}/property-list/" class="submenu-item"><span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> {{get_location.location_name}} </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="sister-concern.html" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" target="_blank">Sister Concern</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                {% for concern in concern_entry %}
+                                <a href="/sister-company/{{concern.pk}}/" class="dropdown-item"> <span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> {{concern.sister_concern_name}}</a>
+                                {% endfor %}
+                                <!-- <a href="/arisha-agro/" class="dropdown-item"> <span class="text-primary me-2"><i class="fas fa-caret-right"></i></span> Arisha Agro & Fisharies</a>
+                                <a href="/arisha-fashion/" class="dropdown-item"> <span class="text-primary me-2"><i class="fas fa-caret-right"></i></span>Arisha Fashion</a>
+                                <a href="/nsb-foundation/" class="dropdown-item"> <span class="text-primary me-2"><i class="fas fa-caret-right"></i></span> NSB Foundation</a> -->
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Services</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                {% for d in getservice %}
+                                <a href="/service-details/{{d.pk}}/" class="dropdown-item"> <span class="text-dark me-2"><i class="fas fa-caret-right"></i></span> {{d.service_name}}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <a href="/contact-us/" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <a href="/browse-all-property/" class="btn btn-dark px-3"> <span class="text-white me-2"><i class="fas fa-hand-point-right"></i></span> Search Property</a>
+                </div>
+            </nav>
+        </div>
+        <!-- Navbar End -->
+
+
+        
+{% block content %}
+
+{% endblock %}
+
+ <!-- Footer Start -->
+ <div class="container-fluid bg-dark text-white-50 footer pt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container-fluid py-2">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <img src="/static/realstateapp/website/img/footer_logo_sti.png" style="width:140px; margin-bottom: 10px;" alt="logo"></a>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{get_profile.address}}</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>{{get_profile.mobile}}</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{get_profile.email}}</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href="{{get_profile.twitter_link}}"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{get_profile.facebook_link}}"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{get_profile.youtube_link}}"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="{{get_profile.linkedin_link}}"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white mb-4">Quick Links</h5>
+                <a class="btn btn-link text-white-50" href="/dashboard-login/"> login</a>
+                <a class="btn btn-link text-white-50" href="/about-us/">About Us</a>
+                <a class="btn btn-link text-white-50" href="/contact-us/">Contact Us</a>
+                <a href="/our-management-team/" class="btn btn-link text-white-50" > Management Team </a>
+                <a href="/Client-Testimonial/" class="btn btn-link text-white-50">  Testimonial</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white mb-4">Hotline Numbers</h5>
+                {% for data in hot_number %}
+                <a class="btn text-white-50 btn-link" href="">{{data.title}}--{{data.number}}</a>
+                {% endfor %}
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white mb-4">Sister Concern</h5>
+                {% for concern in concern_entry %}
+                <a href="/sister/{{concern.pk}}/company/" class="btn btn-link text-white-50">
+                    <h6 class="text-white-50 d-inline">{{concern.sister_concern_name}}</h6>
+                </a>
+                {% endfor %}
+              
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy;<script>document.write(new Date().getFullYear())</script> <a class="border-bottom" href="#">{{get_profile.company_name}}</a>, All Right Reserved. 
+                    
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Developed By <a class="border-bottom" href="https://bitscol.com"> www.bitscol.com </a>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="/terms-conditions/"> Terms & Conditions </a>
+                        <a href="/privacy-policy/"> Privacy & Policy </a>
+                        <a href="/frequently-question/"> FAQs </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'realstateapp/website/lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'realstateapp/website/lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'realstateapp/website/lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'realstateapp/website/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'realstateapp/website/lib/range-slider/jquery.range.js' %}"></script>
+<script src="{% static 'realstateapp/website/lib/light-slider/lightslider.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'realstateapp/website/js/main.js' %}"></script>
+
+<script>
+    $('.input-range-area .slider-container').click(function(){
+        $('.min-area').val(null)
+        $('.max-area').val(null)
+        let areaRange=$('#price-range').val()
+        let areas=areaRange.split(',');
+        $('.min-area').val(areas[0])
+        $('.max-area').val(areas[1])     
+    });
+</script>
+</body>
+
+</html>

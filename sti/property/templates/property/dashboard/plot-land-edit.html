@@ -1,0 +1,184 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+	<div class="wrapper">
+		 <!-- Content Wrapper. Contains page content -->
+		 <div class="content-wrapper">
+			<div class="container-full">
+				<!-- Main content -->
+				<section class="content">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box">
+								{% if messages %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+									{% for message in messages %}
+									<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+									<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+									</p>
+									{% endfor %}
+								</div>
+								{% endif %}
+								<div class="box-body">
+										<div class="plotland-edit-section">
+                                            <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+											<div class="row mt-5">
+												<div class="col-4">
+													<label for="block" class="form-label">Block</label>
+                                                    <input type="text" class="form-control" placeholder="Block"
+                                                        id="block" name="block" value="{{getplot.block}}">
+												</div>
+												<div class="col-4">
+													<label for="sector" class="form-label">Sector</label>
+                                                    <input type="number" class="form-control" id="sector"
+                                                        name="sector" value="{{getplot.sector}}">
+												</div>
+                                                <div class="col-4">
+													<label for="road-no" class="form-label">Road
+                                                        NO</label>
+                                                    <input type="number" class="form-control" id="road-no"
+                                                        name="road_no" value="{{getplot.road_no}}">
+												</div>
+											</div>
+
+                                            <div class="row mt-5">
+												<div class="col-4">
+													<label for="plot-no" class="form-label">Plot
+                                                        NO</label>
+                                                    <input type="number" class="form-control" id="plot-no"
+                                                        name="plot_no" value="{{getplot.plot_no}}">
+												</div>
+												<div class="col-4">
+													<label for="land-size" class="form-label">Land
+                                                        Size</label>
+                                                    <input type="text" class="form-control" id="land-size"
+                                                        name="land_size" value="{{getplot.land_size}}">
+												</div>
+                                                <div class="col-4">
+													<label for="size-unit" class="form-label">Size
+                                                        Unit</label>
+                                                    <select name="measurement_scale" id="size-unit" class="form-control">
+                                                        {% for data in getsclale %}
+                                                        {% if getplot.measurement_scale_id == data.id %}
+                                                        <option value="{{data.pk}}" hidden> {{data.measurement_scale}} </option>
+                                                        {% else %}
+                                                        <option value="{{data.pk}}">{{data.measurement_scale}}</option>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+												</div>
+											</div>
+                                            <div class="row mt-5">
+												<div class="col-4">
+													<label for="land-status" class="form-label">Land
+                                                        Status</label>
+                                                    <select name="plot_land_status" id="" class="form-control">
+                                                        {% for data in getlandstatus %}
+                                                        {% if getplot.land_status_name_id == data.id %}
+                                                        <option value="{{data.pk}}" hidden> {{data.land_status_name}} </option>
+                                                        {% else %}
+                                                        <option value="{{data.pk}}">{{data.land_status_name}}</option>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+												</div>
+
+                                    
+												<div class="col-4">
+													<label for="developer_name"> Developer Name </label>
+                                                    <select name="developer_name" id="developer_name" class="form-control">
+                                                        {% for data in getplotproject %}
+                                                        {% if getplot.developer_name_id == data.id %}
+                                                        <option value="{{data.pk}}" hidden> {{data.developer_name}} </option>
+                                                        {% else %}
+                                                        <option value="{{data.pk}}">{{data.developer_name}}</option>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+												</div>
+                                                <div class="col-4">
+                                                    <label for="google_map_url" class="form-label">Google Map Url
+                                                        </label>
+                                                    <textarea name="google_map_url" id="google_map_url" cols="3" rows="1" class="form-control"> {{getplot.map_url}}</textarea>
+												</div>
+											</div>
+                                            <div class="row mt-5">
+                                                <div class="col-6">
+													<label> Address </label>
+                                                    <textarea name="address" id="" cols="1" rows="5" class="form-control"> {{getplot.address}} </textarea>
+												</div>
+												<div class="col-6">
+                                                    <label> Plot land Image </label>
+                                                    <table class="table table-bordered" style="margin-bottom:0px;">
+                                                        <tr>
+                                                            <td>
+                                                                <label> Plot land Image </label>
+                                                                <input type="file" onchange="plotimage(this)" name="plot_land_image"  id="plot_land_image">
+                                                            </td>
+                                                            <td>
+                                                                <div class="std_images"> <img src="/static/realstateapp/media/{{getplot.plot_land_image}}" alt="" id="plotland" style="width:100px;height: 90px;"></div> 
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+												</div>
+											</div>
+                                         
+                                            <!-- <div class="row mt-5">
+                                                {% for list in getplot_facility %}
+												<div class="col-4">
+													<input type="checkbox" id="{{list.land_facility}}" value="{{list.id}}" name="facility_id" checked>
+                                                    <label for="{{list.land_facility}}" class="me-30">{{list.land_facility}} </label>
+												</div>
+                                                {% endfor %}
+											</div> -->
+                                            <div class="row mt-5">
+                                                {% for data in landfacility %}
+												<div class="col-4">
+													<input type="checkbox" id="{{data.id}}" value="{{data.id}}" name="facility_id">
+                                                    <label for="{{data.id}}" class="me-30">{{data.land_facility_name}} </label>
+												</div>
+                                                {% endfor %}
+											</div>
+                                            <br>
+											<button
+												type="submit"
+												class="btn
+												btn-primary" style="float:right;">
+												<i
+													class="ti-save-alt"></i>
+												Save
+											</button>
+                                        </form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- /.content -->
+			</div>
+		</div>
+		<!-- /.content-wrapper -->
+	</div>
+</body>
+
+
+
+<!-- -======stat plot land image ======= -->
+<script>
+    function plotimage(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#plotland').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<!-- -======plot land ======= -->
+
+{% endblock %}

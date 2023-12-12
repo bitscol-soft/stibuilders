@@ -1,0 +1,198 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Add Company</h2>
+                                </div>
+
+                            </div>
+
+                            <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                <div id="base-info">
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="full_name"
+                                                    class="form-label">
+                                                    full name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="full_name"
+                                                    id="full_name" value="{{getuser.full_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="user_mobile"
+                                                    class="form-label">
+                                                    Mobile
+                                                    </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="user_mobile"
+                                                    name="user_mobile" value="{{getuser.user_mobile}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="email"
+                                                    class="form-label"> Permission 
+                                                    </label>
+                                                <select name="user_type" id="user_type" class="form-control">
+                                                    {% if getuser.user_type == "1" %}<option value="1" hidden>  Admin </option> {% endif %}
+                                                    {% if getuser.user_type == "2" %}<option value="2" hidden>  Editor </option> {% endif %}
+                                                    <option value="1"> Admin </option>
+                                                    <option value="2"> Editor </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="email"
+                                                    class="form-label">email
+                                                    </label>
+                                                <input
+                                                    type="email"
+                                                    class="form-control"
+                                                    id="email"
+                                                    name="email" value="{{getuser.email}}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="user_password"
+                                                    class="form-label">
+                                                    Password
+                                                    </label>
+                                                <input
+                                                    type="password"
+                                                    class="form-control"
+                                                    id="user_password"
+                                                    name="user_password" value="{{getuser.user_password}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="mobile1"
+                                                    class="form-label">Date of Birth
+                                                    </label>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    id="date_of_birth"
+                                                    name="date_of_birth" value="{{ getuser.date_of_birth|date:'Y-d-m' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+                                    <div class="row mt-5">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="address"
+                                                    class="form-label"> Address
+                                                    </label>
+                                                
+                                                    <textarea name="address" id="address" cols="1" rows="1" class="form-control"> {{getuser.address}}</textarea>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                                <tr>
+                                                    <td>
+                                                        <label> User Photo </label>
+                                                        <input type="file" onchange="show(this)" name="photo"  id="photo">
+                                                    </td>
+                                                    <td>
+                                                        <div class="std_images"> <img src="/static/realstateapp/media/{{getuser.photo}}" alt="" id="stImg" style="width:50px;height: 50px;"> </div> 
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

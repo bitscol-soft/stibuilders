@@ -1,0 +1,85 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+	<div class="wrapper">
+		 <!-- Content Wrapper. Contains page content -->
+		 <div class="content-wrapper">
+			<div class="container-full">
+				<!-- Main content -->
+				<section class="content">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box">
+								{% if messages %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+									{% for message in messages %}
+									<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+									<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+									</p>
+									{% endfor %}
+								</div>
+								{% endif %}
+								<div class="box-body">
+										<div class="property-edti-section">
+                                            <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+											
+                                            <div class="row mt-5">
+												<div class="col-12">
+                                                    <table class="table table-bordered" style="margin-bottom:0px;">
+                                                        <tr>
+                                                            <td>
+                                                                <label> Property photo </label>
+                                                                <input type="file" onchange="plotimage(this)" name="property_photo"  id="property_photo">
+                                                            </td>
+                                                            <td>
+                                                                <div class="std_images"> <img src="/static/realstateapp/media/{{get_image.property_photo}}" alt="" id="plotland" style="width:100px;height: 90px;"></div> 
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+												</div>
+											</div>
+                                         
+                                           
+                                            <br>
+											<button
+												type="submit"
+												class="btn
+												btn-primary" style="float:right;">
+												<i
+													class="ti-save-alt"></i>
+												Save
+											</button>
+                                        </form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- /.content -->
+			</div>
+		</div>
+		<!-- /.content-wrapper -->
+	</div>
+</body>
+
+
+
+<!-- -======stat plot land image ======= -->
+<script>
+    function plotimage(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#plotland').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<!-- -======plot land ======= -->
+
+{% endblock %}

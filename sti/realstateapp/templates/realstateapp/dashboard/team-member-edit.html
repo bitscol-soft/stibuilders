@@ -1,0 +1,188 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        {% if messages %}
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							{% for message in messages %}
+							<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+							<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+							</p>
+							{% endfor %}
+						</div>
+						{% endif %}
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2> Team Member Update </h2>
+                                </div>
+
+                            </div>
+
+                            <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                <div id="base-info">
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="member_name"
+                                                    class="form-label">
+                                                    member name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="member_name"
+                                                    id="member_name" value="{{get_team.member_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="member_disignation"
+                                                    class="form-label"> designation
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="member_disignation"
+                                                    name="member_disignation" value="{{get_team.member_disignation}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="facebook_link"
+                                                    class="form-label"> facebook profile url
+                                                    </label>
+                                                    <textarea name="facebook_link" id="facebook_link" cols="1" rows="1" class="form-control"> {{get_team.facebook_link}} </textarea>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="twitter_link"
+                                                    class="form-label"> twitter profile url 
+                                                    </label>
+                                                    <textarea name="twitter_link" id="twitter_link" cols="1" rows="1" class="form-control"> {{get_team.twitter_link}} </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="instragram_link"
+                                                    class="form-label"> instragram profile url 
+                                                    </label>
+                                                <textarea name="instragram_link" id="instragram_link" cols="1" rows="1" class="form-control"> {{get_team.instragram_link}} </textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="member_order"
+                                                    class="form-label">
+                                                     serial 
+                                                    </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="member_order"
+                                                    name="member_order" value="{{get_team.member_order}}">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <table class="table table-bordered" style="margin-bottom:0px;">
+                                                    <tr>
+                                                        <td>
+                                                            <label> image </label>
+                                                            <input type="file" onchange="show(this)" name="member_image"  id="member_image">
+                                                        </td>
+                                                        <td>
+                                                            <div class="std_images"> <img src="/static/realstateapp/media/{{get_team.member_image}}" alt="" id="stImg" style="width:50px;height: 50px;"> </div> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

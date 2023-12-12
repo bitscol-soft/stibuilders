@@ -1,0 +1,55 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+
+        <!-- Header Start -->
+        <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                    <h1 class="display-5 animated fadeIn mb-4 text-white"> Client Feedback</h1> 
+                        <nav aria-label="breadcrumb animated fadeIn">
+                        <ol class="breadcrumb text-uppercase justify-content-center">
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Pages</a></li>
+                            <li class="breadcrumb-item text-white" aria-current="page">Client Feedback</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+       <!-- Testimonial Start -->
+        {% if client_testi %}
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3">What Our Clients Say!</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                    {% for data in client_testi %}
+                    <div class="testimonial-item bg-light rounded p-3">
+                        <div class="bg-white border rounded p-4">
+                            <p style="text-align:justify;">{{data.testimonial|slice:"350"}}.....</p>
+                            <div class="d-flex align-items-center">
+                                <img class="img-fluid flex-shrink-0 rounded" src="/static/realstateapp/media/{{data.image}}" style="width: 45px; height: 45px;">
+                                <div class="ps-3">
+                                    <h6 class="fw-bold mb-1"> {{data.name}} </h6>
+                                    <small>{{data.profession}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Testimonial End -->
+        
+
+        
+
+{% endblock %}

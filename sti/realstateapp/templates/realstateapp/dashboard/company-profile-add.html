@@ -1,0 +1,318 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Add Company</h2>
+                                </div>
+
+                            </div>
+
+                            <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                <div id="base-info">
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="company_name"
+                                                    class="form-label">Company
+                                                    Name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="company_name"
+                                                    id="company_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="slugan"
+                                                    class="form-label">Slugan
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="slugan"
+                                                    name="slugan">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="email"
+                                                    class="form-label">email
+                                                    </label>
+                                                <input
+                                                    type="email"
+                                                    class="form-control"
+                                                    id="email"
+                                                    name="email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="mobile"
+                                                    class="form-label">mobile
+                                                    </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="mobile"
+                                                    name="mobile">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="mobile1"
+                                                    class="form-label">mobile 1
+                                                    </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="mobile1"
+                                                    name="mobile1">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="phone1"
+                                                    class="form-label"> phone
+                                                    </label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="phone1"
+                                                    name="phone1">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="address"
+                                                    class="form-label"> Address
+                                                    </label>
+                                                
+                                                    <textarea name="address" id="address" cols="1" rows="1" class="form-control"></textarea>
+                                                
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="staring_year"
+                                                    class="form-label">staring year</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="staring_year"
+                                                    name="staring_year">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="instragram_link"
+                                                    class="form-label"> instragram link</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="instragram_link"
+                                                    name="instragram_link">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="google_map_link"
+                                                    class="form-label"> google map link</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="google_map_link"
+                                                    name="google_map_link">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="facebook_link"
+                                                    class="form-label"> facebook link</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="facebook_link"
+                                                    name="facebook_link">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="twitter_link"
+                                                    class="form-label"> twitter link </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="twitter_link"
+                                                    name="twitter_link">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                   
+
+                                    <div class="row">
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="linkedin_link"
+                                                    class="form-label"> linkedin link</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="linkedin_link"
+                                                    name="linkedin_link">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="youtube_link"
+                                                    class="form-label"> youtube link </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="youtube_link"
+                                                    name="youtube_link">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="row mt-5">
+                                        <div class="col-12">
+											<label> About </label>
+                                            <textarea cols="10" id="editor1" name="about"  rows="10" class="form-control" > </textarea>
+										</div>
+									</div>
+                                    <div class="row mt-5">
+                                        <div class="col-12">
+                                            <label
+                                                for="logo"
+                                                class="form-label">Company Logo</label>
+                                            <input
+                                                class="form-control"
+                                                type="file" name="logo"
+                                                id="upload-logo">
+                                            <img src="" id="logo-preview" style="width: 100px;margin-top: 20px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'editor1', {
+        height: 300,
+
+        // Configure your file manager integration. This example uses CKFinder 3 for PHP.
+        filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
+        filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
+    } );
+</script>
+
+{% endblock %}

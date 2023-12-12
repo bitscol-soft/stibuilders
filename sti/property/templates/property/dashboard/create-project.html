@@ -1,0 +1,565 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+
+    <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+        <div class="wrapper">
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <div class="container-full">
+                    <!-- Main content -->
+                    <section class="content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box">
+                                    {% if messages %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {% for message in messages %}
+                                        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+                                        <p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+                                        </p>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h2>Add Project</h2>
+                                            </div>
+                                            <div class="col-8">
+                                                <ul class="nav nav-pills
+                                                    justify-content-end mb-20">
+                                                    <li class=" nav-item">
+                                                        <a href="#base-info"
+                                                            class="nav-link
+                                                            active"
+                                                            data-bs-toggle="tab"
+                                                            aria-expanded="false">Apartment
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#land"
+                                                            class="nav-link"
+                                                            data-bs-toggle="tab"
+                                                            aria-expanded="false">Plot/Land
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        
+                                            <div class="tab-content">
+                                                
+                                                <div id="base-info" class="tab-pane active">
+                                                    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="project-name"
+                                                                        class="form-label">Project Name</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Project
+                                                                        Name"
+                                                                        name="project_name"
+                                                                        id="project-name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="developer_name"
+                                                                        class="form-label"> Developer Name </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Project
+                                                                        Location"
+                                                                        id="developer_name"
+                                                                        name="developer_name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="address"
+                                                                        class="form-label"> Address </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="address"
+                                                                        name="address">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="project-type"
+                                                                        class="form-label">Project Type</label>
+                                                                    <select
+                                                                        name="project_type"
+                                                                        id="project-type"
+                                                                        class="form-control">
+                                                                        <option value="" hidden> select </option>
+                                                                        {% for data in projecttype %}
+                                                                        <option value="{{data.pk}}"> {{data.property_type}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="status"
+                                                                        class="form-label"> Total Apartments </label>
+                                                                    <input type="number" name="total_apartment" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="land_size"
+                                                                        class="form-label">Land Size</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="land_size"
+                                                                        id="land_size">
+                                                                        
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="total_units"
+                                                                        class="form-label"> Total Unit </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        name="total_units"
+                                                                        id="total_units">
+                                                                        
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="lift"
+                                                                        class="form-label"> Lift </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        name="lift"
+                                                                        id="lift">
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="stairs"
+                                                                        class="form-label"> Stairs </label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        name="stairs"
+                                                                        id="stairs">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="face"
+                                                                        class="form-label">Face</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="face"
+                                                                        id="face"
+                                                                        placeholder="Face">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="plot_no"
+                                                                        class="form-label">Plot
+                                                                        NO</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="plot_no"
+                                                                        id="plot_no"
+                                                                        placeholder="Plot
+                                                                        NO">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="block-no"
+                                                                        class="form-label">Block
+                                                                        NO</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="block_no"
+                                                                        id="block-no"
+                                                                        placeholder="BlockNo">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="road_size"
+                                                                        class="form-label">Road Size
+                                                                        </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="road_size"
+                                                                        id="road_size">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="parking_ability"
+                                                                        class="form-label"> Parking Avaiality
+                                                                        </label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="parking_ability"
+                                                                        id="parking_ability">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <label> Project Image </label>
+                                                                                <input type="file" onchange="show(this)" name="project_logo"  id="project_logo">
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="std_images"> <img src="" alt="" id="stImg" style="width:50px;height: 50px;"> </div> 
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12
+                                                                col-sm-6 col-md-4
+                                                                mt-3">
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn
+                                                                    btn-primary">
+                                                                    <i
+                                                                        class="ti-save-alt"></i>
+                                                                    Save
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                
+                                                <div id="land" class="tab-pane">
+                                                    <form action="/property/project-plot-land/" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="block"
+                                                                        class="form-label">Block</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Block"
+                                                                        id="block"
+                                                                        name="block">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="sector"
+                                                                        class="form-label">Sector</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        id="sector"
+                                                                        name="sector">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="road-no"
+                                                                        class="form-label">Road
+                                                                        NO</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        id="road-no"
+                                                                        name="road_no">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="plot-no"
+                                                                        class="form-label">Plot
+                                                                        NO</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        id="plot-no"
+                                                                        name="plot_no">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="land-size"
+                                                                        class="form-label">Land
+                                                                        Size</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="land-size"
+                                                                        name="land_size">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4
+                                                                col-md-4 col-sm-6
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="size-unit"
+                                                                        class="form-label">Size
+                                                                        Unit</label>
+                                                                    <select
+                                                                        name="size_unit"
+                                                                        id="size-unit"
+                                                                        class="form-control">
+                                                                        <option
+                                                                            value="">Select
+                                                                            One</option>
+                                                                        <option
+                                                                            value="sft">SFT</option>
+                                                                        <option
+                                                                            value="decimal">Decimal</option>
+                                                                        <option
+                                                                            value="katha">Kathe</option>
+                                                                        <option
+                                                                            value="bigha">Bigha</option>
+                                                                        <option
+                                                                            value="acors">Acors</option>
+                                                                        <option
+                                                                            value="sq_metre">Square
+                                                                            Metre</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-xl-6
+                                                                col-md-8 col-sm-12
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label for="address"> Developer Name </label>
+                                                                    <input type="text" name="developer_name" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-6
+                                                                col-md-8 col-sm-12
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label for="address"> Address </label>
+                                                                    <textarea name="address" id="address" cols="1" rows="1" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xl-6
+                                                                col-md-8 col-sm-12
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <label
+                                                                        for="location-map"
+                                                                        class="form-label">Location
+                                                                        Map</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        name="map_url"
+                                                                        id="location-map">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-6
+                                                                col-md-8 col-sm-12
+                                                                col-12">
+                                                                <div
+                                                                    class="form-group">
+                                                                    <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <label> land Image </label>
+                                                                                <input type="file" onchange="showshow(this)" name="plot_land_image"  id="plot_land_image">
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="std_images"> <img src="" alt="" id="stImgg" style="width:50px;height: 50px;"> </div> 
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-12
+                                                                col-sm-6 col-md-4
+                                                                mt-3">
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn
+                                                                    btn-primary">
+                                                                    <i
+                                                                        class="ti-save-alt"></i>
+                                                                    Save
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- /.content -->
+                </div>
+            </div>
+        </div>
+        <!-- ./wrapper -->
+    </body>
+
+    <script>
+        function show(input) {
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#stImg').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+        <script>
+            function showshow(input) {
+                if (input.files && input.files[0]) {
+                    var filerdr = new FileReader();
+                    filerdr.onload = function (e) {
+                        $('#stImgg').attr('src', e.target.result);
+                    }
+                    filerdr.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+{% endblock %}

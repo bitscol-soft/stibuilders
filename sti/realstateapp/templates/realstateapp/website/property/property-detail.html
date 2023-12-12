@@ -1,0 +1,416 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+            <!-- Header Start -->
+            <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/media/{{get_property.property_banner}}'); padding: 200px 0 !important; background-size: cover; background-position: center;">
+                <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                    <div class="col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                        <h1 class="display-5 animated fadeIn mb-4 text-shadow">{{get_property.property_name}}</h1> 
+                        <nav aria-label="breadcrumb animated fadeIn">
+                            <ol class="breadcrumb text-uppercase justify-content-center">
+                                <li class="breadcrumb-item"><a href="#" class="text-white">Home</a></li>
+                                <li class="breadcrumb-item"><a href="#" class="text-white">Prperty Details</a></li>
+                                <li class="breadcrumb-item text-white" aria-current="page">{{get_property.property_name}}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Header End -->
+    
+    
+            <div class="container-fluid header bg-white">
+                <div class="row">
+                    <div class="col-md-8">
+    
+                        <!-- Property Image Carousel Start  -->
+    
+                        <div class="row overflow-hidden mb-2">
+                            <div class="col-md-12 property-details">
+                                <!-- Slider Item Start  -->
+                                <div id="flexslider-thumb" class="flexslider-thumb">
+                                    <ul class="slides">
+                                        {% for data in get_image %}
+                                        <li data-thumb="/static/realstateapp/media/{{data.property_photo}}">
+                                            <img src="/static/realstateapp/media/{{data.property_photo}}" style="height:350px;" alt="inhouse">
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    
+                                </div>
+                                <!-- Slider Item End  -->
+                            </div>
+                        </div>
+    
+                        <!-- Property Image Carousel end  -->
+    
+                        <!-- Property Destails Start -->
+    
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs justify-content-center" id="property-details-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="aminities-tab" data-bs-toggle="tab" data-bs-target="#aminities" type="button" role="tab" aria-controls="aminities" aria-selected="false">Aminities</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="facilities-tab" data-bs-toggle="tab" data-bs-target="#facilities" type="button" role="tab" aria-controls="facilities" aria-selected="false">Facilities</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="gallery-tab" data-bs-toggle="tab" data-bs-target="#gallery" type="button" role="tab" aria-controls="gallery" aria-selected="false">Gallery</button>
+                                    </li>
+                                    {% for data in get_legaldocu %}
+                                    <li class="nav-item" role="presentation">
+                                        <a href="/static/realstateapp/media/{{data.document}}" class="nav-link active" download="/static/realstateapp/media/{{data.document}}"><i class="fa fa-download" aria-hidden="true"></i> {{data.property_document_name}} </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="tab-content text-center p-3 mt-3" id="property-details-tabcontent">
+                                    <!-- Overview Start  -->
+                                    <div class="tab-pane fade show active property-overview" id="overview" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <h2 class="heading-after">Property Overview</h2>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <div class="col-12">
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <th><img src="/static/realstateapp/website/img/icons/price.png" style="height:30px;width:40px;" alt="location"> Price</th>
+                                                        <td>{{get_property.selling_price}} TK</td>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-type.png" style="height:30px;width:40px;" alt="land-size">Appartment Size</th>
+                                                        <td>{{get_property.property_area}} sft</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-bedroom.png" style="height:30px;width:40px;" alt="location">Bedroom</th>
+                                                        <td>{{get_property.bed}}</td>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-bathroom.png" style="height:30px;width:40px;" alt="land-size">Bathroom</th>
+                                                        <td>{{get_property.bath}}</td>
+                                                    </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <th><img src="/static/realstateapp/website/img/icons/balcony.png" style="height:30px;width:40px;" alt="land-size">Balconies</th>
+                                                        <td>{{get_property.number_of_belcony}} </td>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-land-size.png" style="height:30px;width:40px;" alt="land-size">Daining Space</th>
+                                                        <td>{{get_property.daining_space}} </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-appartment-size.png" style="height:30px;width:40px;" alt="land-size">Flat/Appartment No</th>
+                                                        <td>{{get_property.flat_apartment_no}}</td>
+                                                        <th><img src="/static/realstateapp/website/img/icons/kitchen-room.png" style="height:30px;width:40px;" alt="land-size">kitchen</th>
+                                                        <td>{{get_property.kitchen_space}}  </td>
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-status.png" style="height:30px;width:40px;" alt="land-size">Construction Status</th>
+                                                        <td>{{get_property.construction_status}}</td>
+                                                        <th><img src="/static/realstateapp/website/img/icons/property-status.png" style="height:30px;width:40px;" alt="land-size">Sales Status</th>
+                                                        <td>{{get_property.sales_type}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Overview End  -->
+    
+                                  
+                                    <!-- Aminities Start  -->
+                                    <div class="tab-pane fade" id="aminities" role="tabpanel" aria-labelledby="aminities-tab">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <h2 class="heading-after">Features & Aminities</h2>
+                                            </div>
+                                            <div class="col-12 mt-5 py-3">
+                                                <div class="owl-carousel">
+                                                    {% for data in get_aminity %}
+                                                    {% if forloop.first %}
+                                                    <div class="items rounded" style="background: url('/static/realstateapp/media/{{data.aminity_logo}}');">
+                                                        <div class="features-item rounded">
+                                                            <img src="/static/realstateapp/media/{{data.aminity_logo}}" alt="" class="w-50 mx-auto">
+                                                            <h5 class="text-white">{{data.aminity_name}}</h5>
+                                                        </div>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="items rounded" style="background: url('/static/realstateapp/media/{{data.aminity_logo}}');">
+                                                        <div class="features-item rounded">
+                                                            <img src="/static/realstateapp/media/{{data.aminity_logo}}" alt="" class="w-50 mx-auto">
+                                                            <h5 class="text-white">{{data.aminity_name}}</h5>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Aminities End  -->
+    
+                                    <!-- Nearby Facilities Start  -->
+                                    <div class="tab-pane fade" id="facilities" role="tabpanel" aria-labelledby="contact-tab">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <h2 class="heading-after">Nearby Facilities</h2>
+                                            </div>
+                                            <div class="col-12 mt-5">
+                                                <div class="row g-4">
+                                                    {% for data in get_faci %}
+                                                    <div class="col-6 col-md-3">
+                                                        <div class="facility-item rounded">
+                                                            <div class="facility-item-overlay">
+                                                                <img src="/static/realstateapp/media/{{data.facility_logo}}" alt="" class="img-fluid">
+                                                            <h6 class="mt-3 text-black">{{data.facility_name}}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Nearby Facilities End  -->
+                                    <!-- Property Gallery Start  -->
+                                    <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="contact-tab">
+                                        <div class="row mt-3" id="gallery">
+                                            <div class="col-12">
+                                                <h2 class="heading-after">Photo Gallery</h2>
+                                            </div>
+                                            <div class="col-12 mt-5">
+                                                <div class="row g-4">
+                                                    {% for data in get_photo %}
+                                                    <div class="col-md-3 col-sm-6 col-12">
+                                                        <a href="/static/realstateapp/media/{{data.photo_gallery}}" data-lightbox="image-1" data-title="Property Title"><img src="/static/realstateapp/media/{{data.photo_gallery}}" alt="" class="img-fluid"></a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <h2 class="heading-after">Video Gallery</h2>
+                                            </div>
+                                            <div class="col-12 mt-5">
+                                                <div class="row g-4">
+                                                    {% for data in get_vdo %}
+                                                    <div class="col-md-4 col-sm-6 col-12">
+                                                        <iframe class="video-gallery-item" src="{{data.video_ulr}}"></iframe>
+                                                    </div>
+                                                   {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Property Gallery End  -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Property Destails End -->
+            
+    
+                        <!-- Property Floor Plan Start  -->
+                        <!-- <div class="row text-center mt-4">
+                            <div class="col-12">
+                                <h2 class="heading-after">Floor Plan</h2>
+                            </div>
+                            <div class="col-12 mt-5">
+                                <div id="flexslider-thumb" class="flexslider-thumb">
+                                    <ul class="floor-slides">
+                                        {% for data in get_legaldocu %}
+                                        <li data-thumb="/static/realstateapp/media/{{data.document}}">
+                                            <img src="/static/realstateapp/media/{{data.document}}" class="img-fluid"alt="upload flor plan">
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    
+                                </div>
+                            </div>
+                            
+                        </div> -->
+                        <!-- Property Floor Plan End  -->
+    
+                        <!-- Property Location Start  -->
+            
+                        <div class="row text-center">
+                            <div class="col-12">
+                                <h2 class="heading-after">Property Location Map</h2>
+                            </div>
+                            <div class="col-12 mt-5 mb-2">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.501508739539!2d90.38105271445818!3d23.87182889004475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c40fb857cb01%3A0xb6ca60a98b4c89e2!2z4KaJ4Kak4KeN4Kak4Kaw4Ka-IOCnp-CnqCDgpqjgpq7gp43gpqzgprAg4Ka44KeH4KaV4KeN4Kaf4KawIOCmquCmvuCmsOCnjeCmlQ!5e0!3m2!1sbn!2sbd!4v1657101564445!5m2!1sbn!2sbd" style="border:0; width: 100%;" allowfullscreen="" loading="lazy" height="450" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                        <!-- Property Location End  -->
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-12 bg-primary">
+                                <div class="row">
+                                   
+                                    <div class="col-md-12 m-0 p-0 project-overview">
+                                        <div class="company-image">
+                                            <img src="/static/realstateapp/media/{{get_project.project_logo}}" style="height:400px;" alt="" class="img-fluid">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 p-0 m-0 pb-3">
+                                        <h4 class="text-white text-uppercase mt-3 text-center">{{get_project.project_name}}</h4>
+                                        <p class="mb-1 address text-center">Developer: {{get_project.developer_name}}</p>
+                                        <hr class="text-white">
+                                        <h5 class="text-center">At A Glance</h5>
+                                        <div class="companry-overviews px-3">
+                                            <table class="table text-white table-bordered text-bold">
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/property-location.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Location</td>
+                                                    <td>{{get_project.address}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img//icons/property-type.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Type</td>
+                                                    <td>{{get_project.project_type}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img//icons/property-appartment-size.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Total Appartments</td>
+                                                    <td>{{get_project.total_apartment}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/land.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Land Size</td>
+                                                    <td>{{get_project.land_size}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/unit.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Units</td>
+                                                    <td>{{get_project.total_units}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/lift.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Lift</td>
+                                                    <td>{{get_project.lift}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/stair.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Stairs</td>
+                                                    <td>{{get_project.stairs}}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/land.png" style="height:30px;width:30px;" alt="land-size" class="img-fluid mr-5">Face</td>
+                                                    <td>{{get_project.face}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/land.png" style="height:30px;width:30px;" alt="land-size" class="img-fluid  mr-5">Plot No</td>
+                                                    <td>{{get_project.plot_no}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/land.png" style="height:30px;width:30px;" alt="land-size" class="img-fluid  mr-5">Block No</td>
+                                                    <td>{{get_project.block_no}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/road.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Road Size</td>
+                                                    <td>{{get_project.road_size}}t</td>
+                                                </tr>
+                                             
+                                                <tr>
+                                                    <td><img src="/static/realstateapp/website/img/icons/parking-icon.png" style="height:30px;width:30px;" class="img-fluid mr-5" alt="icon" />Parking</td>
+                                                    <td>{{get_project.parking_ability}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        
+                    
+                        <div class="row">
+                            <form action="/property-search/" method="POST"> {% csrf_token %}
+                                <div class="sidebar-search-form bg-primary p-4">
+                                    <div class="row g-2">
+                                        <div class="col-md-12 col-12">
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <select name="phase_name" class="form-select border-0 py-3">
+                                                        <option value=""> Select Phase  </option>
+                                                        {% for data in get_phase %}
+                                                        <option value="{{data.pk}}">{{data.phase_name}} </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <select name="property_type" class="form-select border-0 py-3">
+                                                        <option value=""> Select Property Type</option>
+                                                        {% for data in add_property %}
+                                                        <option value="{{data.pk}}">{{data.property_type}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <select name="location_name" class="form-select border-0 py-3">
+                                                        <option value=""> Select Location</option>
+                                                        {% for data in get %}
+                                                        <option value="{{data.pk}}">{{data.location_name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="number" name="min_price" class="form-control border-0 py-3" placeholder="Min Price">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="number" name="max_price" class="form-control border-0 py-3" placeholder="Max Price">
+                                        </div>
+                                        <div class="col-12 col-md-12 search-range">
+                                            <div class="row g-2">
+                                                <div class="col-12 py-2">
+                                                    <div class="input-range input-range-area overflow-hidden p-2">
+                                                        <label for="price-range" id="area-range-label">Area Range (Sft):</label>
+                                                        <input type="hidden" name="my_range" value=" " id="price-range"/>
+                                                        <input type="text" name="min_area" class="min-area area-value" readonly>
+                                                        <input type="text" name="max_area" class="max-area area-value" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 py-2">
+                                                    <div class="input-range overflow-hidden p-2">
+                                                        <label for="bedroom-range">Bedroom Range </label>
+                                                        <input name="bed" type="hidden" class="span2" id="bedroom-range"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 py-2">
+                                                    <div class="input-range overflow-hidden p-2">
+                                                        <label for="bathroom-range">Bathroom Range </label>
+                                                        <input name="bath" type="hidden" class="span2" id="bathroom-range" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-12">
+                                            <div class="row g-2">
+                                                {% for data in aminity %}
+                                                <div class="col-12 py-2">
+                                                    <div class="d-block form-check-inline my-2">
+                                                        <label class="mt form-check-label">
+                                                            <input type="checkbox" value="{{data.aminity_name}}" class="form-check-input"/>
+                                                            <span class="checkbox-label"> {{data.aminity_name}} </span>
+                                                        </label>
+                                                    </div>
+                                                   
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-dark border-0 w-50 py-3"> Search </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+
+{% endblock %}

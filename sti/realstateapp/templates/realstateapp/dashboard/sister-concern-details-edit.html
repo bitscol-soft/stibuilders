@@ -1,0 +1,294 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        {% if messages %}
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							{% for message in messages %}
+							<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+							<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+							</p>
+							{% endfor %}
+						</div>
+						{% endif %}
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2> Service Concern Details Edit </h2>
+                                </div>
+
+                            </div>
+
+                            <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                <div id="base-info">
+                                    <div class="row">
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="sister_concern_name"
+                                                    class="form-label">
+                                                    Sister Concern Details Name</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="sister_concern_name"
+                                                    id="sister_concern_name" value="{{get_concern_details.sister_concern_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="address"
+                                                    class="form-label"> address
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="address"
+                                                    name="address" value="{{get_concern_details.address}}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="mobile"
+                                                    class="form-label">
+                                                    mobile </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="mobile"
+                                                    id="mobile" value="{{get_concern_details.mobile}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="email"
+                                                    class="form-label"> email
+                                                    </label>
+                                                <input
+                                                    type="email"
+                                                    class="form-control"
+                                                    id="email"
+                                                    name="email" value="{{get_concern_details.email}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="facebook_link"
+                                                    class="form-label">
+                                                    facebook link </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="facebook_link"
+                                                    id="facebook_link" value="{{get_concern_details.facebook_link}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="twitter_link"
+                                                    class="form-label"> twitter link
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="twitter_link"
+                                                    name="twitter_link" value="{{get_concern_details.twitter_link}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="linkedin_link"
+                                                    class="form-label">
+                                                    linkedin link </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="linkedin_link"
+                                                    id="linkedin_link" value="{{get_concern_details.linkedin_link}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="youtube_link"
+                                                    class="form-label"> youtube link
+                                                    </label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="youtube_link"
+                                                    name="youtube_link" value="{{get_concern_details.youtube_link}}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <label
+                                                    for="editor1"
+                                                    class="form-label"> sister concern description
+                                                    </label>
+                                                <textarea name="service_description" id="editor1" cols="1" rows="4" class="form-control">{{get_concern_details.service_description}}</textarea>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <table class="table table-bordered" style="margin-bottom:0px;">
+                                                    <tr>
+                                                        <td>
+                                                            <label> sister concern banner  </label>
+                                                            <input type="file" onchange="show(this)" name="sister_concern_banner"  id="sister_concern_banner">
+                                                        </td>
+                                                        <td>
+                                                            <div class="std_images"> <img src="/static/realstateapp/media/{{get_concern_details.sister_concern_banner}}" alt="" id="stImg" style="width:200px;height: 50px;"> </div> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
+
+                                    <div class="row">
+                                        <div class="col-xl-12
+                                            col-md-4 col-sm-6
+                                            col-12">
+                                            <div
+                                                class="form-group">
+                                                <table class="table table-bordered" style="margin-bottom:0px;">
+                                                    <tr>
+                                                        <td>
+                                                            <label> sister concern image </label>
+                                                            <input type="file" onchange="showw(this)" name="sister_concern_image"  id="sister_concern_image">
+                                                        </td>
+                                                        <td>
+                                                            <div class="std_images"> <img src="/static/realstateapp/media/{{get_concern_details.sister_concern_image}}" alt="" id="stImgg" style="width:50px;height: 50px;"> </div> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12
+                                            col-sm-6 col-md-4
+                                            mt-3">
+                                            <button
+                                                type="submit"
+                                                class="btn
+                                                btn-primary">
+                                                <i
+                                                    class="ti-save-alt"></i>
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+
+<script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'editor1', {
+        height: 300,
+
+        // Configure your file manager integration. This example uses CKFinder 3 for PHP.
+        filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+        filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?type=Images',
+        filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+        filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images'
+    } );
+</script>
+
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script>
+    function showw(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImgg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

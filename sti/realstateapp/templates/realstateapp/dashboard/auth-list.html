@@ -1,0 +1,76 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Company List</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table id="data-table" class="table
+                                    table-striped
+                                    text-center"
+                                    style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th> User Type </th>
+                                            <th> Photo</th>
+                                            <th> mobile </th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in alluser %}
+                                        <tr>
+                                            <td>{{data.full_name}}</td>
+                                            {% if data.user_type == "1" %} <td> Admin </td> {% endif %}
+                                            {% if data.user_type == "2" %} <td> Editor </td> {% endif %}
+                                               
+                                            <td><img
+                                                    style="width:40px; height: 20px;"
+                                                    src="/static/realstateapp/media/{{data.photo}}"
+                                                    alt=""></td>
+                                            <td>{{data.user_mobile}}</td>
+                                            
+                                            <td>
+                                                <a href="/auth/{{data.pk}}/edit/" class="btn btn-success btn-sm mr-5"> 
+                                                    <i class="fa fa-pencil mr-5"></i>
+                                                    Edit
+                                                </a>
+                                                <a href="/auth/{{data.pk}}/delete/" class="btn btn-danger btn-sm mr-5"> 
+                                                    <i class="fa fa-trash mr-5"></i>
+                                                    Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock %}
+            

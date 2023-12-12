@@ -1,0 +1,379 @@
+{% extends 'realstateapp/website/base.html'%}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+        <!-- Header Start -->
+        <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                    <h1 class="display-5 animated fadeIn mb-4 text-white"> Search Property </h1> 
+                        <nav aria-label="breadcrumb animated fadeIn">
+                        <ol class="breadcrumb text-uppercase justify-content-center">
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#" class="text-white">Pages</a></li>
+                            <li class="breadcrumb-item text-white" aria-current="page"> Search Property </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+        <!-- Property List Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row g-0 gx-5">
+                            <div class="col-lg-6">
+                                <div class="text-start mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
+                                    <h1 class="mb-3">Property List </h1>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
+                                <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary active" data-bs-toggle="pill" href="#grid" id="grid-active-btn"><i class="fas fa-th"></i></a>
+                                    </li>
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#list" id="list-active-btn"><i class="fas fa-list"></i></a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="grid" class="tab-pane fade show p-0 active">
+                                <div class="tab-content">
+                                    <div id="grid-tab-1" class="tab-pane fade show p-0">
+                                        <div class="row g-4">
+                                            {% for data in get_up %}
+                                            <div class="col-lg-6 col-md-6 col-12 wow fadeInUp" data-wow-delay="0.1s">
+                                                <div class="property-item rounded overflow-hidden">
+                                                    <div class="position-relative overflow-hidden">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> {{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">Appartment</div>
+                                                    </div>
+                                                    <div class="p-4 pb-0" style="height:160px;>
+                                                        <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/"> {{data.property_name}} </a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i> {{data.address}} </p>
+                                                    </div>
+                                                    <div class="d-flex border-top">
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="grid-tab-2" class="tab-pane fade show p-0 active">
+                                        <div class="row g-4">
+                                            {% for data in get_on %}
+                                            <div class="col-lg-6 col-md-6 col-12">
+                                                <div class="property-item rounded overflow-hidden">
+                                                    <div class="position-relative overflow-hidden">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> {{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{data.property_userfor}}</div>
+                                                    </div>
+                                                    <div class="p-4 pb-0" style="height:160px;>
+                                                         <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/"> {{data.property_name}} </a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i> {{data.address}} </p>
+                                                    </div>
+                                                    <div class="d-flex border-top">
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i> {{data.bath}} Bath</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="grid-tab-3" class="tab-pane fade show p-0">
+                                        <div class="row g-4">
+                                            {% for data in get_com %}
+                                            <div class="col-lg-6 col-md-6 col-12">
+                                                <div class="property-item rounded overflow-hidden">
+                                                    <div class="position-relative overflow-hidden">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> {{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{data.property_userfor}}</div>
+                                                    </div>
+                                                    <div class="p-4 pb-0" style="height:160px;>
+                                                        <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/">{{data.property_name}}</a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{data.address}}</p>
+                                                    </div>
+                                                    <div class="d-flex border-top">
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="list" class="tab-pane fade show p-0">
+                                <div class="tab-content">
+                                    <div id="list-tab-1" class="tab-pane fade show p-0">
+                                        <div class="row g-4">
+                                            {% for data in get_up %}
+                                            <div class="col-lg-12 col-md-12 col-12 wow fadeInUp" data-wow-delay="0.1s">
+                                                <div class="property-item rounded overflow-hidden row">
+                                                    <div class="position-relative overflow-hidden col-4">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">{{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{data.property_userfor}}</div>
+                                                    </div>
+                                                    <div class="p-2 pb-0 col-8" style="height:160px;>
+                                                       <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/">{{data.property_name}}</a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{data.address}}</p>
+                                                        <div class="d-flex border-top">
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                            <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="list-tab-2" class="tab-pane fade show p-0 active">
+                                        <div class="row g-4">
+                                            {% for data in get_on %}
+                                            <div class="col-lg-12 col-md-12 col-12">
+                                                <div class="row property-item rounded overflow-hidden">
+                                                    <div class="col-4 position-relative overflow-hidden">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> {{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{data.property_userfor}}</div>
+                                                    </div>
+                                                    <div class="col-8 p-2 pb-0" style="height:160px;>
+                                                        <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/">{{data.property_name}}</a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{data.address}}</p>
+                                                        <div class="d-flex border-top">
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                            <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="list-tab-3" class="tab-pane fade show p-0">
+                                        <div class="row g-4">
+                                            {% for data in get_com %}
+                                            <div class="col-lg-12 col-md-12 col-12">
+                                                <div class="row property-item rounded overflow-hidden">
+                                                    <div class="col-4 position-relative overflow-hidden">
+                                                        <a href="/property/{{data.id}}/detail/"><img class="img-fluid" src="/static/realstateapp/media/{{data.property_image}}" style="height: 230px;width:100%;" alt=""></a>
+                                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"> {{data.property_for}}</div>
+                                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{data.property_userfor}}</div>
+                                                    </div>
+                                                    <div class="col-8 p-2 pb-0" style="height:160px;>
+                                                         <h5 class="text-primary mb-3"> <span>    মূল্য:    </span>           {{data.selling_price}}       টাকা             </h5>
+                                                        <a class="d-block h5 mb-2" href="/property/{{data.id}}/detail/">{{data.property_name}}</a>
+                                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{data.address}}</p>
+                                                        
+                                                        <div class="d-flex border-top">
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{data.area}} Sqft</small>
+                                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{data.bed}} Bed</small>
+                                                            <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{data.bath}} Bath</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-12 text-start wow slideInRight" data-wow-delay="0.1s">
+                                <ul class="nav nav-pills d-inline-flex mb-5" id="grid-filter">
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary active" data-bs-toggle="pill" href="#grid-tab-2">On Going</a>
+                                    </li>
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#grid-tab-1">Upcoming</a>
+                                    </li>
+                                    <li class="nav-item me-0">
+                                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#grid-tab-3">Completed</a>
+                                    </li>
+                                </ul>
+                                <ul class="nav nav-pills d-inline-flex mb-5 d-none" id="list-filter">
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary active" data-bs-toggle="pill" href="#list-tab-2">On Going</a>
+                                    </li>
+                                    <li class="nav-item me-2">
+                                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#list-tab-1">Upcoming</a>
+                                    </li>
+                                    <li class="nav-item me-0">
+                                        <a class="btn btn-outline-primary" data-bs-toggle="pill" href="#list-tab-3">Completed</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12">
+                                <form action="/search-result/" method="POST"> {% csrf_token %}
+                                    <div class="sidebar-search-form bg-primary p-4">
+                                        <div class="row g-2">
+                                            <div class="col-md-12 col-12">
+                                                <div class="row g-2">
+                                                    <div class="col-12">
+                                                        <select name="phase_name" class="form-select border-0 py-3">
+                                                            <option value=""> Selected Phase  </option>
+                                                            {% for data in get_phase %}
+                                                            <option value="{{data.phase_name}}">{{data.phase_name}} </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <select name="property_type" class="form-select border-0 py-3">
+                                                            <option value=""> Selected Property Type</option>
+                                                            {% for data in add_property %}
+                                                            <option value="{{data.property_type}}">{{data.property_type}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <select name="location_name" class="form-select border-0 py-3">
+                                                            <option value="">Selected Location</option>
+                                                            {% for data in get %}
+                                                            <option value="{{data.location_name}}">{{data.location_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                  
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="number" class="form-control border-0 py-3" placeholder="Min Price" name="min_price">
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="number" class="form-control border-0 py-3" placeholder="Max Price" name="max_price">
+                                            </div>
+                                            <div class="col-12 col-md-12 search-range">
+                                                <div class="row g-2">
+                                                    <div class="col-12 py-2">
+                                                        <div class="input-range input-range-area overflow-hidden p-2">
+                                                            <label for="price-range" id="area-range-label">Area Range (Sft):</label>
+                                                            <input type="hidden" name="my_range" value=" " id="price-range"/>
+                                                            <input type="text" name="min_area" class="min-area area-value" readonly>
+                                                            <input type="text" name="max_area" class="max-area area-value" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 py-2">
+                                                        <div class="input-range overflow-hidden p-2">
+                                                            <label for="bedroom-range">Bedroom Range </label>
+                                                            <input type="hidden" class="span2" name="bed" id="bedroom-range" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 py-2">
+                                                        <div class="input-range overflow-hidden p-2">
+                                                            <label for="bathroom-range">Bathroom Range </label>
+                                                            <input type="hidden" class="span2" name="bath" id="bathroom-range" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-12 col-12">
+                                                <div class="row g-2">
+                                                    <div class="col-12 py-2">
+                                                        <div class="d-block form-check-inline my-2">
+                                                            <label for="feature-1" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-1" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check-inline d-block my-2">
+                                                            <label for="feature-2" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-2" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check-inline d-block my-2">
+                                                            <label for="feature-3" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-3" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 py-2">
+                                                        <div class="d-block form-check-inline my-2">
+                                                            <label for="feature-4" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-4" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="d-block form-check-inline my-2">
+                                                            <label for="feature-5" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-5" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="d-block form-check-inline my-2">
+                                                            <label for="feature-6" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-6" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 py-2">
+                                                        <div class="form-check-inline d-block my-2">
+                                                            <label for="feature-7" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-7" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check-inline d-block my-2">
+                                                            <label for="feature-8" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-8" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check-inline d-block my-2">
+                                                            <label for="feature-9" class="mt form-check-label">
+                                                                <input type="checkbox" class="form-check-input" id="feature-9" />
+                                                                <span class="checkbox-label">Golden Urban House For Sell(3100)</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-dark border-0 w-50 py-3">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Property List End -->
+
+        
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'realstateapp/website/base.html' %}
+{% block title %}   {% endblock %}
+{% load static %}
+{% block content %}
+
+
+    <!-- Header Start -->
+    <div class="container-fluid header bg-white service-page" style="background: url('/static/realstateapp/website/img/header.webp'); padding: 150px 0 !important;">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+            <div class="col-sm-12 col-md-8 offset-md-2 p-5 mt-lg-5 text-center">
+                <h1 class="display-5 animated fadeIn mb-4 text-white"> {{get_privacy.title}} </h1> 
+                    <nav aria-label="breadcrumb animated fadeIn">
+                    <ol class="breadcrumb text-uppercase justify-content-center">
+                        <li class="breadcrumb-item"><a href="/" class="text-white">Home</a></li>
+                        <li class="breadcrumb-item text-white" aria-current="page"> <a href="/privacy-policy/"> Privacy Policy </a> </li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- <div class="col-md-6 animated fadeIn">
+                <img class="img-fluid" src="img/header.jpg" alt="">
+            </div> -->
+        </div>
+    </div>
+    <!-- Header End -->
+
+<!-- Author Message Start -->
+        <div class="container-xxl py-5 author-message">
+            <div class="container">
+                <div class="bg-light rounded p-3">
+                    <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="position-relative">
+                                    <img class="img-fluid rounded w-100" src="/static/realstateapp/media/{{get_privacy.picture}}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow fadeIn" id="mess" data-wow-delay="0.5s">
+                                <div class="mb-4">
+                                    <p>{{get_privacy.privacy_policy|safe}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Author Message End -->
+{% endblock %}

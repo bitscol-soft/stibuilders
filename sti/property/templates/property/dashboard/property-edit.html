@@ -1,0 +1,828 @@
+{% extends 'realstateapp/dashboard/dash_base.html' %}
+{% block title %} {% endblock %}
+{% load static %}
+{% block content %}
+
+<style>
+    .hovereffect {
+  width: 100%;
+  height: 100%;
+  float: left;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  cursor: default;
+}
+
+.hovereffect .overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  background-color: rgba(0,0,0,0.5);
+  -webkit-transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+  transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+}
+
+.hovereffect img {
+  display: block;
+  position: relative;
+  -webkit-transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+  transition: all 0.4s cubic-bezier(0.88,-0.99, 0, 1.81);
+}
+
+
+.hovereffect a.info {
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid #fff;
+  background-color: transparent;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  margin: 50px 0 0;
+  padding: 7px 14px;
+}
+
+.hovereffect a.info:hover {
+  box-shadow: 0 0 5px #fff;
+}
+
+.hovereffect:hover img {
+  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.hovereffect:hover .overlay {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.hovereffect:hover a.info {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -ms-transform: translatey(0);
+  -webkit-transform: translatey(0);
+  transform: translatey(0);
+  margin-top: 100px;
+}
+
+.hovereffect:hover a.info {
+  -webkit-transition-delay: .2s;
+  transition-delay: .2s;
+}
+
+</style>
+
+<style>
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    td,
+    th {
+        border-color: inherit;
+        border-style: none;
+        border-width: 0;
+    }
+</style>
+
+
+
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+	<div class="wrapper">
+		 <!-- Content Wrapper. Contains page content -->
+		 <div class="content-wrapper">
+			<div class="container-full">
+				<!-- Main content -->
+				<section class="content">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box">
+								{% if messages %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+									{% for message in messages %}
+									<p {% if message.tags %} class="{{ message.tags }}"{% endif %}> 
+									<p class="text-center"><strong>Success!</strong> {{ message }}</p> 
+									</p>
+									{% endfor %}
+								</div>
+								{% endif %}
+								<div class="box-body">
+                                    
+
+                                        <div class="row bg-primary">
+                                            <div class="col-6">
+                                                <h2 style="font-size: 15px;"><a href="javascript:void()" class="text-white"><i class="fa fa-edit"></i> Edit Property</a> </h2>
+                                            </div>
+                                            <div class="col-6">
+                                                <h2 style="font-size: 15px;"><a href="/property/create-property/" class="text-white" style="float: right;"><i class="fa fa-plus"></i> Add Property</a>  </h2>
+                                            </div>
+                                        </div><br>
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h2>Update Property</h2>
+                                            </div>
+                                            <div class="col-8">
+                                                <ul class="nav nav-pills
+                                                            justify-content-end
+                                                            mb-20">
+                                                    <li class="
+                                                                nav-item">
+                                                        <a href="#base-info" class="nav-link
+                                                                    active" data-bs-toggle="tab"
+                                                            aria-expanded="false">Basic
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#photo" class="nav-link" data-bs-toggle="tab"
+                                                            aria-expanded="false"> Photo
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#video" class="nav-link" data-bs-toggle="tab"
+                                                            aria-expanded="false"> Video
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#owner-info" class="nav-link" data-bs-toggle="tab"
+                                                            aria-expanded="false">Owner
+                                                            Info
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#aminities" class="nav-link" data-bs-toggle="tab"
+                                                            aria-expanded="true">Aminities
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="#facilities" class="nav-link" data-bs-toggle="tab"
+                                                            aria-expanded="true">Facilities
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                            
+                                      
+                                        <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                                            <div class="tab-content">
+                                                <div id="base-info" class="tab-pane active">
+                                                    <div class="row">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="property-category"
+                                                                    class="form-label">Property
+                                                                    Category</label>
+                                                                <select name="property_catagory" id="property-category"
+                                                                    class="form-control">
+                                                                    <option value="{{getproperty.property_catagory}}" hidden>
+                                                                        {% if getproperty.property_catagory == "1" %} Upcoming {% endif %}
+                                                                        {% if getproperty.property_catagory == "2" %} Ongoing {% endif %}
+                                                                        {% if getproperty.property_catagory == "3" %} Completed {% endif %}
+                                                                    </option>
+                                                                    <option value="1">Upcoming</option>
+                                                                    <option value="2">Ongoing</option>
+                                                                    <option value="3">Completed</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="title" class="form-label">Property
+                                                                    Name <span style="color:red;">*</span> </label>
+                                                                <input type="text" class="form-control"
+                                                                    name="property_name" id="title" value="{{getproperty.property_name}}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="project-name" class="form-label">Project
+                                                                    Name <span style="color:red;">*</span> </label>
+                                                                    <!-- {{getproperty.project_name}} -->
+                                                                <select name="project_name" id="project-name" class="form-control"
+                                                                    required>
+                                                                    <option hidden> {{getproperty.project_name}} </option>
+                                                                    {% for data in getproject %}
+                                                                    <option value="{{data.project_name}}">{{data.project_name}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="row align-items-center">
+                                                        
+                                                         
+                                                            <div class="form-group">
+                                                                <label> Property Image </label>
+                                                                <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                    <tr>
+                                                                        {% comment %} <td rowspan="4">
+                                                                            Property image
+                                                                            <input type="file" name="property_image" id="property_image">
+                                                                        </td> {% endcomment %}
+                                                                        <td>
+                                                                            <label> Property Image </label>
+                                                                            <input type="file" onchange="show(this)" name="property_image"  id="property_image">
+                                                                        </td>
+                                                                        <td style="width:200px;">
+                                                                            <div class="std_images"> <img src="/static/realstateapp/media/{{getproperty.property_image}}" alt="" id="stImg" style="width:200px;height: 150px;"> </div> 
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                       
+                                                    </div>
+                                                    <div class="row align-items-center">
+                                                        <div class="form-group">
+                                                            <label> Property Banner </label>
+                                                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                <tr>
+                                                                    {% comment %} <td rowspan="4">
+                                                                        Property Banner
+                                                                        <input type="file" name="property_banner" id="property_banner">
+                                                                    </td> {% endcomment %}
+                                                                    <td>
+                                                                        <label> Banner </label>
+                                                                        <input type="file" onchange="photo(this)" name="property_banner"  id="property_banner">
+                                                                    </td>
+                                                                    <td style="width:600px;">
+                                                                        <div class="std_images"> <img src="/static/realstateapp/media/{{getproperty.property_banner}}" alt="" id="probanner" style="width:600px;height: 150px;"> </div> 
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center">
+                                                        <div class="form-group">
+                                                            <label> Flor Plan </label>
+                                                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                <tr>
+                                                                    {% comment %} <td rowspan="4">
+                                                                        Flor Plan
+                                                                        <input type="file" name="flor_plan" id="flor_plan">
+                                                                    </td> {% endcomment %}
+                                                                    <td>
+                                                                        <label>  Flor Plan </label>
+                                                                        <input type="file" onchange="plan(this)" name="flor_plan"  id="flor_plan">
+                                                                    </td>
+                                                                    <td style="width:600px;">
+                                                                        <div class="std_images"> <img src="/static/realstateapp/media/{{getproperty.flor_plan}}" alt="" id="florplan" style="width:600px;height: 150px;"> </div> 
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row align-items-center">
+                                                        <div class="form-group">
+                                                            <label> Project Brochure </label>
+                                                            <table class="table table-bordered" style="margin-bottom:0px;">
+                                                                <tr>
+                                                                    {% comment %} <td rowspan="4">
+                                                                        Project Brochure
+                                                                        <input type="file" name="brochure" id="brochure" value="{{getproperty.brochure}}">
+                                                                    </td> {% endcomment %}
+                                                                    <td>
+                                                                        <label>  Project Brochure </label>
+                                                                        <input type="file" onchange="brochure(this)" name="brochure"  id="brochure">
+                                                                    </td>
+                                                                    <td style="width:600px;">
+                                                                         <iframe src="/static/realstateapp/media/{{getproperty.brochure}}" id="brochureid" width="100%" height="200px"></iframe>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="selling-price" class="form-label">Selling
+                                                                    Price</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="selling-price" name="selling_price" value="{{getproperty.selling_price}}">
+                                                            </div>
+                                                        </div>
+                                                    
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="flat-size"
+                                                                    class="form-label">Flat/Appertment
+                                                                    Size</label>
+                                                                <input type="text" class="form-control" id="flat-size"
+                                                                    name="property_area" value="{{getproperty.property_area}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="flat_apartment_no" class="form-label">
+                                                                    Flat/Apartment No
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                    id="flat_apartment_no" name="flat_apartment_no" value="{{getproperty.flat_apartment_no}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row
+                                                                align-items-center">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="choose_phase" class="form-label">Property
+                                                                    Phase </label>
+                                                                
+                                                                <select name="choose_phase" id="choose_phase" class="form-control">
+                                                                    <option hidden> {{getproperty.choose_phase}} </option>
+                                                                    {% for data in getphase %}
+                                                                    <option value="{{data.phase_name}}">{{data.phase_name}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="property_banner" class="form-label">Property
+                                                                    Type  </label>
+                                                                <select name="property_type" id="property_type" class="form-control">
+                                                                    <option hidden> {{getproperty.property_type}} </option>
+                                                                    {% for data in property_type %}
+                                                                    <option value="{{data.property_type}}">{{data.property_type}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="location" class="form-label">
+                                                                    Location
+                                                                </label>
+                                                                <select name="location" id="location" class="form-control">
+                                                                    <option hidden> {{getproperty.location}} </option>
+                                                                    {% for data in getlocation %}
+                                                                    <option value="{{data.location_name}}">{{data.location_name}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row
+                                                                align-items-center">
+                                                        <div class="col-xl-12
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="address" class="form-label">
+                                                                    Address
+                                                                </label>
+                                                                <textarea name="address" id="address" cols="3" rows="1" class="form-control"> {{getproperty.address}}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="bedroom" class="form-label">Bedroom</label>
+                                                                <input type="number" class="form-control" name="bed"
+                                                                    id="bedroom" value="{{getproperty.bed}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="bathroom"
+                                                                    class="form-label">Bathroom</label>
+                                                                <input type="number" class="form-control" name="bath"
+                                                                    id="bathroom" value="{{getproperty.bath}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="balcony" class="form-label">Balconis</label>
+                                                                <input type="number" class="form-control" id="balcony"
+                                                                    name="number_of_belcony" value="{{getproperty.number_of_belcony}}">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row
+                                                                align-items-center">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="construction-status"
+                                                                    class="form-label">Construction
+                                                                    Status</label>
+                                                                    
+                                                                <select name="construction_status" id=""
+                                                                    class="form-control">
+                                                                    <option hidden> {{getproperty.construction_status}} </option>
+                                                                    {% for data in cons_status %}
+                                                                    <option value="{{data.construction_status}}">{{data.construction_status}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                        <div class="form-group">
+                                                            <label for="sales-status" class="form-label">Sales
+                                                                Status</label>
+                                                            <select name="sales_status" id="sales-status"
+                                                                class="form-control">
+                                                                <option hidden> {{getproperty.sales_type}} </option>
+                                                                {% for data in sales_status %}
+                                                                <option value="{{data.sales_status}}">{{data.sales_status}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="location-map" class="form-label"> Location
+                                                                    Map </label>
+                                                                    <textarea name="location_map" id="location-map" cols="1" rows="1" class="form-control"> {{getproperty.location_map}} </textarea>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row
+                                                                align-items-center">
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="kitchen-space" class="form-label">Kitchen
+                                                                    Space
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                    name="kitchen_space" id="kitchen-space" value="{{getproperty.kitchen_space}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4
+                                                                    col-md-4
+                                                                    col-sm-6
+                                                                    col-12">
+                                                            <div class="form-group">
+                                                                <label for="dining-space" class="form-label"> Dining
+                                                                    Space</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="dining-space" name="daining_space" value="{{getproperty.daining_space}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="photo" class="tab-pane">
+                                                    <div class="col-12 mt-5">
+                                                        <div class="row g-4">
+                                                            {% for data in get_image %}
+                                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                                                <div class="hovereffect">
+                                                                    <img class="img-responsive" src="/static/realstateapp/media/{{data.property_photo}}" style="height:150px;width:250px;" alt="">
+                                                                    <div class="overlay">
+                                                                     <a href="/property/property-photo-edit/{{data.pk}}/" target="_blank" type="button" class="btn btn-primary info">
+                                                                        Change
+                                                                    </a> 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div> <br>
+                                                     
+                                                        <div class="form-group table-bordered">
+                                                            <label> Property Photo </label> <label
+                                                                style="float: right;">
+                                                                <p onclick="propertyphoto();"
+                                                                    class="badge badge-success"><i
+                                                                        class="fa fa-plus"></i> ADD MORE</p>
+                                                            </label>
+                                                            <table id="propertyphoto" class="table table-hover">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="width: 100%;"> <input type="file" multiple
+                                                                            name="property_photo"
+                                                                            value="{{list.property_photo}}"
+                                                                            placeholder="image"
+                                                                            class="form-control"> 
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div><br>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div id="video" class="tab-pane">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group table-bordered">
+                                                            <label> Property Video </label> <label
+                                                                style="float: right;">
+                                                                <p onclick="propertyvideo();"
+                                                                    class="badge badge-success"><i
+                                                                        class="fa fa-plus"></i> ADD MORE</p>
+                                                            </label>
+                                                            <table id="propertyvideo" class="table table-hover">
+                                                                <tbody>
+                                                                    {% for list in get_video %}
+                                                                    <tr>
+                                                                        <td style="width: 100%;"> <input type="text"
+                                                                                name="property_video_rul"
+                                                                                value="{{list.property_video_rul}}"
+                                                                                placeholder="video url"
+                                                                                class="form-control"> </td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div><br>
+                                                    </div>
+                                                </div>
+                                                <div id="owner-info" class="tab-pane">
+                                                    <div class="form-group table-bordered">
+                                                        <label> Owner Information </label> <label style="float: right;">
+                                                            <p onclick="ownership();" class="badge badge-success"><i
+                                                                    class="fa fa-plus"></i> ADD MORE</p>
+                                                        </label>
+                                                        <table id="ownership" class="table table-hover">
+                                                            <tbody>
+                                                                {% for list in get_owner %}
+                                                                <tr>
+                                                                    <td style="width: 50%;"> <input type="text"
+                                                                            name="property_owner_name"
+                                                                            value="{{list.property_owner_name}}"
+                                                                            placeholder="owner name"
+                                                                            class="form-control"> </td>
+                                                                    <td style="width: 50%;"> <input type="text"
+                                                                            name="property_ownership"
+                                                                            value="{{list.property_ownership}}"
+                                                                            placeholder="ownership"
+                                                                            class="form-control"> </td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div><br>
+                                                </div>
+                                                <div id="aminities" class="tab-pane">
+                                                    <div class="row mt-5">
+                                                        {% for list in get_amenity %}
+                                                        <div class="col-6
+                                                                    col-sm-6
+                                                                    col-md-3">
+                                                            <input type="checkbox" id="{{list.id}}" name="" checked>
+                                                            <label for="{{list.id}}" class="me-30"> <span> <img
+                                                                src="/static/realstateapp/media/{{list.amenity_icon}}"
+                                                                style="width:20px;height:15px;" alt=""> </span>
+                                                                {{list.amenity_name}}</label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <div class="row mt-5">
+                                                        {% for list in amenity %}
+                                                        <div class="col-6
+                                                                    col-sm-6
+                                                                    col-md-3">
+                                                            <input type="checkbox" id="{{list.id}}" value="{{list.id}}" name="amenity_id">
+                                                            <label for="{{list.id}}" class="me-30"> <span> <img
+                                                                src="/static/realstateapp/media/{{list.amenity_icon}}"
+                                                                style="width:20px;height:15px;" alt=""> </span>
+                                                                {{list.amenity_name}}</label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div id="facilities" class="tab-pane">
+                                                    <div class="row mt-5">
+                                                        {% for facility in get_facility %}
+                                                        <div class="col-6
+                                                                    col-sm-6
+                                                                    col-md-3">
+                                                            <input type="checkbox" id="{{facility.facility_name}}" value="" checked>
+                                                            <label for="{{facility.facility_name}}" class="me-30"> <span> <img
+                                                                        src="/static/realstateapp/media/{{facility.facility_icon}}"
+                                                                        style="width:20px;height:15px;" alt=""> </span>
+                                                                {{facility.facility_name}}</label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div><br>
+                                                    <div class="row mt-5">
+                                                        {% for facility in facility %}
+                                                        <div class="col-6
+                                                                    col-sm-6
+                                                                    col-md-3">
+                                                            <input type="checkbox" id="{{facility.facility_name}}" value="{{facility.id}}" name="facility_id">
+                                                            <label for="{{facility.facility_name}}" class="me-30"> <span> <img
+                                                                        src="/static/realstateapp/media/{{facility.facility_icon}}"
+                                                                        style="width:20px;height:15px;" alt=""> </span>
+                                                                {{facility.facility_name}}</label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12
+                                                            col-sm-6 col-md-4
+                                                            mt-3">
+                                                    <button type="submit" class="btn
+                                                                btn-primary">
+                                                        <i class="ti-save-alt"></i>
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                               
+                                
+
+                                </div>
+
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- /.content -->
+			</div>
+		</div>
+		<!-- /.content-wrapper -->
+	</div>
+</body>
+
+
+
+<script>
+    var photo_row = 0;
+    function propertyphoto() {
+        html = '<tr id="photo-row' + photo_row + '">';
+        html += '<td style="width: 100%;"> <input type="file" name="property_photo" value="{{list.property_photo}}" placeholder="image" class="form-control">  </td>';
+        html += '<td><p class="badge badge-danger" onclick="$(\'#photo-row' + photo_row + '\').remove();"><i class="fa fa-trash"></i> Delete</p></td>';
+        html += '</tr>';
+
+        $('#propertyphoto tbody').append(html);
+
+        photo_row++;
+    }
+</script>
+
+<script>
+    var video_row = 0;
+    function propertyvideo() {
+        html = '<tr id="video-row' + video_row + '">';
+        html += '<td style="width: 100%;"> <input type="text" name="property_video_rul" value="{{list.property_video_rul}}" placeholder="video url" class="form-control">  </td>';
+        html += '<td><p class="badge badge-danger" onclick="$(\'#video-row' + video_row + '\').remove();"><i class="fa fa-trash"></i> Delete</p></td>';
+        html += '</tr>';
+
+        $('#propertyvideo tbody').append(html);
+
+        video_row++;
+    }
+</script>
+
+<script>
+    var ownership_row = 0;
+    function ownership() {
+        html = '<tr id="ownership-row' + ownership_row + '">';
+        html += '<td style="width: 50%;"> <input type="text" name="property_owner_name" value="{{list.property_owner_name}}" placeholder="owner name" class="form-control">  </td>';
+        html += '<td style="width: 50%;"> <input type="text" name="property_ownership" value="{{list.property_ownership}}" placeholder="ownership" class="form-control">  </td>';
+        html += '<td><p class="badge badge-danger" onclick="$(\'#ownership-row' + ownership_row + '\').remove();"><i class="fa fa-trash"></i> Delete</p></td>';
+        html += '</tr>';
+        $('#ownership tbody').append(html);
+
+        ownership_row++;
+    }
+</script>
+
+
+<script>
+    function show(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#stImg').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script>
+    function rephoto(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#prophoto').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script>
+    function photo(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#probanner').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script>
+    function plan(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#florplan').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<script>
+    function brochure(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#brochureid').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+<script>
+    function pro_photo(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#pro_photo').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+
+{% endblock %}
