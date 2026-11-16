@@ -40,7 +40,7 @@
 
           <!-- step 1 -->
           <div data-pane="0">
-            <h3 style="font-size:1.15rem">What would you like to do?</h3>
+            <h3 style="font-size:1.15rem">{% t 'bk.what' 'What would you like to do?' %}</h3>
             <div class="choice-grid mt-2">
               <label class="choice"><input type="radio" name="kind" value="visit" checked><span>{% icon 'i-calendar' %} Site visit</span></label>
               <label class="choice"><input type="radio" name="kind" value="reserve"><span>{% icon 'i-key' %} Reserve a unit</span></label>
@@ -92,7 +92,7 @@
               </div>
             </div>
             <div class="row mt-3">
-              <button class="btn btn--copper" type="button" data-next>Continue {% icon 'i-arrow-right' %}</button>
+              <button class="btn btn--copper" type="button" data-next>{% t 'cta.continue' 'Continue' %} {% icon 'i-arrow-right' %}</button>
             </div>
           </div>
 
@@ -120,7 +120,7 @@
             <label class="fopt mt-2"><input type="checkbox" data-required> I agree to be contacted about this enquiry.</label>
             <div class="row mt-3">
               <button class="btn btn--ghost" type="button" data-prev>{% icon 'i-arrow-left' %} Back</button>
-              <button class="btn btn--copper" type="button" data-next data-validate>Review {% icon 'i-arrow-right' %}</button>
+              <button class="btn btn--copper" type="button" data-next data-validate>{% t 'cta.review' 'Review' %} {% icon 'i-arrow-right' %}</button>
             </div>
           </div>
 

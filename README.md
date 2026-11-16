@@ -30,12 +30,38 @@ Land-sharing breakdown (owner/developer split + delivery schedule) · Project vi
 Project profile & brochure · Social channels & sharing (Facebook, WhatsApp, X,
 LinkedIn, Pinterest, email, copy link).
 
+## Bilingual (English / বাংলা)
+
+The header carries an `EN | বাংলা` switch; the choice is stored in a cookie and
+applied server-side on the return trip, so there is no flash of the wrong
+language. Bengali strings live in `website/i18n_bn.py` and are pulled in with
+`{% t 'key' 'English fallback' %}` — a missing key falls back to the English
+text, never to an empty string.
+
+The bundled **Hind Siliguri** webfont (Bengali + Latin, 6 woff2 files, ~270 KB)
+is served from the app itself, so Bengali renders correctly with no CDN. It
+also sits at the end of the Latin stacks, which is what makes the `৳` symbol
+render properly while the UI is still in English. In Bengali mode the type
+stack switches, line-height opens up to 1.8 and heading tracking relaxes.
+
+## Dark & light theme
+
+A `data-theme` attribute on `<html>` drives a token override block; every
+colour in the stylesheet resolves through semantic tokens (`--surface`,
+`--on-surface`, `--inverse`, `--edge`, …) so the whole site flips without
+duplicating component rules. The toggle lives in the header and the mobile
+drawer, writes both `localStorage` (instant, pre-paint) and a cookie (so the
+server renders the right theme on the first byte).
+
 ## Design language
 
 Warm editorial architectural theme, no CSS framework and no external CDN calls
 (works fully offline):
 
-* Ink `#0c1f26`, paper `#fbf9f5`, copper `#b3742f`, moss `#3d5a4c`.
+* Ink `#0c1f26`, paper `#fbf9f5`, copper `#b3742f`, moss `#3d5a4c` — plus a
+  parallel dark palette (`#0b1a1f` ground, `#11252b` surfaces, `#cf8f45` copper).
+* Footer sits on a darkened full-bleed photograph (`footer-tower.jpg`), scrimmed
+  well past the page heroes so the link columns keep AA contrast.
 * Instrument-Serif-style display type with an italic copper accent for the hero;
   a Manrope-style geometric sans for UI and body.
 * Full inline SVG icon sprite (`templates/website/partials/_icons.html`) — 80+ icons.

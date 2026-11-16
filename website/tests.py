@@ -131,6 +131,37 @@ class WebsiteSmokeTests(TestCase):
         self.assertTrue(self.client.post(url, {'slug': self.project.slug}).json()['saved'])
         self.assertFalse(self.client.post(url, {'slug': self.project.slug}).json()['saved'])
 
+    def test_language_switch_swaps_ui_strings(self):
+        res = self.client.get(reverse('website:home'), HTTP_COOKIE='sti_lang=bn')
+        html = res.content.decode()
+        self.assertIn('lang="bn"', html)
+        self.assertIn('প্রকল্প', html)          # Projects
+        self.assertIn('ভিজিট বুক করুন', html)     # Book a visit
+        # English must come back when the cookie says so
+        res_en = self.client.get(reverse('website:home'), HTTP_COOKIE='sti_lang=en')
+        self.assertIn('lang="en"', res_en.content.decode())
+
+    def test_theme_switch_sets_attribute(self):
+        res = self.client.get(reverse('website:home'), HTTP_COOKIE='sti_theme=dark')
+        self.assertIn('data-theme="dark"', res.content.decode())
+        res = self.client.get(reverse('website:home'), HTTP_COOKIE='sti_theme=light')
+        self.assertIn('data-theme="light"', res.content.decode())
+
+    def test_set_prefs_cookie_and_redirect(self):
+        res = self.client.get(reverse('website:set_prefs'), {'lang': 'bn', 'next': '/projects/'})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], '/projects/')
+        self.assertEqual(res.cookies['sti_lang'].value, 'bn')
+
+    def test_set_prefs_rejects_offsite_next(self):
+        res = self.client.get(reverse('website:set_prefs'), {'lang': 'bn', 'next': 'https://evil.example/'})
+        self.assertEqual(res['Location'], '/')
+
+    def test_footer_uses_dark_image_band(self):
+        res = self.client.get(reverse('website:home'))
+        self.assertContains(res, 'site-footer has-image')
+        self.assertContains(res, 'footer-tower.jpg')
+
     def test_legacy_redirects(self):
         res = self.client.get('/browse-all-property/')
         self.assertEqual(res.status_code, 301)

@@ -257,12 +257,10 @@
 
         {% if features %}
         <div class="panel mt-3">
-          <h3 class="mb-2" style="font-size:1rem">Apartment features &amp; finishing</h3>
+          <h3 class="mb-2" style="font-size:1rem">{% t 'pd.features' 'Apartment features & finishing' %}</h3>
           <div class="grid g-3" style="gap:.4rem 1.25rem">
             {% for f in features %}
-            <div class="row" style="gap:.5rem;align-items:flex-start;font-size:.87rem">
-              <span style="color:var(--moss);flex:0 0 auto;margin-top:.2rem">{% icon 'i-check' %}</span> {{ f.name }}
-            </div>
+            <div class="feature-row">{% icon 'i-check' %}<span>{{ f.name }}</span></div>
             {% endfor %}
           </div>
         </div>

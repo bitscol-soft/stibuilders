@@ -36,7 +36,7 @@
       <div class="metric"><b>{{ location.rental_yield|default:"—" }}{% if location.rental_yield %}%{% endif %}</b><span>Rental yield</span></div>
       <div class="metric"><b>{{ location.demand_index|default:"—" }}</b><span>Demand index</span></div>
       <div class="metric"><b>{{ location.livability_score|default:"—" }}</b><span>Livability</span></div>
-      <div class="metric"><b>{% if location.commute_minutes %}{{ location.commute_minutes }}′{% else %}—{% endif %}</b><span>To Motijheel</span></div>
+      <div class="metric"><b>{% if location.commute_minutes %}{{ location.commute_minutes }} <small class="xs muted">min</small>{% else %}—{% endif %}</b><span>{% t 'sub.commute' 'Commute' %} · Motijheel</span></div>
     </div>
 
     <div class="grid g-2 mt-4" style="gap:clamp(1.5rem,4vw,3rem);align-items:start">
@@ -73,8 +73,12 @@
       <div class="stack">
         <div class="panel" style="padding:0;overflow:hidden">
           {% if map_src %}
-          <div class="map-panel" style="border:0;border-radius:0">
-            <iframe src="{{ map_src }}" title="Map of {{ location.name }}" loading="lazy" style="min-height:300px"></iframe>
+          <div class="map-panel" style="border:0;border-radius:0" data-map-panel>
+            <div class="map-canvas" style="height:100%;position:absolute;inset:0" aria-hidden="true"></div>
+            <iframe src="{{ map_src }}" title="Map of {{ location.name }}" loading="lazy"
+                    data-map-frame style="min-height:300px"></iframe>
+            <a class="map-fallback-link" href="https://maps.google.com/?q={{ location.latitude }},{{ location.longitude }}"
+               target="_blank" rel="noopener">{% icon 'i-map-pin' %} Open in Google Maps</a>
           </div>
           {% else %}
           <div class="map-shell" style="border:0;border-radius:0;min-height:300px">

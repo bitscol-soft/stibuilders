@@ -45,6 +45,10 @@
   $$('[data-reveal]').forEach((el, i) => {
     el.style.transitionDelay = (Math.min(i % 6, 5) * 60) + 'ms';
     if (io) io.observe(el); else el.classList.add('is-in');
+    // Safety net: a reveal must never leave content invisible. If the observer
+    // has not fired within two seconds (hidden tab, offscreen scroll container,
+    // bot/no-JS edge case) show it anyway.
+    setTimeout(() => el.classList.add('is-in'), 2000);
   });
 
   /* ---------- counters ---------- */
@@ -338,6 +342,72 @@
   $$('[data-row-link]').forEach(row => on(row, 'click', (e) => {
     if (e.target.closest('a, button')) return;
     window.location.href = row.dataset.rowLink;
+  }));
+
+  /* ---------- language + theme ---------- */
+  const rootEl = document.documentElement;
+  const THEME_KEY = 'sti_theme';
+
+  function applyTheme(mode) {
+    rootEl.setAttribute('data-theme', mode);
+    try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+  }
+
+  // Cookie is the server-side source of truth; localStorage keeps the choice
+  // instant on the next page load (and ahead of the cookie round trip).
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored && stored !== rootEl.getAttribute('data-theme')) {
+      rootEl.setAttribute('data-theme', stored);
+    }
+  } catch (e) {}
+
+  function syncThemeLabels() {
+    const dark = rootEl.getAttribute('data-theme') === 'dark';
+    $$('[data-theme-label]').forEach(el => { el.textContent = dark ? 'Light mode' : 'Dark mode'; });
+  }
+  function toggleTheme() {
+    const next = rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    document.cookie = 'sti_theme=' + next + ';path=/;max-age=31536000;samesite=lax';
+    syncThemeLabels();
+  }
+  $$('#themeToggle, [data-theme-toggle]').forEach(btn => on(btn, 'click', toggleTheme));
+  syncThemeLabels();
+
+  // Language links are real <a> tags so they work without JS; the handler only
+  // saves a round trip by setting the cookie first.
+  $$('[data-pref="lang"]').forEach(link => on(link, 'click', () => {
+    document.cookie = 'sti_lang=' + link.dataset.value + ';path=/;max-age=31536000;samesite=lax';
+  }));
+
+  /* ---------- map embeds ----------
+     A blocked embed (no network, CSP, ad blocker) still fires no error we can
+     catch reliably, so we treat "not loaded within 4s" as dead and let the
+     drawn map underneath stand in. */
+  $$('[data-map-frame]').forEach(frame => {
+    let settled = false;
+    const fail = () => {
+      if (settled) return;
+      settled = true;
+      frame.classList.add('is-dead');
+    };
+    frame.addEventListener('load', () => { settled = true; });
+    frame.addEventListener('error', fail);
+    setTimeout(() => { if (!settled) fail(); }, 4000);
+  });
+
+  /* open the search overlay from the drawer */
+  $$('[data-open-search]').forEach(btn => on(btn, 'click', () => {
+    const drawer = $('#drawer');
+    if (drawer) drawer.classList.remove('is-open');
+    document.body.classList.remove('no-scroll');
+    const search = $('#searchOverlay');
+    if (search) {
+      search.classList.add('is-open');
+      const input = search.querySelector('input[type="search"]');
+      if (input) setTimeout(() => input.focus(), 200);
+    }
   }));
 
   /* ---------- copy buttons ---------- */

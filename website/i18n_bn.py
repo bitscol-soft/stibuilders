@@ -1,0 +1,173 @@
+"""Bengali strings used by the site's own translation layer.
+
+Django's i18n catalogue needs compiled ``.mo`` files which cannot be built in
+this environment, so every translatable label lives in a plain dictionary and
+templates call ``{% t 'key' %}``. Missing keys fall back to the English string
+passed as the second argument, so the site never shows an empty label.
+"""
+
+BN = {
+    # ---- navigation ----
+    'nav.home': 'হোম',
+    'nav.projects': 'প্রকল্প',
+    'nav.locations': 'এলাকা',
+    'nav.about': 'আমাদের সম্পর্কে',
+    'nav.services': 'সেবা',
+    'nav.land': 'জমি ভাগাভাগি',
+    'nav.investors': 'বিনিয়োগকারী',
+    'nav.gallery': 'গ্যালারি',
+    'nav.news': 'সংবাদ',
+    'nav.contact': 'যোগাযোগ',
+    'nav.book': 'ভিজিট বুক করুন',
+    'nav.saved': 'সংরক্ষিত',
+    'nav.search': 'খুঁজুন',
+    'nav.menu': 'মেনু',
+    'nav.close': 'বন্ধ করুন',
+    'nav.compare': 'তুলনা করুন',
+    'nav.all_projects': 'সব প্রকল্প',
+    'nav.suburbs': 'এলাকাভিত্তিক বিশ্লেষণ',
+    'nav.faq': 'সাধারণ প্রশ্ন',
+
+    'cta.explore': 'প্রকল্প দেখুন',
+    'cta.story': 'আমাদের গল্প',
+    'cta.browse_all': 'সব দেখুন',
+    'cta.all_services': 'সব সেবা',
+    'cta.land_how': 'জমি ভাগাভাগি কীভাবে কাজ করে',
+    'cta.hotline': 'হটলাইনে কল করুন',
+    'cta.all_suburbs': 'সব এলাকা',
+    'cta.all_updates': 'সব সংবাদ',
+    'cta.see_inside': 'ভেতরে কী আছে দেখুন',
+    'home.eyebrow.builder': 'নির্মাতা',
+    'home.eyebrow.portfolio': 'প্রকল্প সম্ভার',
+    'home.eyebrow.comfort': 'প্রতিদিনের আরাম',
+    'home.eyebrow.land': 'জমি মালিকদের জন্য',
+    'home.eyebrow.journal': 'সংবাদ',
+
+    # ---- home page headings ----
+    'home.hero.line1': 'যে ঠিকানাগুলো',
+    'home.hero.line2': 'মূল্য ধরে রাখে।',
+    'home.quiet.line1': 'নীরব স্থাপত্য।',
+    'home.quiet.loud': 'স্পষ্ট',
+    'home.quiet.line2': 'মনোযোগ।',
+    'home.portfolio': 'কাছ থেকে দেখার মতো প্রকল্প',
+    'home.suburbs': 'শহর যেদিকে এগোচ্ছে',
+    'home.footprint.line1': 'চোদ্দো বছর ধরে ঢাকা,',
+    'home.footprint.line2': 'একটি করে প্রকল্প।',
+    'home.amenities': 'সুবিধাগুলো মানসূচিতে অন্তর্ভুক্ত',
+    'home.land.line1': 'জমি ভাগাভাগি,',
+    'home.land.line2': 'সহজ ভাষায়।',
+    'home.testimonials': 'এখানে থাকার অনুভূতি',
+    'home.journal': 'সংবাদ, হস্তান্তর ও মতামত',
+    'home.cta': 'সিদ্ধান্তের আগে সরেজমিনে দেখুন।',
+
+    'home.hero.sub': 'ঢাকাজুড়ে অ্যাপার্টমেন্ট, বাণিজ্যিক ফ্লোর ও জমি ভাগাভাগির প্রকল্প আমরা নকশা করি, নির্মাণ করি এবং হস্তান্তর করি — কাঠামোগত সততা, আলো-বাতাসের যত্ন আর উত্তর দেওয়া সেলস ডেস্ক নিয়ে।',
+    'home.hero.est': 'প্রতিষ্ঠিত',
+    'home.hero.years': 'বছর · ঢাকা, বাংলাদেশ',
+    # ---- stages ----
+    'stage.ongoing': 'চলমান',
+    'stage.upcoming': 'আসন্ন',
+    'stage.handover': 'হস্তান্তরিত',
+    'stage.ready': 'প্রস্তুত',
+    'stage.all': 'সব প্রকল্প',
+
+    # ---- common actions ----
+    'cta.view': 'বিস্তারিত দেখুন',
+    'cta.details': 'বিস্তারিত',
+    'cta.book': 'ভিজিট বুক করুন',
+    'cta.call': 'কল করুন',
+    'cta.enquire': 'জিজ্ঞাসা করুন',
+    'cta.brochure': 'ব্রোশিওর',
+    'cta.compare': 'তুলনা করুন',
+    'cta.save': 'সংরক্ষণ',
+    'cta.saved': 'সংরক্ষিত',
+    'cta.share': 'শেয়ার',
+    'cta.all': 'সব দেখুন',
+    'cta.back': 'ফিরে যান',
+    'cta.continue': 'পরবর্তী',
+    'cta.review': 'যাচাই করুন',
+    'cta.confirm': 'নিশ্চিত করুন',
+    'cta.submit': 'পাঠান',
+    'cta.next': 'পরবর্তী',
+    'cta.from': 'থেকে',
+
+    # ---- filters ----
+    'filter.title': 'ফিল্টার',
+    'filter.stage': 'অবস্থা',
+    'filter.budget': 'বাজেট',
+    'filter.size': 'আয়তন',
+    'filter.beds': 'বেডরুম',
+    'filter.type': 'ধরন',
+    'filter.suburb': 'এলাকা',
+    'filter.amenities': 'সুবিধা',
+    'filter.ownership': 'মালিকানা',
+    'filter.sort': 'সাজান',
+    'filter.reset': 'সব মুছুন',
+    'filter.apply': 'প্রয়োগ করুন',
+    'filter.results': 'প্রকল্প',
+
+    # ---- project detail ----
+    'pd.overview': 'সংক্ষিপ্ত',
+    'pd.building': 'ভবন',
+    'pd.apartments': 'ফ্ল্যাট',
+    'pd.amenities': 'সুবিধা',
+    'pd.location': 'অবস্থান',
+    'pd.design': 'নকশা',
+    'pd.milestones': 'অগ্রগতি',
+    'pd.landshare': 'জমি ভাগ',
+    'pd.videos': 'ভিডিও',
+    'pd.profile': 'প্রোফাইল',
+    'pd.social': 'যোগাযোগ',
+    'pd.features': 'ফ্ল্যাটের বৈশিষ্ট্য ও ফিনিশিং',
+    'pd.units': 'ফ্ল্যাট ও দাম',
+    'pd.size': 'আয়তন',
+    'pd.beds': 'বেডরুম',
+    'pd.baths': 'বাথরুম',
+    'pd.price': 'মূল্য',
+    'pd.status': 'অবস্থা',
+    'pd.available': 'খালি আছে',
+    'pd.location.landmarks': 'আশপাশে',
+
+    # ---- suburb / analytics ----
+    'sub.title': 'এলাকাভিত্তিক বিশ্লেষণ',
+    'sub.avg_price': 'গড় মূল্য / বর্গফুট',
+    'sub.growth': 'বার্ষিক বৃদ্ধি',
+    'sub.yield': 'ভাড়া আয়',
+    'sub.demand': 'চাহিদা',
+    'sub.livability': 'বসবাসযোগ্যতা',
+    'sub.commute': 'যাতায়াত',
+    'sub.schools': 'স্কুল',
+    'sub.hospitals': 'হাসপাতাল',
+
+    # ---- booking ----
+    'bk.title': 'অ্যাপয়েন্টমেন্ট বুক করুন',
+    'bk.what': 'আপনি কী করতে চান?',
+    'bk.visit': 'সাইট ভিজিট',
+    'bk.reserve': 'ইউনিট সংরক্ষণ',
+    'bk.callback': 'কল ব্যাক',
+    'bk.brochure': 'ব্রোশিওর চাই',
+    'bk.name': 'আপনার নাম',
+    'bk.phone': 'মোবাইল নম্বর',
+    'bk.project': 'প্রকল্প',
+    'bk.date': 'তারিখ',
+    'bk.time': 'সময়',
+    'bk.consent': 'আমাকে যোগাযোগ করার অনুমতি দিন।',
+    'bk.step1': 'আপনার পছন্দ',
+    'bk.step2': 'যোগাযোগ',
+    'bk.step3': 'নিশ্চিত করুন',
+
+    # ---- footer ----
+    'ft.explore': 'প্রকল্প',
+    'ft.company': 'প্রতিষ্ঠান',
+    'ft.contact': 'যোগাযোগ',
+    'ft.rights': 'সর্বস্বত্ব সংরক্ষিত।',
+    'ft.tagline': 'ঢাকার নির্ভরযোগ্য আবাসন উন্নয়নকারী।',
+
+    # ---- misc ----
+    'misc.loading': 'লোড হচ্ছে…',
+    'misc.empty': 'কিছু পাওয়া যায়নি',
+    'misc.yes': 'হ্যাঁ',
+    'misc.no': 'না',
+}
+
+# Bengali digits for prices / counts when the UI is in Bengali.
+BN_DIGITS = str.maketrans('0123456789', '০১২৩৪৫৬৭৮৯')

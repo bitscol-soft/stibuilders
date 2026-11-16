@@ -19,17 +19,18 @@
       <div data-hero-slide><img src="{% static 'website/img/hero-tower.jpg' %}" alt="An STI Builders development at dusk" fetchpriority="high"></div>
     {% endfor %}
   </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
 
   <div class="hero__inner">
     <div class="wrap-wide">
       <div class="hero__top">
         <div>
-          <span class="eyebrow on-dark" data-reveal>Est. {{ site.years_experience|default:12 }}+ years · Dhaka, Bangladesh</span>
-          <h1 class="display hero__title" data-reveal>Addresses that<br><em>hold their value.</em></h1>
-          <p class="hero__sub" data-reveal>We design, build and hand over apartments, commercial floors and land-sharing developments across Dhaka — with structural honesty, careful light, and a sales desk that answers.</p>
+          <span class="eyebrow on-dark" data-reveal>{% t 'home.hero.est' 'Est.' %} {{ site.years_experience|default:12 }}+ {% t 'home.hero.years' 'years · Dhaka, Bangladesh' %}</span>
+          <h1 class="display hero__title" data-reveal>{% t 'home.hero.line1' 'Addresses that' %}<br><em>{% t 'home.hero.line2' 'hold their value.' %}</em></h1>
+          <p class="hero__sub" data-reveal>{% t 'home.hero.sub' "We design, build and hand over apartments, commercial floors and land-sharing developments across Dhaka — with structural honesty, careful light, and a sales desk that answers." %}</p>
           <div class="row mt-3" data-reveal>
-            <a class="btn btn--copper btn--lg" href="{% url 'website:project_list' %}">Explore projects {% icon 'i-arrow-right' %}</a>
-            <a class="btn btn--light btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a site visit</a>
+            <a class="btn btn--copper btn--lg" href="{% url 'website:project_list' %}">{% t 'cta.explore' 'Explore projects' %} {% icon 'i-arrow-right' %}</a>
+            <a class="btn btn--light btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} {% t 'cta.book' 'Book a site visit' %}</a>
           </div>
         </div>
 
@@ -126,12 +127,12 @@
   <div class="wrap-wide">
     <div class="grid g-2" style="align-items:center;gap:clamp(2rem,5vw,4rem)">
       <div data-reveal>
-        <span class="eyebrow">The builder</span>
-        <h2 class="mt-2" style="max-width:18ch">Quiet buildings.<br><span class="serif" style="font-style:italic;color:var(--copper)">Loud</span> attention to detail.</h2>
+        <span class="eyebrow">{% t 'home.eyebrow.builder' 'The builder' %}</span>
+        <h2 class="mt-2" style="max-width:18ch">{% t 'home.quiet.line1' 'Quiet buildings.' %}<br><span class="serif" style="font-style:italic;color:var(--copper)">{% t 'home.quiet.loud' 'Loud' %}</span> {% t 'home.quiet.line2' 'attention to detail.' %}</h2>
         <p class="lead mt-2">STI Builders Limited is a multi-disciplinary house working across construction, land development, engineering and interiors. Every project starts with the site — its light, its road, its neighbours — and ends with a family collecting keys.</p>
         <p class="muted">From our first Uttara tower to lake-facing residences in Bashundhara, the brief has not changed: build what you would live in, document it honestly, and stand behind it after handover.</p>
         <div class="row mt-3">
-          <a class="btn btn--ghost" href="{% url 'website:about' %}">Our story {% icon 'i-arrow-right' %}</a>
+          <a class="btn btn--ghost" href="{% url 'website:about' %}">{% t 'cta.story' 'Our story' %} {% icon 'i-arrow-right' %}</a>
           <a class="link-arrow" href="{% url 'website:services' %}">Capabilities</a>
         </div>
       </div>
@@ -169,8 +170,8 @@
   <div class="wrap-wide">
     <div class="section-head">
       <div class="title">
-        <span class="eyebrow">Portfolio</span>
-        <h2>Projects worth a closer look</h2>
+        <span class="eyebrow">{% t 'home.eyebrow.portfolio' 'Portfolio' %}</span>
+        <h2>{% t 'home.portfolio' 'Projects worth a closer look' %}</h2>
         <p class="lead">Filter the full portfolio by stage, suburb, budget, size, bedrooms and amenities — or start with what our buyers shortlisted this month.</p>
       </div>
       <div class="tabs" data-tabs="featured">
@@ -208,7 +209,7 @@
     </div>
 
     <div class="center mt-4">
-      <a class="btn btn--ink btn--lg" href="{% url 'website:project_list' %}">Browse all {{ stage_counts.all }} projects {% icon 'i-arrow-right' %}</a>
+      <a class="btn btn--ink btn--lg" href="{% url 'website:project_list' %}">{% t 'cta.browse_all' 'Browse all' %} {{ stage_counts.all }} {% t 'nav.projects' 'projects' %} {% icon 'i-arrow-right' %}</a>
     </div>
   </div>
 </section>
@@ -218,11 +219,11 @@
   <div class="wrap-wide">
     <div class="section-head">
       <div class="title">
-        <span class="eyebrow">Suburb analytics</span>
-        <h2>Where the city is moving</h2>
+        <span class="eyebrow">{% t 'nav.suburbs' 'Suburb analytics' %}</span>
+        <h2>{% t 'home.suburbs' 'Where the city is moving' %}</h2>
         <p class="lead">Average price per sq ft, 12-month growth and buyer demand across the neighbourhoods we build in. Updated quarterly from our own sales desk.</p>
       </div>
-      <a class="link-arrow" href="{% url 'website:suburb_list' %}">All suburbs {% icon 'i-arrow-right' %}</a>
+      <a class="link-arrow" href="{% url 'website:suburb_list' %}">{% t 'cta.all_suburbs' 'All suburbs' %} {% icon 'i-arrow-right' %}</a>
     </div>
 
     <div class="grid g-4">
@@ -267,7 +268,7 @@
     <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:center">
       <div data-reveal>
         <span class="eyebrow on-dark">Our footprint</span>
-        <h2 class="mt-2">Fourteen years of Dhaka,<br>one project at a time.</h2>
+        <h2 class="mt-2">{% t 'home.footprint.line1' 'Fourteen years of Dhaka,' %}<br>{% t 'home.footprint.line2' 'one project at a time.' %}</h2>
         <p class="lead mt-2" style="color:#b7c2c4">From Uttara's metro corridor to the lakes of Bashundhara and the wide roads of Purbachal, our developments sit where families actually want to live — near schools, hospitals and transit.</p>
         <div class="grid g-2 mt-3" style="gap:1rem">
           {% for s in services|slice:":4" %}
@@ -283,7 +284,7 @@
           <div style="display:flex;gap:.7rem"><span style="color:var(--copper-2)">{% icon 'i-layers' %}</span><div><strong style="color:#fff">Land sharing</strong><span class="xs" style="color:#93a5a8">Transparent owner agreements</span></div></div>
           {% endfor %}
         </div>
-        <a class="btn btn--light mt-3" href="{% url 'website:services' %}">All services {% icon 'i-arrow-right' %}</a>
+        <a class="btn btn--light mt-3" href="{% url 'website:services' %}">{% t 'cta.all_services' 'All services' %} {% icon 'i-arrow-right' %}</a>
       </div>
       <div data-reveal>
         <div class="map-shell">
@@ -305,10 +306,10 @@
   <div class="wrap-wide">
     <div class="spread mb-3">
       <div>
-        <span class="eyebrow">Everyday comfort</span>
-        <h2 style="margin:.5rem 0 0;font-size:clamp(1.5rem,2.4vw,2rem)">Amenities included as standard</h2>
+        <span class="eyebrow">{% t 'home.eyebrow.comfort' 'Everyday comfort' %}</span>
+        <h2 style="margin:.5rem 0 0;font-size:clamp(1.5rem,2.4vw,2rem)">{% t 'home.amenities' 'Amenities included as standard' %}</h2>
       </div>
-      <a class="link-arrow" href="{% url 'website:project_list' %}">See what's inside {% icon 'i-arrow-right' %}</a>
+      <a class="link-arrow" href="{% url 'website:project_list' %}">{% t 'cta.see_inside' "See what's inside" %} {% icon 'i-arrow-right' %}</a>
     </div>
     <div class="amenity-grid">
       {% for a in amenities %}
@@ -335,8 +336,8 @@
         <img src="{% static 'website/img/proj-purbachal.jpg' %}" alt="Gated plot development from above" style="width:100%;height:100%;max-height:430px;object-fit:cover" loading="lazy">
       </div>
       <div data-reveal>
-        <span class="eyebrow">For land owners</span>
-        <h2 class="mt-2">Land sharing,<br>written plainly.</h2>
+        <span class="eyebrow">{% t 'home.eyebrow.land' 'For land owners' %}</span>
+        <h2 class="mt-2">{% t 'home.land.line1' 'Land sharing,' %}<br>{% t 'home.land.line2' 'written plainly.' %}</h2>
         <p class="lead mt-2">If you own land but not the capital to build, we develop it together. You keep a defined share of the finished apartments — with the breakdown, timeline and exit terms set out before signing, not after.</p>
         <ul class="check-list mt-2">
           <li>{% icon 'i-check' %} Owner and developer share fixed in the deed</li>
@@ -345,7 +346,7 @@
           <li>{% icon 'i-check' %} Monthly construction reporting from the site engineer</li>
         </ul>
         <div class="row mt-3">
-          <a class="btn btn--copper" href="{% url 'website:land_sharing' %}">How land sharing works {% icon 'i-arrow-right' %}</a>
+          <a class="btn btn--copper" href="{% url 'website:land_sharing' %}">{% t 'cta.land_how' 'How land sharing works' %} {% icon 'i-arrow-right' %}</a>
           <a class="link-arrow" href="{% url 'website:booking' %}?kind=land">Talk to our team</a>
         </div>
       </div>
@@ -359,7 +360,7 @@
     <div class="section-head">
       <div class="title">
         <span class="eyebrow">Owners</span>
-        <h2>What living here is like</h2>
+        <h2>{% t 'home.testimonials' 'What living here is like' %}</h2>
       </div>
       <div class="row">
         <div class="stars">{% for i in "12345"|make_list %}{% icon 'i-star' %}{% endfor %}</div>
@@ -391,8 +392,8 @@
 <section class="section">
   <div class="wrap-wide">
     <div class="section-head">
-      <div class="title"><span class="eyebrow">Journal</span><h2>News, handovers &amp; insight</h2></div>
-      <a class="link-arrow" href="{% url 'website:news' %}">All updates {% icon 'i-arrow-right' %}</a>
+      <div class="title"><span class="eyebrow">{% t 'home.eyebrow.journal' 'Journal' %}</span><h2>{% t 'home.journal' 'News, handovers & insight' %}</h2></div>
+      <a class="link-arrow" href="{% url 'website:news' %}">{% t 'cta.all_updates' 'All updates' %} {% icon 'i-arrow-right' %}</a>
     </div>
     <div class="grid g-3">
       {% for post in posts %}
@@ -419,12 +420,12 @@
       <div class="cta-band__inner">
         <div>
           <span class="eyebrow on-dark">Next step</span>
-          <h2 class="mt-2">Come see a site before you decide.</h2>
+          <h2 class="mt-2">{% t 'home.cta' 'Come see a site before you decide.' %}</h2>
           <p>Our sales desk runs guided visits seven days a week — including construction sites, so you can see what is behind the plaster.</p>
         </div>
         <div class="row">
-          <a class="btn btn--copper btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a visit</a>
-          <a class="btn btn--light btn--lg" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} Call the hotline</a>
+          <a class="btn btn--copper btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} {% t 'cta.book' 'Book a visit' %}</a>
+          <a class="btn btn--light btn--lg" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {% t 'cta.hotline' 'Call the hotline' %}</a>
         </div>
       </div>
     </div>

@@ -23,10 +23,10 @@
 
     <div class="tabs mt-3" style="border-bottom:1px solid var(--line);padding-bottom:0">
       <a class="tab {% if not active_filters.stage %}is-active{% endif %}" href="?" style="text-decoration:none">All <span class="xs muted">{{ stage_counts.all }}</span></a>
-      <a class="tab {% if active_filters.stage == 'ongoing' %}is-active{% endif %}" href="?stage=ongoing" style="text-decoration:none">Ongoing <span class="xs muted">{{ stage_counts.ongoing }}</span></a>
-      <a class="tab {% if active_filters.stage == 'upcoming' %}is-active{% endif %}" href="?stage=upcoming" style="text-decoration:none">Upcoming <span class="xs muted">{{ stage_counts.upcoming }}</span></a>
-      <a class="tab {% if active_filters.stage == 'ready' %}is-active{% endif %}" href="?stage=ready" style="text-decoration:none">Ready to move <span class="xs muted">{{ stage_counts.ready }}</span></a>
-      <a class="tab {% if active_filters.stage == 'handover' %}is-active{% endif %}" href="?stage=handover" style="text-decoration:none">Handed over <span class="xs muted">{{ stage_counts.handover }}</span></a>
+      <a class="tab {% if active_filters.stage == 'ongoing' %}is-active{% endif %}" href="?stage=ongoing" style="text-decoration:none">{% t 'stage.ongoing' 'Ongoing' %} <span class="xs muted">{{ stage_counts.ongoing }}</span></a>
+      <a class="tab {% if active_filters.stage == 'upcoming' %}is-active{% endif %}" href="?stage=upcoming" style="text-decoration:none">{% t 'stage.upcoming' 'Upcoming' %} <span class="xs muted">{{ stage_counts.upcoming }}</span></a>
+      <a class="tab {% if active_filters.stage == 'ready' %}is-active{% endif %}" href="?stage=ready" style="text-decoration:none">{% t 'stage.ready' 'Ready to move' %} <span class="xs muted">{{ stage_counts.ready }}</span></a>
+      <a class="tab {% if active_filters.stage == 'handover' %}is-active{% endif %}" href="?stage=handover" style="text-decoration:none">{% t 'stage.handover' 'Handed over' %} <span class="xs muted">{{ stage_counts.handover }}</span></a>
     </div>
   </div>
 </section>
@@ -58,10 +58,10 @@
           <button class="fgroup__head" type="button">Stage {% icon 'i-chevron-down' %}</button>
           <div class="fgroup__body">
             <label class="fopt"><input type="radio" name="stage" value="" {% if not active_filters.stage %}checked{% endif %}> Any stage</label>
-            <label class="fopt"><input type="radio" name="stage" value="ongoing" {% if active_filters.stage == 'ongoing' %}checked{% endif %}> Ongoing <span class="count">{{ stage_counts.ongoing }}</span></label>
-            <label class="fopt"><input type="radio" name="stage" value="upcoming" {% if active_filters.stage == 'upcoming' %}checked{% endif %}> Upcoming <span class="count">{{ stage_counts.upcoming }}</span></label>
-            <label class="fopt"><input type="radio" name="stage" value="ready" {% if active_filters.stage == 'ready' %}checked{% endif %}> Ready to move <span class="count">{{ stage_counts.ready }}</span></label>
-            <label class="fopt"><input type="radio" name="stage" value="handover" {% if active_filters.stage == 'handover' %}checked{% endif %}> Handed over <span class="count">{{ stage_counts.handover }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="ongoing" {% if active_filters.stage == 'ongoing' %}checked{% endif %}> {% t 'stage.ongoing' 'Ongoing' %} <span class="count">{{ stage_counts.ongoing }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="upcoming" {% if active_filters.stage == 'upcoming' %}checked{% endif %}> {% t 'stage.upcoming' 'Upcoming' %} <span class="count">{{ stage_counts.upcoming }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="ready" {% if active_filters.stage == 'ready' %}checked{% endif %}> {% t 'stage.ready' 'Ready to move' %} <span class="count">{{ stage_counts.ready }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="handover" {% if active_filters.stage == 'handover' %}checked{% endif %}> {% t 'stage.handover' 'Handed over' %} <span class="count">{{ stage_counts.handover }}</span></label>
           </div>
         </div>
 
@@ -163,20 +163,20 @@
     <!-- ============ RESULTS ============ -->
     <div>
       <div class="filter-bar" style="padding-top:0">
-        <button class="btn btn--ghost btn--sm filter-open-mobile" type="button" id="filterOpen">{% icon 'i-filter' %} Filters</button>
+        <button class="btn btn--ghost btn--sm filter-open-mobile" type="button" id="filterOpen">{% icon 'i-filter' %} {% t 'filter.title' 'Filters' %}</button>
         <div>
           <strong style="font-size:1.05rem">{{ total_found }} project{{ total_found|pluralize }}</strong>
           {% if total_found %}<span class="small muted"> · page {{ page }} of {{ total_pages }}</span>{% endif %}
         </div>
         <div class="spacer"></div>
-        <div class="segmented" role="group" aria-label="Layout">
-          <button type="button" data-view="grid" class="is-active" aria-label="Grid view">{% icon 'i-grid' %}</button>
-          <button type="button" data-view="list" aria-label="List view">{% icon 'i-list' %}</button>
+        <div class="segmented segmented--icon" role="group" aria-label="Layout">
+          <button type="button" data-view="grid" class="is-active" aria-label="Grid view" title="Grid view">{% icon 'i-grid' %}</button>
+          <button type="button" data-view="list" aria-label="List view" title="List view">{% icon 'i-list' %}</button>
         </div>
         <label class="xs muted" for="sort" style="margin-left:.35rem">Sort</label>
-        <select id="sort" class="input" style="width:auto;padding:.5rem .75rem;font-size:.82rem" onchange="location.href=this.value">
+        <select id="sort" class="input input--compact" onchange="location.href=this.value">
           {% for value, label in sort_options %}
-          <option value="?{{ query_string }}{% if query_string %}&{% endif %}sort={{ value }}" {% if active_filters.sort == value %}selected{% endif %}>{{ label }}</option>
+          <option value="{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}sort={{ value }}" {% if active_filters.sort == value %}selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
       </div>
@@ -229,9 +229,9 @@
         <div class="map-shell">
           <div class="map-canvas" id="listMap"></div>
           <div class="map-legend">
-            <span><i style="background:#2f7d5a"></i> Ongoing</span>
-            <span><i style="background:var(--copper)"></i> Upcoming</span>
-            <span><i style="background:#3b6ea5"></i> Handed over</span>
+            <span><i style="background:#2f7d5a"></i> {% t 'stage.ongoing' 'Ongoing' %}</span>
+            <span><i style="background:var(--copper)"></i> {% t 'stage.upcoming' 'Upcoming' %}</span>
+            <span><i style="background:#3b6ea5"></i> {% t 'stage.handover' 'Handed over' %}</span>
             <span><i style="background:#1f8a70"></i> Ready</span>
           </div>
         </div>

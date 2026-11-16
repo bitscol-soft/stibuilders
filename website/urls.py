@@ -33,4 +33,5 @@ urlpatterns = [
     path('faq/', views.faq, name='faq'),
     path('search/', views.search, name='search'),
     path('robots.txt', views.robots_txt, name='robots'),
+    path('prefs/', views.set_prefs, name='set_prefs'),
 ]

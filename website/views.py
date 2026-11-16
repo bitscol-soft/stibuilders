@@ -661,3 +661,32 @@ def robots_txt(request):
         f'Sitemap: {base}sitemap.xml',
     ]
     return HttpResponse('\n'.join(lines), content_type='text/plain')
+
+
+def set_prefs(request):
+    """Persist language / theme choice in a cookie and return to the page."""
+    from django.http import JsonResponse, HttpResponseRedirect
+    from django.utils.http import url_has_allowed_host_and_scheme
+    from .context_processors import LANG_COOKIE, THEME_COOKIE
+
+    nxt = request.POST.get('next') or request.GET.get('next') or '/'
+    if not url_has_allowed_host_and_scheme(nxt, allowed_hosts={request.get_host()},
+                                           require_https=request.is_secure()):
+        nxt = '/'
+
+    lang = request.POST.get('lang') or request.GET.get('lang')
+    theme = request.POST.get('theme') or request.GET.get('theme')
+
+    if request.headers.get('x-requested-with') == 'fetch':
+        if lang in ('en', 'bn'):
+            return JsonResponse({'lang': lang})
+        if theme in ('light', 'dark'):
+            return JsonResponse({'theme': theme})
+        return JsonResponse({'ok': False}, status=400)
+
+    response = HttpResponseRedirect(nxt)
+    if lang in ('en', 'bn'):
+        response.set_cookie(LANG_COOKIE, lang, max_age=60 * 60 * 24 * 365, samesite='Lax')
+    if theme in ('light', 'dark'):
+        response.set_cookie(THEME_COOKIE, theme, max_age=60 * 60 * 24 * 365, samesite='Lax')
+    return response

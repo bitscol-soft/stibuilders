@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from website import models as m
+from website.i18n_bn import BN, BN_DIGITS
 
 register = template.Library()
 
@@ -182,3 +183,30 @@ def stars(value):
 def stage_color(stage):
     return {'ongoing': '#2f7d5a', 'upcoming': '#b3742f',
             'handover': '#3b6ea5', 'ready': '#1f8a70'}.get(stage, '#0c1f26')
+
+
+# ---------------------------------------------------------------------------
+# language helpers
+# ---------------------------------------------------------------------------
+@register.simple_tag(takes_context=True)
+def t(context, key, default=''):
+    """Translate a UI label. Falls back to ``default`` then the key itself.
+
+    Usage:  {% t 'nav.projects' 'Projects' %}
+    """
+    if context.get('lang') != 'bn':
+        return default or key
+    return BN.get(key, default or key)
+
+
+@register.simple_tag(takes_context=True)
+def bn_num(context, value):
+    """Render digits in Bengali numerals when the UI is in Bengali."""
+    if context.get('lang') != 'bn':
+        return value
+    return str(value).translate(BN_DIGITS)
+
+
+@register.filter
+def bn_digits(value):
+    return str(value).translate(BN_DIGITS)

@@ -29,7 +29,7 @@
 
     {% if unit.features.all %}
     <div class="row" style="gap:.3rem">
-      {% for f in unit.features.all|slice:":3" %}<span class="chip xs" style="padding:.22rem .55rem">{{ f.name }}</span>{% endfor %}
+      {% for f in unit.features.all|slice:":3" %}<span class="chip">{{ f.name }}</span>{% endfor %}
     </div>
     {% endif %}
 
