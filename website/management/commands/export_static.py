@@ -259,6 +259,16 @@ class Command(BaseCommand):
         # 2. URLs that live inside JSON (the map payload) and inline styles are
         #    not attributes, so the pass above misses them; the client builds an
         #    <img src> from them at runtime and would hit the server root.
+        # JSON payloads (map pins, saved lists) are built into links by JS, so a
+        # bare "/projects/<slug>/" inside them would escape the export prefix.
+        def _prefix_json_route(match):
+            path = match.group(1)
+            if path.startswith(base + '/'):
+                return match.group(0)
+            return '"{}{}"'.format(base, path)
+
+        html = re.sub(r'"(/(?:projects|suburbs|services|news)/[^"\s]*)"',
+                      _prefix_json_route, html)
         for kind in ('media', 'static'):
             marker = '__ALREADY_PREFIXED_' + kind + '__'
             html = html.replace(f'"{base}/{kind}/', marker)
@@ -268,6 +278,17 @@ class Command(BaseCommand):
         for stage in ('ongoing', 'upcoming', 'ready', 'handover'):
             html = html.replace(f'{base}/projects/?stage={stage}',
                                 f'{base}/projects/{stage}/')
+        # In-page tabs render as ?stage=x (relative) or an empty action that
+        # posts back to the same URL. Neither does anything on a file server.
+        for stage in ('ongoing', 'upcoming', 'ready', 'handover'):
+            html = html.replace(f'href="?stage={stage}"',
+                                f'href="{base}/projects/{stage}/"')
+        # the "all projects" tab renders href="?" when no filter is applied
+        html = re.sub(r'href="[^"]*-(?:light|dark)-(?:en|bn)\.html\?"', 
+                      'href="{}/projects/"'.format(base), html)
+        html = html.replace('href="?"', 'href="{}/projects/"'.format(base))
+        # a filtered page's sort form would submit to the variant filename
+        html = re.sub(r'action="[^"]*-(light|dark)-(en|bn)\.html"', 'action=""', html)
         # 3. absolute site origin
         html = re.sub(r'https?://(127\.0\.0\.1|localhost)(:\d+)?', '', html)
         return html

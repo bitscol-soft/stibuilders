@@ -219,6 +219,7 @@ def project_list(request):
              'lng': float(p.map_longitude or p.location.longitude or 90.3795),
              'stage': p.stage_label, 'stageKey': p.stage, 'price': p.price_full,
              'location': p.location.name,
+             'url': p.get_absolute_url(),
              'image': p.cover_image.url if p.cover_image else ''}
             for p in projects
         ],

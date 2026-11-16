@@ -266,7 +266,7 @@
       var x = Math.max(3, Math.min(97, ((p.lng + 90.42) / lngR) * 100));
       var y = Math.max(2, Math.min(96, ((23.95 - p.lat) / latR) * 100));
       var a = document.createElement('a');
-      a.className = 'map-marker'; a.href = p.slug ? '/projects/' + p.slug + '/' : '#';
+      a.className = 'map-marker'; a.href = p.slug ? p.url : '#';
       a.style.left = x + '%'; a.style.top = y + '%';
       a.setAttribute('data-stage', p.stage);
       a.innerHTML = '<span class="map-marker__dot"></span><span class="map-marker__card">' +
