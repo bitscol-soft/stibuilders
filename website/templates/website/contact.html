@@ -1,0 +1,108 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Contact &amp; sales gallery — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Contact</span></nav>
+    <div class="spread mt-2" style="align-items:end">
+      <div>
+        <span class="eyebrow">Contact</span>
+        <h1 class="mt-2">Tell us what you need.</h1>
+        <p class="lead">A project adviser answers every enquiry — buying, land sharing, investment or a career. Weekdays 10 AM to 7 PM.</p>
+      </div>
+      <div class="row">
+        <a class="btn btn--copper" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+        <a class="btn btn--ghost" href="https://wa.me/{{ site.whatsapp|default:'8801923505050' }}" target="_blank" rel="noopener">{% icon 'i-whatsapp' %} WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-wide">
+    {% if sent %}
+    <div class="alert mb-3">{% icon 'i-check-circle' %}<div><strong>Thank you — your enquiry has reached our desk.</strong><p style="margin:.25rem 0 0">We respond within one business day. For anything urgent please call the hotline.</p></div></div>
+    {% endif %}
+    <div class="grid" style="grid-template-columns:minmax(0,1.3fr) 380px;gap:clamp(1.25rem,3vw,2.5rem);align-items:start">
+      <div class="panel" style="padding:clamp(1.25rem,3vw,2rem)">
+        <h2 style="font-size:1.35rem">Send an enquiry</h2>
+        <form method="post" action="{% url 'website:contact' %}">
+          {% csrf_token %}
+          <div class="form-grid mt-2">
+            <div class="field"><label for="c-name">Your name</label><input id="c-name" type="text" name="name" required autocomplete="name"></div>
+            <div class="field"><label for="c-phone">Mobile</label><input id="c-phone" type="tel" name="phone" required autocomplete="tel"></div>
+            <div class="field"><label for="c-email">Email</label><input id="c-email" type="email" name="email" autocomplete="email"></div>
+            <div class="field">
+              <label for="c-subject">Subject</label>
+              <select id="c-subject" name="subject">
+                <option value="buy">Buying an apartment</option>
+                <option value="land">Land sharing proposal</option>
+                <option value="invest">Investment / NRI desk</option>
+                <option value="career">Career</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field span-2">
+              <label for="c-project">Project (optional)</label>
+              <select id="c-project" name="project">
+                <option value="">Not project specific</option>
+                {% for p in projects %}<option value="{{ p.pk }}">{{ p.name }} — {{ p.location.name }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="field span-2"><label for="c-message">Message</label><textarea id="c-message" name="message" placeholder="Budget, preferred area, family size, timeline…"></textarea></div>
+          </div>
+          <div class="spread mt-3">
+            <p class="form-note" style="margin:0">We never share your details with third parties.</p>
+            <button class="btn btn--copper" type="submit">{% icon 'i-send' %} Send enquiry</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="stack">
+        <div class="panel">
+          <h3 style="font-size:1rem">Sales gallery</h3>
+          <div class="footer-contact mt-2" style="font-size:.88rem">
+            <div>{% icon 'i-map-pin' %}<span>{{ site.address|default:"House 41 (Flat A2), Sonargaon Janapath, Sector 12, Uttara, Dhaka 1230" }}</span></div>
+            <div>{% icon 'i-phone' %}<span><a href="tel:{{ site.phone }}">{{ site.phone }}</a>{% if site.phone_2 %}<br><a href="tel:{{ site.phone_2 }}">{{ site.phone_2 }}</a>{% endif %}</span></div>
+            <div>{% icon 'i-mail' %}<span><a href="mailto:{{ site.email }}">{{ site.email|default:"info@stibuilderslimited.com" }}</a></span></div>
+            <div>{% icon 'i-clock' %}<span>{{ site.office_hours|default:"Sat – Thu · 10:00 AM – 7:00 PM" }}</span></div>
+          </div>
+        </div>
+        <div class="panel panel--ink">
+          <h3 style="font-size:1rem">Book instead of writing</h3>
+          <p class="small" style="color:#b7c2c4">Pick a slot and we will meet you at the site or the gallery.</p>
+          <a class="btn btn--copper btn--sm btn--block" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a site visit</a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="panel mt-3" style="padding:0;overflow:hidden">
+      {% if site.map_embed_url %}
+      <iframe src="{{ site.map_embed_url }}" title="Sales gallery location" loading="lazy" style="width:100%;height:380px;border:0"></iframe>
+      {% else %}
+      <iframe src="https://maps.google.com/maps?q=Sector+12+Uttara+Dhaka&z=15&output=embed" title="Sales gallery location" loading="lazy" style="width:100%;height:380px;border:0"></iframe>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if faqs %}
+<section class="section paper2 tight">
+  <div class="wrap-wide">
+    <h2 style="font-size:1.4rem">Before you write — quick answers</h2>
+    <div class="acc mt-2" data-single="true">
+      {% for f in faqs %}
+      <div class="acc__item">
+        <button class="acc__head" type="button" aria-expanded="false">{{ f.question }} {% icon 'i-plus' %}</button>
+        <div class="acc__body">{{ f.answer|safe }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <a class="link-arrow mt-3" href="{% url 'website:faq' %}">All FAQs {% icon 'i-arrow-right' %}</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

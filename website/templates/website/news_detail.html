@@ -1,0 +1,42 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ post.title }} — {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ post.excerpt }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide" style="max-width:900px">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><a href="{% url 'website:news' %}">News</a><span>/</span><span>{{ post.get_kind_display }}</span></nav>
+    <span class="eyebrow mt-2" style="display:inline-flex">{{ post.get_kind_display }}</span>
+    <h1 class="display mt-2" style="font-size:clamp(1.9rem,4vw,3rem)">{{ post.title }}</h1>
+    <p class="muted small">{{ post.published_at|date:"j F Y" }} · {{ post.read_minutes }} min read{% if post.project %} · {{ post.project.name }}{% endif %}</p>
+  </div>
+</section>
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-narrow">
+    {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}" class="rounded mb-3" style="width:100%" loading="lazy">{% endif %}
+    <div class="panel"><div style="font-size:1rem;line-height:1.75">{{ post.body|safe }}</div></div>
+    <div class="spread mt-3">
+      <a class="btn btn--ghost btn--sm" href="{% url 'website:news' %}">{% icon 'i-arrow-left' %} All updates</a>
+      <div class="share-row">
+        <button type="button" data-share="facebook" data-url="{{ request.build_absolute_uri }}" data-title="{{ post.title }}" aria-label="Share on Facebook">{% icon 'i-facebook' %}</button>
+        <button type="button" data-share="whatsapp" data-url="{{ request.build_absolute_uri }}" data-title="{{ post.title }}" aria-label="Share on WhatsApp">{% icon 'i-whatsapp' %}</button>
+        <button type="button" data-share="copy" data-url="{{ request.build_absolute_uri }}" aria-label="Copy link">{% icon 'i-link' %}</button>
+      </div>
+    </div>
+  </div>
+</section>
+{% if others %}
+<section class="section paper2 tight">
+  <div class="wrap-wide">
+    <h2 style="font-size:1.3rem">More from the journal</h2>
+    <div class="grid g-3 mt-2">
+      {% for p in others %}
+      <article class="post-card"><time>{{ p.published_at|date:"j M Y" }}</time><h3 style="font-size:1rem"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3></article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

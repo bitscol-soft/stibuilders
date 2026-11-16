@@ -1,0 +1,46 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Gallery — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Gallery</span></nav>
+    <div class="spread mt-2" style="align-items:end">
+      <div>
+        <span class="eyebrow">Gallery</span>
+        <h1 class="mt-2">Sites, slabs and finished rooms</h1>
+        <p class="lead">{{ total }} image{{ total|pluralize }} — construction progress, handovers, interiors and our community work.</p>
+      </div>
+    </div>
+    <div class="tabs mt-3" data-tabs="gallery">
+      <a class="tab {% if not active_group %}is-active{% endif %}" href="{% url 'website:gallery' %}">All</a>
+      {% for value, label in groups %}
+      <a class="tab {% if active_group == value %}is-active{% endif %}" href="?group={{ value }}">{{ label }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="gal-grid">
+      {% for img in images %}
+      <a href="{{ img.image.url }}" data-lightbox="gallery" data-caption="{{ img.caption }}">
+        <img src="{{ img.image.url }}" alt="{{ img.caption|default:'STI Builders gallery image' }}" loading="lazy">
+        {% if img.caption %}<figcaption>{{ img.caption }}</figcaption>{% endif %}
+      </a>
+      {% empty %}
+      <div class="empty" style="grid-column:1/-1">{% icon 'i-image' %}<h3>Gallery is being curated</h3><p class="muted">Photographs from our sites will be published here shortly.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close">{% icon 'i-x' %}</button>
+  <button class="lightbox__nav prev" id="lightboxPrev" type="button" aria-label="Previous">{% icon 'i-chevron-left' %}</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox__nav next" id="lightboxNext" type="button" aria-label="Next">{% icon 'i-chevron-right' %}</button>
+  <div class="lightbox__caption" id="lightboxCaption"></div>
+</div>
+{% endblock %}

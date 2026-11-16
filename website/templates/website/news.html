@@ -1,0 +1,47 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}News &amp; insights — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>News</span></nav>
+    <div class="spread mt-2" style="align-items:end">
+      <div>
+        <span class="eyebrow">Journal</span>
+        <h1 class="mt-2">News, handovers &amp; insight</h1>
+        <p class="lead">Construction milestones, delivery announcements and plain-language notes on buying property in Dhaka.</p>
+      </div>
+    </div>
+    <div class="tabs mt-3">
+      <a class="tab {% if not active_kind %}is-active{% endif %}" href="{% url 'website:news' %}">All</a>
+      {% for value, label in kinds %}
+      <a class="tab {% if active_kind == value %}is-active{% endif %}" href="?kind={{ value }}">{{ label }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="grid g-3">
+      {% for post in posts %}
+      <article class="post-card card card--hover" data-reveal style="padding-bottom:1rem">
+        <a href="{{ post.get_absolute_url }}">
+          {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}" loading="lazy">
+          {% else %}<img src="{% static 'website/img/proj-dhanmondi.jpg' %}" alt="" loading="lazy">{% endif %}
+        </a>
+        <div style="padding:0 1rem">
+          <time datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min</time>
+          <h3 class="mt-1"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+          <p>{{ post.excerpt|truncatechars:140 }}</p>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty" style="grid-column:1/-1">{% icon 'i-file' %}<h3>Nothing published yet</h3><p class="muted">Updates will appear here as projects progress.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

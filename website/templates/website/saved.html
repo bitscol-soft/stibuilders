@@ -1,0 +1,32 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Saved projects — {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Saved</span></nav>
+    <span class="eyebrow mt-2" style="display:inline-flex">Shortlist</span>
+    <h1 class="mt-2">Your saved projects</h1>
+    <p class="lead">{{ projects|length }} project{{ projects|length|pluralize }} on this device. Send the shortlist to our desk and we will book the visits together.</p>
+  </div>
+</section>
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-wide">
+    {% if projects %}
+    <div class="grid g-3">{% for project in projects %}{% include 'website/includes/project_card.html' %}{% endfor %}</div>
+    <div class="row mt-4">
+      <a class="btn btn--copper" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book visits for this shortlist</a>
+      <a class="btn btn--ghost" href="{% url 'website:compare' %}?{% for p in projects %}p={{ p.slug }}&{% endfor %}">{% icon 'i-sliders' %} Compare them</a>
+    </div>
+    {% else %}
+    <div class="empty">
+      {% icon 'i-heart' %}
+      <h3>Nothing saved yet</h3>
+      <p class="muted">Tap the heart on any project card to keep it here. Your shortlist stays on this device.</p>
+      <a class="btn btn--ink btn--sm" href="{% url 'website:project_list' %}">Browse projects</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

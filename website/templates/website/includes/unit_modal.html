@@ -1,0 +1,17 @@
+{% load static website_extras %}
+<div style="display:grid;gap:1rem">
+  <div class="spread">
+    <h3 style="margin:0">{{ unit.label }}</h3>
+    <span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span>
+  </div>
+  {% if unit.floor_plan %}<img src="{{ unit.floor_plan.url }}" alt="{{ unit.label }}" style="width:100%;border-radius:10px">{% else %}<img src="{% static 'website/img/plans/floor-type-a.svg' %}" alt="" style="width:100%;border-radius:10px">{% endif %}
+  <dl class="spec-grid">
+    <div class="spec"><dt>Project</dt><dd>{{ project.name }}</dd></div>
+    <div class="spec"><dt>Size</dt><dd>{{ unit.size_label }}</dd></div>
+    <div class="spec"><dt>Bedrooms</dt><dd>{{ unit.beds }}</dd></div>
+    <div class="spec"><dt>Bathrooms</dt><dd>{{ unit.baths }}</dd></div>
+    <div class="spec"><dt>Price</dt><dd>{{ unit.price_display }}</dd></div>
+    <div class="spec"><dt>Floor</dt><dd>{{ unit.floor_no|default:"—" }}</dd></div>
+  </dl>
+  <a class="btn btn--copper" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">{% icon 'i-key' %} Reserve this unit</a>
+</div>

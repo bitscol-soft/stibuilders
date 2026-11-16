@@ -1,0 +1,42 @@
+{% load static website_extras %}
+<article class="pcard" data-reveal>
+  <div class="pcard__media">
+    <a href="{{ project.get_absolute_url }}" aria-label="{{ project.name }}">
+      {% if project.cover_image %}
+        <img src="{{ project.cover_image.url }}" alt="{{ project.name }}, {{ project.location.name }}" loading="lazy">
+        {% if project.night_image %}<img src="{{ project.night_image.url }}" alt="" aria-hidden="true" loading="lazy">{% endif %}
+      {% else %}
+        <img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="{{ project.name }}" loading="lazy">
+      {% endif %}
+    </a>
+    <div class="pcard__badges">
+      <span class="stage-pill" data-stage="{{ project.stage }}">{{ project.stage_label }}</span>
+      <button class="pcard__save" type="button" data-save="{{ project.slug }}" aria-pressed="false" aria-label="Save {{ project.name }}">
+        {% icon 'i-heart' %}
+      </button>
+    </div>
+    {% if project.stage == 'ongoing' or project.stage == 'upcoming' %}
+    <div class="pcard__progress" title="Construction progress {{ project.stage_progress }}%"><span style="width:{{ project.stage_progress }}%"></span></div>
+    {% endif %}
+  </div>
+
+  <div class="pcard__body">
+    <div class="pcard__kicker">{% icon 'i-map-pin' %} {{ project.location.name }} <span class="divider-dot">·</span> {{ project.category_label }}</div>
+    <h3 class="pcard__title"><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></h3>
+    {% if project.tagline %}<p class="pcard__tag">{{ project.tagline }}</p>{% endif %}
+    <div class="pcard__meta">
+      {% if project.bed_range %}<span>{% icon 'i-bed' %} {{ project.bed_range }}</span>{% endif %}
+      {% if project.size_range %}<span>{% icon 'i-area' %} {{ project.size_range }}</span>{% endif %}
+      {% if project.total_units %}<span>{% icon 'i-layers' %} {{ project.total_units }} units</span>{% endif %}
+      {% if project.handover_date %}<span>{% icon 'i-calendar' %} {{ project.handover_date|date:"M Y" }}</span>{% endif %}
+    </div>
+    <div class="pcard__foot">
+      <div class="pcard__price">
+        <small>Starting from</small>
+        {{ project.price_display }}
+        
+      </div>
+      <a class="pcard__go" href="{{ project.get_absolute_url }}" aria-label="View {{ project.name }}">{% icon 'i-arrow-right' %}</a>
+    </div>
+  </div>
+</article>

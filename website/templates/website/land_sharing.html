@@ -1,0 +1,93 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Land sharing with {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <img src="{% static 'website/img/proj-purbachal.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb"><a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>Land sharing</span></nav>
+    <h1 class="display mt-2" style="font-size:clamp(2.2rem,5vw,4rem)">You bring the land.<br><em>We build the rest.</em></h1>
+    <p class="lead" style="color:rgba(255,255,255,.82)">A land-sharing agreement where the owner's share, the timeline and the exit terms are written down before a single pile is driven.</p>
+    <div class="row mt-3">
+      <a class="btn btn--copper btn--lg" href="{% url 'website:contact' %}?subject=land">Submit your plot</a>
+      <a class="btn btn--light btn--lg" href="{% url 'website:booking' %}?kind=land">Talk to the land desk</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:start">
+      <div>
+        <span class="eyebrow">The model</span>
+        <h2 class="mt-1">Four steps, no surprises</h2>
+        <div class="steps-2 mt-3" style="grid-template-columns:1fr 1fr">
+          <div class="process"><h4>Site &amp; title review</h4><p>We inspect the plot, road access and title documents, then run a feasibility study.</p></div>
+          <div class="process"><h4>Share agreement</h4><p>The owner/developer split is fixed in the deed — typically 50:50 to 55:45 on net built area.</p></div>
+          <div class="process"><h4>Approvals &amp; build</h4><p>RAJUK plans, structural design and construction are ours to fund and deliver.</p></div>
+          <div class="process"><h4>Handover of share</h4><p>The owner's apartments are handed over first, with mutation and utility support.</p></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:1.05rem">Typical split</h3>
+        <div class="donut mt-2">
+          <div class="donut__ring" style="--p:52"><span>52%</span></div>
+          <div class="donut__legend">
+            <div><i style="background:var(--copper)"></i> Land owner</div>
+            <div><i style="background:#e6ddcd"></i> STI Builders</div>
+            <div class="xs muted">Of net sellable area. Varies by plot size, road width and FAR.</div>
+          </div>
+        </div>
+        <ul class="check-list mt-3">
+          <li>{% icon 'i-check-circle' %} No cash outlay from the land owner</li>
+          <li>{% icon 'i-check-circle' %} All approvals and construction costs borne by us</li>
+          <li>{% icon 'i-check-circle' %} Monthly progress reports with photographs</li>
+          <li>{% icon 'i-check-circle' %} Handover date written into the deed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if projects %}
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">Land-sharing portfolio</span><h2>Projects built on shared land</h2></div>
+      <a class="link-arrow" href="{% url 'website:project_list' %}?ownership=landshare">Filter land-sharing projects {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="grid g-3">
+      {% for project in projects %}{% include 'website/includes/project_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section class="section">
+  <div class="wrap-wide" style="max-width:900px">
+    <span class="eyebrow">Land owner FAQ</span>
+    <h2 class="mt-1">The questions land owners ask us</h2>
+    <div class="acc mt-2">
+      {% for f in faqs %}
+      <div class="acc__item"><button class="acc__head" type="button" aria-expanded="false">{{ f.question }} {% icon 'i-plus' %}</button><div class="acc__body">{{ f.answer|safe }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="cta-band">
+      <img src="{% static 'website/img/proj-purbachal.jpg' %}" alt="" loading="lazy">
+      <div class="cta-band__inner">
+        <div><span class="eyebrow on-dark">Free valuation</span><h2 class="mt-2">Send the plot details. We will do the maths.</h2><p>Location, size, road width and current use is enough to start. You will receive a development proposal with a share estimate in five working days.</p></div>
+        <div class="row"><a class="btn btn--copper btn--lg" href="{% url 'website:contact' %}?subject=land">Submit a plot</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

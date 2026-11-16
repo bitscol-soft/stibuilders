@@ -1,0 +1,26 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{% if q %}“{{ q }}” — search{% else %}Search{% endif %} — {{ site.company_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Search</span></nav>
+    <h1 class="mt-2">{% if q %}Results for “{{ q }}”{% else %}Search the portfolio{% endif %}</h1>
+    <p class="lead">{{ count }} project{{ count|pluralize }} matched.</p>
+    <form method="get" class="mt-2" style="display:flex;gap:.5rem;max-width:620px">
+      <input class="input" type="search" name="q" value="{{ q }}" placeholder="Project, suburb or road…">
+      <button class="btn btn--copper" type="submit">{% icon 'i-search' %}</button>
+    </form>
+  </div>
+</section>
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-wide">
+    <div class="grid g-3">
+      {% for project in projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+      <div class="empty" style="grid-column:1/-1">{% icon 'i-search' %}<h3>No matches</h3><p class="muted">Try a suburb like “Uttara” or a project name. Or browse everything.</p><a class="btn btn--ink btn--sm" href="{% url 'website:project_list' %}">All projects</a></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

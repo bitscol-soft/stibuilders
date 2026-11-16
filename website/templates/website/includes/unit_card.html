@@ -1,0 +1,49 @@
+{% load static website_extras %}
+<article class="unit-card" data-reveal>
+  <div class="unit-card__top">
+    <div>
+      <div class="xs muted" style="letter-spacing:.1em;text-transform:uppercase">{{ unit.get_unit_type_display }}</div>
+      <h4 style="margin:.15rem 0 0;font-size:1.05rem">{{ unit.title|default:unit.label }}</h4>
+      {% if unit.unit_no %}<div class="xs muted">Unit {{ unit.unit_no }}{% if unit.floor_no %} · Floor {{ unit.floor_no }}{% endif %}</div>{% endif %}
+    </div>
+    <span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span>
+  </div>
+
+  <div class="unit-card__plan">
+    {% if unit.floor_plan %}
+    <img src="{{ unit.floor_plan.url }}" alt="Plan for {{ unit.label }}" loading="lazy">
+    {% else %}
+    <img src="{% static 'website/img/plans/floor-type-a.svg' %}" alt="Indicative plan for {{ unit.label }}" loading="lazy">
+    {% endif %}
+  </div>
+
+  <div class="unit-card__body">
+    <div class="unit-attrs">
+      <span>{% icon 'i-area' %} {{ unit.size_label }}</span>
+      {% if unit.beds %}<span>{% icon 'i-bed' %} {{ unit.beds }}</span>{% endif %}
+      {% if unit.baths %}<span>{% icon 'i-bath' %} {{ unit.baths }}</span>{% endif %}
+      {% if unit.balconies %}<span>{% icon 'i-balcony' %} {{ unit.balconies }}</span>{% endif %}
+      {% if unit.parking %}<span>{% icon 'i-car' %} {{ unit.parking }}</span>{% endif %}
+      {% if unit.facing %}<span>{% icon 'i-compass' %} {{ unit.facing }}</span>{% endif %}
+    </div>
+
+    {% if unit.features.all %}
+    <div class="row" style="gap:.3rem">
+      {% for f in unit.features.all|slice:":3" %}<span class="chip xs" style="padding:.22rem .55rem">{{ f.name }}</span>{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="pcard__foot" style="padding-top:.6rem">
+      <div>
+        <div class="pcard__price" style="font-size:1.05rem">{{ unit.price_display }}</div>
+        {% if unit.price_per_sqft %}<div class="xs muted">৳ {{ unit.price_per_sqft|bdt }} / {{ unit.area_unit }}</div>{% endif %}
+      </div>
+      {% if unit.status == 'available' %}
+      <a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">Reserve</a>
+      {% else %}
+      <span class="btn btn--ghost btn--sm" style="pointer-events:none;opacity:.6">{{ unit.status_label }}</span>
+      {% endif %}
+    </div>
+    {% if unit.note %}<p class="xs muted" style="margin:0">{{ unit.note }}</p>{% endif %}
+  </div>
+</article>

@@ -1,0 +1,459 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ site.company_name }} — Apartments, Commercial &amp; Land Sharing in Dhaka{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<!-- ============ HERO ============ -->
+<section class="hero" aria-label="Featured developments">
+  <div class="hero__media">
+    {% for p in hero_projects|slice:":3" %}
+      <div data-hero-slide style="{% if not forloop.first %}opacity:0{% endif %}">
+        {% if p.cover_image %}
+          <img src="{{ p.cover_image.url }}" alt="{{ p.name }}{% if p.location %} in {{ p.location.name }}{% endif %}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        {% else %}
+          <img src="{% static 'website/img/hero-tower.jpg' %}" alt="An STI Builders development at dusk" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        {% endif %}
+      </div>
+    {% empty %}
+      <div data-hero-slide><img src="{% static 'website/img/hero-tower.jpg' %}" alt="An STI Builders development at dusk" fetchpriority="high"></div>
+    {% endfor %}
+  </div>
+
+  <div class="hero__inner">
+    <div class="wrap-wide">
+      <div class="hero__top">
+        <div>
+          <span class="eyebrow on-dark" data-reveal>Est. {{ site.years_experience|default:12 }}+ years · Dhaka, Bangladesh</span>
+          <h1 class="display hero__title" data-reveal>Addresses that<br><em>hold their value.</em></h1>
+          <p class="hero__sub" data-reveal>We design, build and hand over apartments, commercial floors and land-sharing developments across Dhaka — with structural honesty, careful light, and a sales desk that answers.</p>
+          <div class="row mt-3" data-reveal>
+            <a class="btn btn--copper btn--lg" href="{% url 'website:project_list' %}">Explore projects {% icon 'i-arrow-right' %}</a>
+            <a class="btn btn--light btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a site visit</a>
+          </div>
+        </div>
+
+        <aside class="hero__side" data-reveal>
+          {% with featured_projects.0 as hero %}
+          {% if hero %}
+          <div class="chip chip--glass" style="padding:.75rem .9rem;border-radius:14px">
+            <div style="display:grid;gap:.15rem">
+              <small style="font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;opacity:.75">Now showing</small>
+              <strong style="font-size:.95rem">{{ hero.name }}</strong>
+              <small style="font-size:.76rem;opacity:.8">{{ hero.location.name }} · {{ hero.stage_label }} · {{ hero.price_display }}</small>
+            </div>
+          </div>
+          {% endif %}
+          {% endwith %}
+          <div class="row" style="gap:.4rem">
+            <span class="chip chip--glass">{% icon 'i-check-circle' %} RAJUK approved</span>
+            <span class="chip chip--glass">{% icon 'i-shield' %} 10-yr structural warranty</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hero__bottom">
+        <div class="hero__ticker">
+          {% icon 'i-trending' %}
+          <span><strong>{{ stage_counts.ongoing }} ongoing</strong> · {{ stage_counts.upcoming }} upcoming · {{ stage_counts.handover }} handed over</span>
+        </div>
+        <div class="hero__dots" role="tablist" aria-label="Hero slides">
+          {% for p in hero_projects|slice:":3" %}
+          <button type="button" data-hero-dot aria-label="Show {{ p.name }}" {% if forloop.first %}class="is-active"{% endif %}></button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUICK SEARCH ============ -->
+<div class="wrap-wide quick-search">
+  <form class="quick-search__card" action="{% url 'website:project_list' %}" method="get" role="search">
+    <div class="quick-search__field">
+      <label for="qs-stage">Stage</label>
+      <select id="qs-stage" name="stage">
+        <option value="">Any stage</option>
+        <option value="ongoing">Ongoing</option>
+        <option value="upcoming">Upcoming</option>
+        <option value="ready">Ready to move</option>
+        <option value="handover">Handed over</option>
+      </select>
+    </div>
+    <div class="quick-search__field">
+      <label for="qs-suburb">Suburb</label>
+      <select id="qs-suburb" name="suburb">
+        <option value="">All of Dhaka</option>
+        {% for loc in locations %}<option value="{{ loc.slug }}">{{ loc.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="quick-search__field">
+      <label for="qs-type">Type</label>
+      <select id="qs-type" name="category">
+        <option value="">Any type</option>
+        <option value="residential">Residential</option>
+        <option value="commercial">Commercial</option>
+        <option value="mixed">Mixed use</option>
+        <option value="land">Plot &amp; land sharing</option>
+      </select>
+    </div>
+    <div class="quick-search__field">
+      <label for="qs-beds">Bedrooms</label>
+      <select id="qs-beds" name="beds">
+        <option value="">Any</option>
+        <option value="2">2+ beds</option>
+        <option value="3">3+ beds</option>
+        <option value="4">4+ beds</option>
+      </select>
+    </div>
+    <button class="quick-search__submit" type="submit" aria-label="Search projects">{% icon 'i-search' %}</button>
+  </form>
+</div>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee mt-4" aria-hidden="true">
+  <div class="marquee__track">
+    {% for i in "12"|make_list %}
+    <span>RAJUK approved drawings</span><span>In-house structural engineering</span>
+    <span>Handover on schedule</span><span>Land sharing specialists</span>
+    <span>Sub-urban lake-facing plots</span><span>10-year structural warranty</span>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ============ INTRO ============ -->
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="align-items:center;gap:clamp(2rem,5vw,4rem)">
+      <div data-reveal>
+        <span class="eyebrow">The builder</span>
+        <h2 class="mt-2" style="max-width:18ch">Quiet buildings.<br><span class="serif" style="font-style:italic;color:var(--copper)">Loud</span> attention to detail.</h2>
+        <p class="lead mt-2">STI Builders Limited is a multi-disciplinary house working across construction, land development, engineering and interiors. Every project starts with the site — its light, its road, its neighbours — and ends with a family collecting keys.</p>
+        <p class="muted">From our first Uttara tower to lake-facing residences in Bashundhara, the brief has not changed: build what you would live in, document it honestly, and stand behind it after handover.</p>
+        <div class="row mt-3">
+          <a class="btn btn--ghost" href="{% url 'website:about' %}">Our story {% icon 'i-arrow-right' %}</a>
+          <a class="link-arrow" href="{% url 'website:services' %}">Capabilities</a>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:.75rem" data-reveal>
+        <img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="Boutique apartment building facade" class="rounded" style="height:230px;object-fit:cover" loading="lazy">
+        <img src="{% static 'website/img/interior-living.jpg' %}" alt="Living room interior" class="rounded" style="height:230px;object-fit:cover;margin-top:1.75rem" loading="lazy">
+        <img src="{% static 'website/img/interior-kitchen.jpg' %}" alt="Kitchen interior" class="rounded" style="height:190px;object-fit:cover" loading="lazy">
+        <img src="{% static 'website/img/proj-bashundhara.jpg' %}" alt="Lake-facing residence" class="rounded" style="height:190px;object-fit:cover;margin-top:1.75rem" loading="lazy">
+      </div>
+    </div>
+
+    <div class="stat-strip mt-4" data-reveal>
+      <div class="stat">
+        <span class="stat__num"><span data-count="{{ site.years_experience|default:12 }}">0</span><sup>+</sup></span>
+        <span class="stat__label">Years building</span>
+      </div>
+      <div class="stat">
+        <span class="stat__num"><span data-count="{{ site.projects_delivered|default:24 }}">0</span><sup></sup></span>
+        <span class="stat__label">Projects delivered</span>
+      </div>
+      <div class="stat">
+        <span class="stat__num"><span data-count="{{ site.happy_families|default:1800 }}" data-format="comma">0</span><sup>+</sup></span>
+        <span class="stat__label">Families settled</span>
+      </div>
+      <div class="stat">
+        <span class="stat__num"><span data-count="{{ total_units|default:0 }}">0</span><sup></sup></span>
+        <span class="stat__label">Live apartment listings</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED PROJECTS ============ -->
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">Portfolio</span>
+        <h2>Projects worth a closer look</h2>
+        <p class="lead">Filter the full portfolio by stage, suburb, budget, size, bedrooms and amenities — or start with what our buyers shortlisted this month.</p>
+      </div>
+      <div class="tabs" data-tabs="featured">
+        <button class="tab is-active" data-tab="all" type="button">All</button>
+        <button class="tab" data-tab="ongoing" type="button">Ongoing</button>
+        <button class="tab" data-tab="upcoming" type="button">Upcoming</button>
+        <button class="tab" data-tab="handover" type="button">Handed over</button>
+      </div>
+    </div>
+
+    <div data-tab-scope="featured">
+      <div data-pane="all">
+        <div class="grid g-3">
+          {% for project in featured_projects %}{% include 'website/includes/project_card.html' %}{% endfor %}
+        </div>
+      </div>
+      <div data-pane="ongoing" hidden>
+        <div class="grid g-3">
+          {% for project in ongoing_projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+          <p class="muted">No ongoing projects published yet.</p>{% endfor %}
+        </div>
+      </div>
+      <div data-pane="upcoming" hidden>
+        <div class="grid g-3">
+          {% for project in upcoming_projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+          <p class="muted">Upcoming launches will be announced soon.</p>{% endfor %}
+        </div>
+      </div>
+      <div data-pane="handover" hidden>
+        <div class="grid g-3">
+          {% for project in handover_projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+          <p class="muted">Delivered portfolio coming soon.</p>{% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="center mt-4">
+      <a class="btn btn--ink btn--lg" href="{% url 'website:project_list' %}">Browse all {{ stage_counts.all }} projects {% icon 'i-arrow-right' %}</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOCATION / SUBURB INSIGHTS ============ -->
+<section class="section">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">Suburb analytics</span>
+        <h2>Where the city is moving</h2>
+        <p class="lead">Average price per sq ft, 12-month growth and buyer demand across the neighbourhoods we build in. Updated quarterly from our own sales desk.</p>
+      </div>
+      <a class="link-arrow" href="{% url 'website:suburb_list' %}">All suburbs {% icon 'i-arrow-right' %}</a>
+    </div>
+
+    <div class="grid g-4">
+      {% for loc in locations|slice:":4" %}
+      <a class="card card--hover" href="{% url 'website:suburb_detail' loc.slug %}" style="text-decoration:none" data-reveal>
+        <div style="height:150px;overflow:hidden">
+          {% if loc.cover_image %}<img src="{{ loc.cover_image.url }}" alt="{{ loc.name }}" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+          {% else %}<img src="{% static 'website/img/proj-uttara.jpg' %}" alt="{{ loc.name }}" style="width:100%;height:100%;object-fit:cover" loading="lazy">{% endif %}
+        </div>
+        <div class="card-body">
+          <div class="spread">
+            <h3 style="font-size:1.05rem;margin:0">{{ loc.name }}</h3>
+            <span class="chip chip--soft xs">{{ loc.project_total }} proj.</span>
+          </div>
+          <div class="small muted mt-1">{{ loc.zone|default:loc.city }}{% if loc.road_access %} · {{ loc.road_access }}{% endif %}</div>
+          <div class="spread mt-2" style="padding-top:.75rem;border-top:1px solid var(--line-soft)">
+            <div>
+              <div style="font-weight:800">৳ {{ loc.avg_price_per_sqft|default:"—" }}<span class="xs muted">/sft</span></div>
+              <div class="xs muted">Avg. price</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:800;color:{% if loc.price_growth_yoy %}#2f7d5a{% else %}var(--muted){% endif %}">{% if loc.price_growth_yoy %}+{{ loc.price_growth_yoy }}%{% else %}—{% endif %}</div>
+              <div class="xs muted">12-mo growth</div>
+            </div>
+          </div>
+          <div class="score mt-2">
+            <div class="spread xs muted"><span>Buyer demand</span><span>{{ loc.demand_index }}/100</span></div>
+            <div class="score__bar"><i style="width:{{ loc.demand_index }}%"></i></div>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <p class="muted">Suburb insights will appear here once published.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAP + WHAT WE DO ============ -->
+<section class="section ink" style="position:relative;overflow:hidden">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:center">
+      <div data-reveal>
+        <span class="eyebrow on-dark">Our footprint</span>
+        <h2 class="mt-2">Fourteen years of Dhaka,<br>one project at a time.</h2>
+        <p class="lead mt-2" style="color:#b7c2c4">From Uttara's metro corridor to the lakes of Bashundhara and the wide roads of Purbachal, our developments sit where families actually want to live — near schools, hospitals and transit.</p>
+        <div class="grid g-2 mt-3" style="gap:1rem">
+          {% for s in services|slice:":4" %}
+          <div style="display:flex;gap:.7rem;align-items:flex-start">
+            <span class="ico-round" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:var(--copper-2);flex:0 0 auto">{% icon s.icon %}</span>
+            <div>
+              <strong style="color:#fff;font-size:.92rem;display:block">{{ s.title }}</strong>
+              <span class="xs" style="color:#93a5a8">{{ s.summary|truncatechars:78 }}</span>
+            </div>
+          </div>
+          {% empty %}
+          <div style="display:flex;gap:.7rem"><span style="color:var(--copper-2)">{% icon 'i-building' %}</span><div><strong style="color:#fff">Apartment development</strong><span class="xs" style="color:#93a5a8">Land-to-handover delivery</span></div></div>
+          <div style="display:flex;gap:.7rem"><span style="color:var(--copper-2)">{% icon 'i-layers' %}</span><div><strong style="color:#fff">Land sharing</strong><span class="xs" style="color:#93a5a8">Transparent owner agreements</span></div></div>
+          {% endfor %}
+        </div>
+        <a class="btn btn--light mt-3" href="{% url 'website:services' %}">All services {% icon 'i-arrow-right' %}</a>
+      </div>
+      <div data-reveal>
+        <div class="map-shell">
+          <div class="map-canvas" id="homeMap"></div>
+          <div class="map-legend">
+            <span><i style="background:#2f7d5a"></i> Ongoing</span>
+            <span><i style="background:var(--copper)"></i> Upcoming</span>
+            <span><i style="background:#3b6ea5"></i> Handed over</span>
+          </div>
+        </div>
+        <p class="xs mt-1" style="color:#8fa1a4">Illustrative footprint map. Open a project page for the exact Google Maps location.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AMENITIES STRIP ============ -->
+<section class="section tight paper2">
+  <div class="wrap-wide">
+    <div class="spread mb-3">
+      <div>
+        <span class="eyebrow">Everyday comfort</span>
+        <h2 style="margin:.5rem 0 0;font-size:clamp(1.5rem,2.4vw,2rem)">Amenities included as standard</h2>
+      </div>
+      <a class="link-arrow" href="{% url 'website:project_list' %}">See what's inside {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="amenity-grid">
+      {% for a in amenities %}
+      <div class="amenity"><span class="ico">{% icon a.icon %}</span> {{ a.name }}</div>
+      {% empty %}
+      <div class="amenity"><span class="ico">{% icon 'i-car' %}</span> Covered parking</div>
+      <div class="amenity"><span class="ico">{% icon 'i-lift' %}</span> High-speed lifts</div>
+      <div class="amenity"><span class="ico">{% icon 'i-generator' %}</span> Generator + IPS</div>
+      <div class="amenity"><span class="ico">{% icon 'i-security' %}</span> 24/7 security</div>
+      <div class="amenity"><span class="ico">{% icon 'i-fire' %}</span> Fire fighting</div>
+      <div class="amenity"><span class="ico">{% icon 'i-roof' %}</span> Roof garden</div>
+      <div class="amenity"><span class="ico">{% icon 'i-water' %}</span> Water treatment</div>
+      <div class="amenity"><span class="ico">{% icon 'i-cctv' %}</span> CCTV coverage</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAND SHARING ============ -->
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:center">
+      <div class="rounded shadow" data-reveal>
+        <img src="{% static 'website/img/proj-purbachal.jpg' %}" alt="Gated plot development from above" style="width:100%;height:100%;max-height:430px;object-fit:cover" loading="lazy">
+      </div>
+      <div data-reveal>
+        <span class="eyebrow">For land owners</span>
+        <h2 class="mt-2">Land sharing,<br>written plainly.</h2>
+        <p class="lead mt-2">If you own land but not the capital to build, we develop it together. You keep a defined share of the finished apartments — with the breakdown, timeline and exit terms set out before signing, not after.</p>
+        <ul class="check-list mt-2">
+          <li>{% icon 'i-check' %} Owner and developer share fixed in the deed</li>
+          <li>{% icon 'i-check' %} RAJUK approval, drawings and supervision at our cost</li>
+          <li>{% icon 'i-check' %} Owner's share delivered first at handover</li>
+          <li>{% icon 'i-check' %} Monthly construction reporting from the site engineer</li>
+        </ul>
+        <div class="row mt-3">
+          <a class="btn btn--copper" href="{% url 'website:land_sharing' %}">How land sharing works {% icon 'i-arrow-right' %}</a>
+          <a class="link-arrow" href="{% url 'website:booking' %}?kind=land">Talk to our team</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">Owners</span>
+        <h2>What living here is like</h2>
+      </div>
+      <div class="row">
+        <div class="stars">{% for i in "12345"|make_list %}{% icon 'i-star' %}{% endfor %}</div>
+        <span class="small muted">Rated by more than {{ site.happy_families|default:1800 }} families</span>
+      </div>
+    </div>
+    <div class="grid g-3">
+      {% for t in testimonials %}
+      <figure class="quote-card" data-reveal>
+        <span class="mark">"</span>
+        <blockquote>{{ t.quote }}</blockquote>
+        <figcaption>
+          {% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.name }}" loading="lazy">
+          {% else %}<span style="width:42px;height:42px;border-radius:50%;background:var(--copper-soft);display:grid;place-items:center;font-weight:800;color:#8a5619">{{ t.name|first }}</span>{% endif %}
+          <div><cite>{{ t.name }}</cite><small>{{ t.role }}{% if t.project %} · {{ t.project.name }}{% endif %}</small></div>
+        </figcaption>
+      </figure>
+      {% empty %}
+      <figure class="quote-card"><span class="mark">"</span><blockquote>The handover was exactly on the date in the agreement, and the finishing was better than what we saw in the brochure.</blockquote><figcaption><div><cite>Flat owner</cite><small>Royal Tower, Uttara</small></div></figcaption></figure>
+      <figure class="quote-card"><span class="mark">"</span><blockquote>Their engineers walked me through every drawing before I signed the land-sharing deed. Nothing was hidden.</blockquote><figcaption><div><cite>Land owner</cite><small>Purbachal</small></div></figcaption></figure>
+      <figure class="quote-card"><span class="mark">"</span><blockquote>Two years in and the building still looks new. The maintenance team actually answers the phone.</blockquote><figcaption><div><cite>Resident</cite><small>Lake Drive Paradise</small></div></figcaption></figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+{% if posts %}
+<section class="section">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">Journal</span><h2>News, handovers &amp; insight</h2></div>
+      <a class="link-arrow" href="{% url 'website:news' %}">All updates {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="grid g-3">
+      {% for post in posts %}
+      <article class="post-card" data-reveal>
+        <a href="{{ post.get_absolute_url }}">
+          {% if post.cover %}<img src="{{ post.cover.url }}" alt="{{ post.title }}" loading="lazy">
+          {% else %}<img src="{% static 'website/img/proj-dhanmondi.jpg' %}" alt="{{ post.title }}" loading="lazy">{% endif %}
+        </a>
+        <time datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min read</time>
+        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+        <p>{{ post.excerpt|truncatechars:120 }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ============ CTA ============ -->
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="cta-band" data-reveal>
+      <img src="{% static 'website/img/hero-tower.jpg' %}" alt="" loading="lazy">
+      <div class="cta-band__inner">
+        <div>
+          <span class="eyebrow on-dark">Next step</span>
+          <h2 class="mt-2">Come see a site before you decide.</h2>
+          <p>Our sales desk runs guided visits seven days a week — including construction sites, so you can see what is behind the plaster.</p>
+        </div>
+        <div class="row">
+          <a class="btn btn--copper btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a visit</a>
+          <a class="btn btn--light btn--lg" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} Call the hotline</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ map_points|json_script:"homeMapData" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function(){
+    var data = JSON.parse(document.getElementById('homeMapData').textContent || '[]');
+    var root = document.getElementById('homeMap');
+    if (!root || !data.length) return;
+    var latR = 0.055, lngR = 0.085;
+    data.forEach(function(p){
+      var x = Math.max(3, Math.min(97, ((p.lng + 90.42) / lngR) * 100));
+      var y = Math.max(2, Math.min(96, ((23.95 - p.lat) / latR) * 100));
+      var a = document.createElement('a');
+      a.className = 'map-marker';
+      a.href = p.url;
+      a.style.left = x + '%'; a.style.top = y + '%';
+      a.setAttribute('data-stage', p.stageKey);
+      a.innerHTML = '<span class="map-marker__dot"></span><span class="map-marker__card">' +
+        (p.image ? '<img src="' + p.image + '" alt="">' : '') +
+        '<b>' + p.name + '</b><small>' + p.location + ' · ' + p.stage + ' · ' + p.price + '</small></span>';
+      root.appendChild(a);
+    });
+  })();
+</script>
+{% endblock %}

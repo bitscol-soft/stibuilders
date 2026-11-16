@@ -1,0 +1,62 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Investment desk — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb"><a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>Investors</span></nav>
+    <h1 class="display mt-2" style="font-size:clamp(2.2rem,5vw,4rem)">Buy for the yield,<br><em>stay for the address.</em></h1>
+    <p class="lead" style="color:rgba(255,255,255,.82)">Rental yield, price growth and exit timing for buyers treating Dhaka property as an asset — including non-resident Bangladeshis.</p>
+    <div class="row mt-3"><a class="btn btn--copper btn--lg" href="{% url 'website:contact' %}?subject=invest">Speak to the desk</a><a class="btn btn--light btn--lg" href="{% url 'website:suburb_list' %}">Suburb analytics</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-3">
+      <div class="value-card"><span class="ico-round">{% icon 'i-trending' %}</span><h3>Yield, not hype</h3><p>We quote gross rental yield from actual signed tenancies in our own buildings — not from market averages.</p></div>
+      <div class="value-card"><span class="ico-round">{% icon 'i-shield' %}</span><h3>NRI-friendly paperwork</h3><p>Power of attorney, bank remittance and mutation support handled by our documentation desk.</p></div>
+      <div class="value-card"><span class="ico-round">{% icon 'i-key' %}</span><h3>Managed letting</h3><p>Optional letting and maintenance service after handover, so the asset runs without you being in Dhaka.</p></div>
+    </div>
+
+    <div class="mt-4">
+      <div class="section-head">
+        <div class="title"><span class="eyebrow">Where to invest</span><h2>Suburb yield &amp; growth</h2></div>
+        <a class="link-arrow" href="{% url 'website:suburb_list' %}">All analytics {% icon 'i-arrow-right' %}</a>
+      </div>
+      <div class="panel" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="units-table">
+            <thead><tr><th>Suburb</th><th>Avg. price / sft</th><th>12-mo growth</th><th>Rental yield</th><th>Demand</th><th>Commute</th><th></th></tr></thead>
+            <tbody>
+              {% for loc in locations %}
+              <tr onclick="location.href='{% url 'website:suburb_detail' loc.slug %}'">
+                <td class="u-title">{{ loc.name }}<span class="u-sub">{{ loc.zone|default:loc.city }}</span></td>
+                <td>৳ {{ loc.avg_price_per_sqft|default:"—" }}</td>
+                <td>{% if loc.price_growth_yoy %}+{{ loc.price_growth_yoy }}%{% else %}—{% endif %}</td>
+                <td>{% if loc.rental_yield %}{{ loc.rental_yield }}%{% else %}—{% endif %}</td>
+                <td>{{ loc.demand_index }}/100</td>
+                <td>{% if loc.commute_minutes %}{{ loc.commute_minutes }} min{% else %}—{% endif %}</td>
+                <td>{% icon 'i-arrow-right' %}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="muted">Analytics will be published shortly.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head"><div class="title"><span class="eyebrow">Available allocations</span><h2>Projects open for investment</h2></div></div>
+    <div class="grid g-3">{% for project in projects %}{% include 'website/includes/project_card.html' %}{% endfor %}</div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Frequently asked questions — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>FAQs</span></nav>
+    <span class="eyebrow mt-2" style="display:inline-flex">Help centre</span>
+    <h1 class="mt-2">Questions we get asked most</h1>
+    <p class="lead">Buying, booking, land sharing, payments and handover — answered plainly. If yours is not here, call the hotline.</p>
+  </div>
+</section>
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-wide">
+    <div class="grid" style="grid-template-columns:minmax(0,1fr) 320px;gap:clamp(1.25rem,3vw,2.5rem);align-items:start">
+      <div class="stack" style="gap:2rem">
+        {% for group, items in groups.items %}
+        <div>
+          <h2 style="font-size:1.15rem">{{ group }}</h2>
+          <div class="acc mt-2">
+            {% for f in items %}
+            <div class="acc__item" id="faq-{{ f.pk }}">
+              <button class="acc__head" type="button" aria-expanded="false">{{ f.question }} {% icon 'i-plus' %}</button>
+              <div class="acc__body">{{ f.answer|safe }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty">{% icon 'i-info' %}<h3>FAQs are being compiled</h3><p class="muted">Meanwhile, our desk answers the phone from 10 AM to 7 PM, Saturday to Thursday.</p></div>
+        {% endfor %}
+      </div>
+      <aside class="stack">
+        <div class="panel panel--ink">
+          <h3 style="font-size:1rem">Still stuck?</h3>
+          <p class="small" style="color:#b7c2c4">A real person answers between 10 AM and 7 PM.</p>
+          <a class="btn btn--copper btn--sm btn--block" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+          <a class="btn btn--light btn--sm btn--block mt-1" href="{% url 'website:contact' %}">{% icon 'i-mail' %} Write to us</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

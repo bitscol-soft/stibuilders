@@ -1,0 +1,151 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}About {{ site.company_name }} — building in Dhaka since 2012{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <img src="{% static 'website/img/hero-tower.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>About</span>
+    </nav>
+    <h1 class="display mt-2" style="font-size:clamp(2.3rem,5.2vw,4.2rem)">We build what we<br><em>would live in.</em></h1>
+    <p class="lead" style="color:rgba(255,255,255,.82)">A multi-disciplinary house of construction, engineering, land development and interiors — rooted in Uttara, working across Dhaka.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:center">
+      <div>
+        <span class="eyebrow">Our story</span>
+        <h2 class="mt-1">Fourteen years,<br>one standard.</h2>
+        <p class="lead mt-2" style="font-size:1rem">{{ site.about_short|default:"STI Builders Limited began as a small construction team with a simple brief: build what you would live in, document it honestly, and stand behind it after handover. Today we deliver residential towers, commercial floors and land-sharing developments across Dhaka with an in-house design and engineering team." }}</p>
+        <p class="muted">Every project starts with the site. We walk the plot, study the light and the road, and only then draw. Buyers get the full drawing set, the approval papers and a named project adviser for the life of the building.</p>
+        <div class="row mt-3">
+          <a class="btn btn--ink" href="{% url 'website:project_list' %}">See our work</a>
+          <a class="btn btn--ghost" href="{% url 'website:contact' %}">Talk to us</a>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:.75rem">
+        <img src="{% static 'website/img/proj-dhanmondi.jpg' %}" alt="Completed residence" class="rounded" style="height:250px;object-fit:cover" loading="lazy">
+        <img src="{% static 'website/img/interior-bedroom.jpg' %}" alt="Interior detail" class="rounded" style="height:250px;object-fit:cover;margin-top:1.5rem" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tight paper2">
+  <div class="wrap-wide">
+    <div class="grid g-4">
+      <div class="value-card" data-reveal>
+        <span class="ico-round">{% icon 'i-ruler' %}</span>
+        <h3>Design first</h3>
+        <p>In-house architects and structural engineers work on the same drawing set, so what is drawn is what is buildable.</p>
+      </div>
+      <div class="value-card" data-reveal>
+        <span class="ico-round">{% icon 'i-shield' %}</span>
+        <h3>Compliance, not shortcuts</h3>
+        <p>RAJUK approval, BNBC 2020 seismic detailing and environment clearance on every project — paper on file before piling.</p>
+      </div>
+      <div class="value-card" data-reveal>
+        <span class="ico-round">{% icon 'i-users' %}</span>
+        <h3>One adviser, end to end</h3>
+        <p>The person who shows you the site is the person who answers your call during construction and after handover.</p>
+      </div>
+      <div class="value-card" data-reveal>
+        <span class="ico-round">{% icon 'i-clock' %}</span>
+        <h3>Handover on schedule</h3>
+        <p>Milestone reporting every month, and a handover date written into the agreement — not just the brochure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:start">
+      <div class="panel panel--ink" style="padding:clamp(1.5rem,3vw,2.25rem)">
+        <span class="eyebrow on-dark">Managing director</span>
+        <blockquote class="serif mt-2" style="font-size:1.4rem;line-height:1.35;margin:0">
+          “We began with the belief that a building is a promise. Every slab we cast, every tile we lay, is a line in that promise. Our buyers are our neighbours — most of them still live in our first buildings.”
+        </blockquote>
+        <footer class="mt-3" style="display:flex;align-items:center;gap:.8rem">
+          <span style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;color:var(--copper-2);font-weight:800">EA</span>
+          <div>
+            <strong style="color:#fff;display:block;font-size:.92rem">Md. Eshaq Ali</strong>
+            <span class="xs" style="color:#93a5a8">Managing Director, STI Builders Limited</span>
+          </div>
+        </footer>
+      </div>
+      <div>
+        <span class="eyebrow">By the numbers</span>
+        <h2 class="mt-1">A record you can audit</h2>
+        <div class="stat-strip mt-2" style="grid-template-columns:1fr 1fr">
+          <div class="stat"><span class="stat__num"><span data-count="{{ site.years_experience|default:12 }}">0</span><sup>+</sup></span><span class="stat__label">Years</span></div>
+          <div class="stat"><span class="stat__num"><span data-count="{{ site.projects_delivered|default:24 }}">0</span></span><span class="stat__label">Projects</span></div>
+          <div class="stat"><span class="stat__num"><span data-count="{{ site.happy_families|default:1800 }}" data-format="comma">0</span><sup>+</sup></span><span class="stat__label">Families</span></div>
+          <div class="stat"><span class="stat__num"><span data-count="100">0</span><sup>%</sup></span><span class="stat__label">RAJUK approved</span></div>
+        </div>
+        <ul class="check-list mt-3">
+          <li>{% icon 'i-check-circle' %} Delivered assets across Uttara, Bashundhara, Purbachal and the older Dhaka core</li>
+          <li>{% icon 'i-check-circle' %} Own engineering team — no outsourced supervision</li>
+          <li>{% icon 'i-check-circle' %} Post-handover maintenance desk for the first three years</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if leadership or team %}
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">Management</span><h2>The people behind the drawings</h2></div>
+      <a class="link-arrow" href="{% url 'website:contact' %}">Contact the team {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="grid g-4">
+      {% for m in team %}
+      <figure class="team-card" data-reveal>
+        {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">
+        {% else %}<img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="" loading="lazy">{% endif %}
+        <figcaption>
+          <cite>{{ m.name }}</cite>
+          <small>{{ m.designation }}</small>
+        </figcaption>
+      </figure>
+      {% empty %}
+      <p class="muted">Team profiles will be added soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">How we work</span><h2>From site visit to keys</h2></div>
+    </div>
+    <div class="steps-2">
+      <div class="process"><h4>Walk the site</h4><p>We start with the plot: road width, sun path, soil test and neighbours.</p></div>
+      <div class="process"><h4>Draw and approve</h4><p>Architectural and structural drawings, then RAJUK submission and clearance.</p></div>
+      <div class="process"><h4>Build and report</h4><p>Piling to finishing, with monthly milestone reports and site visits for buyers.</p></div>
+      <div class="process"><h4>Hand over</h4><p>Snag list, utilities, mutation support and a maintenance desk for three years.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="cta-band">
+      <img src="{% static 'website/img/proj-bashundhara.jpg' %}" alt="" loading="lazy">
+      <div class="cta-band__inner">
+        <div><span class="eyebrow on-dark">Meet us</span><h2 class="mt-2">Visit the sales gallery in Uttara.</h2><p>Walk through material samples, drawings and the payment plans of every live project — over a cup of cha.</p></div>
+        <div class="row"><a class="btn btn--copper btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a visit</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
