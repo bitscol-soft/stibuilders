@@ -11,6 +11,11 @@ db.sqlite3-journal
 staticfiles/
 media/
 *.log
+.env
+*.env
+# Database dumps must never be committed: they carry user tables and
+# password hashes, and GitHub Pages serves the repo root publicly.
+*.sql
 
 # OS / editors
 .DS_Store
