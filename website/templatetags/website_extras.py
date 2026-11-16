@@ -31,9 +31,13 @@ def icon(name, cls=''):
     """
     key = (name or '').strip().lower()
     symbol = key if key.startswith('i-') else ICON_ALIASES.get(key, 'i-sparkles')
+    # width/height attributes are a hard fallback: without them an <svg> with no
+    # CSS defaults to 300x150, which is what makes buttons and icons look
+    # enormous whenever the stylesheet is missing, stale or still loading.
+    # CSS rules override these attributes, so explicit sizes still win.
     return format_html(
-        '<svg class="ico-svg {}" aria-hidden="true" focusable="false">'
-        '<use href="#{}"></use></svg>', cls, symbol)
+        '<svg class="ico-svg {}" width="18" height="18" viewBox="0 0 24 24" '
+        'aria-hidden="true" focusable="false"><use href="#{}"></use></svg>', cls, symbol)
 
 
 @register.filter

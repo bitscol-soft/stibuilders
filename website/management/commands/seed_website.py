@@ -553,6 +553,141 @@ class Command(BaseCommand):
                             ('B', '3bed', 'Type B', 1520, 3, 3, 2, 1, 'South', 13400000, 'available'),
                             ('C', '3bed', 'Type C', 1950, 3, 3, 2, 2, 'South-East', 16800000, 'available')],
             ),
+            # ---- projects recovered from the developer's own published listing ----
+            # Names, stages, locations, apartment sizes and bed/bath counts below are
+            # taken from stibuilderslimited.com (Wayback, Apr 2024). Prices are modelled
+            # at the same 8,200-8,500 tk/sqft band as our other Uttara stock, because
+            # the legacy listing quoted figures that do not scale with its own sizes.
+            dict(
+                name='STI Rose Garden', slug='sti-rose-garden', loc='Uttara',
+                stage='ongoing', category='residential', ownership='freehold',
+                tagline='A quiet nine-storey garden address beside Sector 15, minutes from the metro.',
+                cover='real-orchid.jpg', night='real-orchid.jpg',
+                gallery=['real-orchid.jpg', 'interior-living.jpg', 'int-2.jpg', 'real-bandon.jpg'],
+                floors=9, basement=1, units=27, upf=3, lifts=2, stairs=2, parking=27,
+                land=6.0, facing='South', road='40 ft', plot='11', block='Sector 15',
+                architect='STI In-house Studio', structural='STI Engineering',
+                rajuk='RAJUK/23/STI/0118', handover=dt.date(2027, 3, 31), launch=dt.date(2023, 6, 1),
+                pct=64, price=13600000, ppsf=8290, size_from=1641, size_to=1641, beds_from=3, beds_to=3,
+                booking=1000000, featured=True, order=10,
+                amenities=['lift', 'generator', 'security', 'cctv', 'water', 'power', 'parking', 'roof'],
+                videos=[], land_owner=50, dev=50,
+                map=(23.8688, 90.3925),
+                desc=('<p>Rose Garden is a nine-storey, single-staircase building on a 40 ft road a '
+                      'short walk from Uttara Sector 15 and the metro corridor. Every floor holds '
+                      'three flats of 1,641 sq ft, each with three bedrooms, three bathrooms and a '
+                      'south-facing living room.</p>'
+                      '<p>The brief was simple: generous rooms, cross ventilation and no wasted '
+                      'circulation. Service cores are stacked on the north face so that no bedroom '
+                      'looks onto a kitchen shaft.</p>'),
+                concept='Three flats per floor, all south-facing, all 1,641 sq ft — one home type, done properly.',
+                milestones=[('Land purchase', -700, 100, True), ('RAJUK approval', -420, 100, True),
+                            ('Piling & structure', -260, 100, True), ('Finishing', 120, 45, False),
+                            ('Handover', 480, 0, False)],
+                units_data=[('A', '3bed', 'Type A — south facing', 1641, 3, 3, 2, 1, 'South', 13600000, 'available'),
+                            ('B', '3bed', 'Type B — corner', 1641, 3, 3, 2, 1, 'South-East', 14100000, 'available')],
+            ),
+            dict(
+                name='South Palace', slug='south-palace', loc='Uttara',
+                stage='ongoing', category='residential', ownership='freehold',
+                tagline='1,832 sq ft of south light, a block from the Sector 15 metro station.',
+                cover='real-complex.jpg', night='real-complex.jpg',
+                gallery=['real-complex.jpg', 'interior-kitchen.jpg', 'int-1.jpg'],
+                floors=10, basement=1, units=30, upf=3, lifts=2, stairs=2, parking=30,
+                land=7.2, facing='South', road='60 ft', plot='4', block='Sector 15',
+                architect='STI In-house Studio', structural='STI Engineering',
+                rajuk='RAJUK/23/STI/0126', handover=dt.date(2027, 9, 30), launch=dt.date(2023, 9, 1),
+                pct=48, price=15200000, ppsf=8295, size_from=1832, size_to=1832, beds_from=3, beds_to=3,
+                booking=1200000, featured=False, order=11,
+                amenities=['lift', 'generator', 'security', 'cctv', 'water', 'power', 'parking',
+                           'roof', 'fire'],
+                videos=[], land_owner=48, dev=52,
+                map=(23.8691, 90.3931),
+                desc=('<p>Ten storeys, three flats per landing, all 1,832 sq ft. The wider than '
+                      'usual frontage on a 60 ft road lets every living room take a full south '
+                      'wall, with the balconies carried on the structural frame rather than bolted '
+                      'on afterwards.</p>'),
+                concept='A south wall of glass for every living room, achieved by buying a wider plot.',
+                milestones=[('Land purchase', -800, 100, True), ('RAJUK approval', -450, 100, True),
+                            ('Piling', -200, 100, True), ('Structure', 180, 40, False),
+                            ('Handover', 600, 0, False)],
+                units_data=[('A', '3bed', 'Type A', 1832, 3, 3, 2, 1, 'South', 15200000, 'available'),
+                            ('B', '3bed', 'Type B', 1832, 3, 3, 2, 1, 'South-West', 15600000, 'sold')],
+            ),
+            dict(
+                name='STI Bandan Residences', slug='sti-bandan-residences', loc='Uttara',
+                stage='handover', category='residential', ownership='freehold',
+                tagline='Six buildings, one neighbourhood — our Bandon series near the first metro station.',
+                cover='real-bandon.jpg', night='real-bandon.jpg',
+                gallery=['real-bandon.jpg', 'real-bandon-1.jpg', 'interior-bedroom.jpg', 'int-3.jpg'],
+                floors=7, basement=0, units=21, upf=3, lifts=1, stairs=1, parking=18,
+                land=5.0, facing='East', road='30 ft', plot='22', block='Sector 15',
+                architect='STI In-house Studio', structural='STI Engineering',
+                rajuk='RAJUK/22/STI/0094', handover=dt.date(2024, 12, 31), launch=dt.date(2021, 3, 1),
+                pct=100, price=14700000, ppsf=8400, size_from=1750, size_to=1750, beds_from=3, beds_to=3,
+                booking=1000000, featured=False, order=12,
+                amenities=['lift', 'generator', 'security', 'water', 'power', 'parking'],
+                videos=[], land_owner=50, dev=50,
+                map=(23.8702, 90.3952),
+                desc=('<p>The Bandon series is what a good small footprint can do. Six seven-storey '
+                      'buildings within two streets of each other and of the first metro station, '
+                      'each holding three 1,750 sq ft flats per floor.</p>'
+                      '<p>All six completed and handed over between 2022 and 2024. Owners here get '
+                      'the advantage of a shared maintenance team across the cluster without the '
+                      'service charge of a gated compound.</p>'),
+                concept='Six small buildings run as one neighbourhood — shared maintenance, individual deeds.',
+                milestones=[('Land purchase', -1400, 100, True), ('RAJUK approval', -1100, 100, True),
+                            ('Structure', -700, 100, True), ('Handover', -120, 100, True)],
+                units_data=[('A', '3bed', 'Type A — handed over', 1750, 3, 3, 2, 1, 'East', 14700000, 'sold')],
+            ),
+            dict(
+                name='Apon Nibas', slug='apon-nibas', loc='Uttara',
+                stage='handover', category='residential', ownership='freehold',
+                tagline='Our largest handed-over flat plan at 1,965 sq ft — built for joint families.',
+                cover='real-starview.jpg', night='real-starview.jpg',
+                gallery=['real-starview.jpg', 'interior-living.jpg', 'interior-kitchen.jpg'],
+                floors=8, basement=0, units=16, upf=2, lifts=1, stairs=1, parking=14,
+                land=4.5, facing='West', road='30 ft', plot='9', block='Sector 15',
+                architect='STI In-house Studio', structural='STI Engineering',
+                rajuk='RAJUK/21/STI/0071', handover=dt.date(2023, 6, 30), launch=dt.date(2020, 2, 1),
+                pct=100, price=16500000, ppsf=8400, size_from=1965, size_to=1965, beds_from=3, beds_to=3,
+                booking=1000000, featured=False, order=13,
+                amenities=['lift', 'generator', 'security', 'water', 'power', 'parking'],
+                videos=[], land_owner=52, dev=48,
+                map=(23.8712, 90.3908),
+                desc=('<p>Two flats per floor and nothing else — 1,965 sq ft each, with a formal '
+                      'living room that can be closed off from the family space. Designed for '
+                      'three-generation households who need separation without leaving the floor.</p>'),
+                concept='Two flats per landing so that every home gets three exposed faces.',
+                milestones=[('Land purchase', -1500, 100, True), ('Structure', -900, 100, True),
+                            ('Finishing', -400, 100, True), ('Handover', -260, 100, True)],
+                units_data=[('A', '3bed', 'Type A — handed over', 1965, 3, 3, 2, 1, 'West', 16500000, 'sold')],
+            ),
+            dict(
+                name='S.I. Palace', slug='si-palace', loc='Uttara',
+                stage='upcoming', category='residential', ownership='freehold',
+                tagline='Launching soon on a 40 ft road near the Sector 15 metro station.',
+                cover='real-bandon-1.jpg', night='real-bandon-1.jpg',
+                gallery=['real-bandon-1.jpg', 'int-1.jpg'],
+                floors=9, basement=1, units=27, upf=3, lifts=2, stairs=1, parking=24,
+                land=5.6, facing='North-East', road='40 ft', plot='17', block='Sector 15',
+                architect='STI In-house Studio', structural='STI Engineering',
+                rajuk='RAJUK/26/STI/0203', handover=dt.date(2029, 6, 30), launch=dt.date(2026, 4, 1),
+                pct=0, price=12600000, ppsf=8270, size_from=1524, size_to=1524, beds_from=3, beds_to=3,
+                booking=800000, featured=False, order=14,
+                amenities=['lift', 'generator', 'security', 'cctv', 'water', 'power', 'parking', 'roof'],
+                videos=[], land_owner=50, dev=50,
+                map=(23.8679, 90.3944),
+                desc=('<p>A nine-storey, three-flats-per-floor building now in pre-launch. All '
+                      '1,524 sq ft with three bedrooms and three bathrooms, on a 40 ft road within '
+                      'walking distance of the metro.</p>'
+                      '<p>Pre-launch buyers get the earliest construction-linked payment schedule '
+                      'and a choice of floor before allocation opens to the public.</p>'),
+                concept='The entry point to our Uttara range: three bedrooms, metro within a walk.',
+                milestones=[('Land purchase', -240, 100, True), ('RAJUK approval', 60, 30, False),
+                            ('Piling & structure', 420, 0, False), ('Handover', 900, 0, False)],
+                units_data=[('A', '3bed', 'Type A — pre-launch', 1524, 3, 3, 2, 1, 'North-East', 12600000, 'available')],
+            ),
         ]
 
         for d in data:

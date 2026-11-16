@@ -685,8 +685,12 @@ def set_prefs(request):
         return JsonResponse({'ok': False}, status=400)
 
     response = HttpResponseRedirect(nxt)
-    if lang in ('en', 'bn'):
-        response.set_cookie(LANG_COOKIE, lang, max_age=60 * 60 * 24 * 365, samesite='Lax')
-    if theme in ('light', 'dark'):
-        response.set_cookie(THEME_COOKIE, theme, max_age=60 * 60 * 24 * 365, samesite='Lax')
+    # SameSite=None so the preference survives inside the cross-site preview
+    # iframe; browsers require Secure alongside None, which is harmless on http
+    # for a non-sensitive UI preference.
+    for key, value, allowed in ((LANG_COOKIE, lang, ('en', 'bn')),
+                                (THEME_COOKIE, theme, ('light', 'dark'))):
+        if value in allowed:
+            response.set_cookie(key, value, max_age=60 * 60 * 24 * 365,
+                                samesite='None', secure=True, path='/')
     return response

@@ -4,10 +4,11 @@ Run with:  python manage.py test website
 """
 import datetime as dt
 
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+from .context_processors import LANG_COOKIE, THEME_COOKIE
 from .models import (Amenity, Apartment, Booking, Enquiry, Feature, Landmark, Location,
                      Milestone, Project, SiteSetting, short_bdt)
 
@@ -165,7 +166,12 @@ class WebsiteSmokeTests(TestCase):
             with self.subTest(url=url):
                 res = self.client.get(url)
                 self.assertNotIn('X-Frame-Options', res.headers)
-                self.assertIn('frame-ancestors', res.headers.get('Content-Security-Policy', ''))
+                csp = res.headers.get('Content-Security-Policy', '')
+                self.assertIn('frame-ancestors', csp)
+                # An http parent origin must be allowed too, otherwise local and
+                # non-TLS previews get ERR_BLOCKED_BY_RESPONSE.
+                self.assertNotIn('https:', csp)
+                self.assertIn('*', csp)
 
     def test_admin_keeps_clickjacking_protection(self):
         res = self.client.get('/admin/login/')
@@ -192,3 +198,58 @@ class MoneyFormatTests(TestCase):
         from website.models import money
         self.assertEqual(money(12500000), '1,25,00,000')
         self.assertEqual(money(999), '999')
+
+
+class PreferencePersistenceTests(TestCase):
+    """The theme and language toggles must survive inside the preview iframe.
+
+    Browsers drop SameSite=Lax cookies on cross-site iframe requests, which made
+    both toggles appear broken even though the click handler ran. The cookies
+    therefore have to be SameSite=None over HTTPS.
+    """
+
+    def test_theme_cookie_is_iframe_safe(self):
+        res = self.client.get('/prefs/', {'theme': 'dark', 'next': '/'})
+        self.assertEqual(res.status_code, 302)
+        cookie = res.cookies[THEME_COOKIE]
+        self.assertEqual(cookie.value, 'dark')
+        self.assertEqual(cookie['samesite'].lower(), 'none')
+        self.assertTrue(cookie['secure'])
+
+    def test_language_cookie_is_iframe_safe(self):
+        res = self.client.get('/prefs/', {'lang': 'bn', 'next': '/'})
+        self.assertEqual(res.status_code, 302)
+        cookie = res.cookies[LANG_COOKIE]
+        self.assertEqual(cookie.value, 'bn')
+        self.assertEqual(cookie['samesite'].lower(), 'none')
+        self.assertTrue(cookie['secure'])
+
+    def test_preferences_render_server_side(self):
+        client = Client()
+        client.cookies[THEME_COOKIE] = 'dark'
+        client.cookies[LANG_COOKIE] = 'bn'
+        res = client.get(reverse('website:project_list'))
+        self.assertContains(res, 'data-theme="dark"')
+        self.assertContains(res, 'lang="bn"')
+
+    def test_bad_preference_values_are_ignored(self):
+        res = self.client.get('/prefs/', {'theme': 'neon', 'lang': 'fr', 'next': '/'})
+        self.assertEqual(res.status_code, 302)
+        self.assertNotIn(THEME_COOKIE, res.cookies)
+        self.assertNotIn(LANG_COOKIE, res.cookies)
+
+
+class IconSizingTests(TestCase):
+    """An <svg> with no width/height and no CSS renders at 300x150.
+
+    That is exactly what made icons and buttons look enormous when the
+    stylesheet was missing or still loading, so every icon carries hard
+    fallback attributes.
+    """
+
+    def test_icons_carry_fallback_dimensions(self):
+        res = self.client.get(reverse('website:home'))
+        self.assertEqual(res.status_code, 200)
+        html = res.content.decode()
+        self.assertNotIn('<svg class="ico-svg " aria-hidden', html)
+        self.assertIn('width="18" height="18"', html)

@@ -369,7 +369,7 @@
   function toggleTheme() {
     const next = rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(next);
-    document.cookie = 'sti_theme=' + next + ';path=/;max-age=31536000;samesite=lax';
+    document.cookie = 'sti_theme=' + next + ';path=/;max-age=31536000;samesite=None;secure';
     syncThemeLabels();
   }
   $$('#themeToggle, [data-theme-toggle]').forEach(btn => on(btn, 'click', toggleTheme));
@@ -378,7 +378,7 @@
   // Language links are real <a> tags so they work without JS; the handler only
   // saves a round trip by setting the cookie first.
   $$('[data-pref="lang"]').forEach(link => on(link, 'click', () => {
-    document.cookie = 'sti_lang=' + link.dataset.value + ';path=/;max-age=31536000;samesite=lax';
+    document.cookie = 'sti_lang=' + link.dataset.value + ';path=/;max-age=31536000;samesite=None;secure';
   }));
 
   /* ---------- map embeds ----------

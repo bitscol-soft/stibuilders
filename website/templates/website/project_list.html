@@ -4,24 +4,29 @@
 {% block meta_description %}Browse ongoing, upcoming, ready-to-move and handed-over projects by STI Builders. Filter by suburb, budget, size, bedrooms, amenities and availability.{% endblock %}
 
 {% block content %}
-<section class="page-head" style="padding-bottom:0">
+<section class="page-hero page-hero--compact">
+  <img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high">
   <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{% url 'website:home' %}">Home</a><span>/</span><span>Projects</span>
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>{% t 'nav.projects' 'Projects' %}</span>
     </nav>
-    <div class="spread mt-2" style="align-items:end">
+    <div class="spread mt-2" style="align-items:end;gap:1.5rem">
       <div>
-        <span class="eyebrow">The portfolio</span>
-        <h1 class="mt-2" style="max-width:20ch">Every STI address, in one place.</h1>
-        <p class="lead">Filter by stage, suburb, budget, size, bedrooms, amenities or availability. Compare up to four projects side by side.</p>
+        <span class="eyebrow on-dark">{% t 'pl.eyebrow' 'The portfolio' %}</span>
+        <h1 class="display mt-2" style="font-size:clamp(2.1rem,4.6vw,3.4rem)">{% t 'pl.title' 'Every STI address, in one place.' %}</h1>
+        <p class="lead" style="color:rgba(255,255,255,.82);max-width:62ch">{% t 'pl.sub' 'Filter by stage, suburb, budget, size, bedrooms, amenities or availability. Compare up to four projects side by side.' %}</p>
       </div>
       <div class="row hide-sm">
-        <a class="btn btn--ghost btn--sm" href="{% url 'website:compare' %}">{% icon 'i-sliders' %} Compare</a>
-        <a class="btn btn--ghost btn--sm" href="{% url 'website:suburb_list' %}">{% icon 'i-chart' %} Suburb analytics</a>
+        <a class="btn btn--ghost-light btn--sm" href="{% url 'website:compare' %}">{% icon 'i-sliders' %} {% t 'nav.compare' 'Compare' %}</a>
+        <a class="btn btn--ghost-light btn--sm" href="{% url 'website:suburb_list' %}">{% icon 'i-chart' %} {% t 'nav.suburbs' 'Suburb analytics' %}</a>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="tabs mt-3" style="border-bottom:1px solid var(--line);padding-bottom:0">
+<section class="page-head" style="padding-top:clamp(1.5rem,3vw,2.5rem);padding-bottom:0">
+  <div class="wrap-wide">
+<div class="tabs mt-3" style="border-bottom:1px solid var(--line);padding-bottom:0">
       <a class="tab {% if not active_filters.stage %}is-active{% endif %}" href="?" style="text-decoration:none">All <span class="xs muted">{{ stage_counts.all }}</span></a>
       <a class="tab {% if active_filters.stage == 'ongoing' %}is-active{% endif %}" href="?stage=ongoing" style="text-decoration:none">{% t 'stage.ongoing' 'Ongoing' %} <span class="xs muted">{{ stage_counts.ongoing }}</span></a>
       <a class="tab {% if active_filters.stage == 'upcoming' %}is-active{% endif %}" href="?stage=upcoming" style="text-decoration:none">{% t 'stage.upcoming' 'Upcoming' %} <span class="xs muted">{{ stage_counts.upcoming }}</span></a>
