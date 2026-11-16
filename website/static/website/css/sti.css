@@ -103,6 +103,25 @@ h4, .h4 { font-size: 1.18rem; }
 .eyebrow.no-rule::before { display: none; }
 .eyebrow.on-dark { color: var(--copper-2); }
 
+/* ---------- icons ---------- */
+/* Sprite is clipped rather than display:none: some engines refuse to resolve
+   <use> references, or gradients inside them, from a display:none subtree. */
+.icon-sprite {
+  position: absolute; width: 0; height: 0;
+  overflow: hidden; clip-path: inset(50%);
+  pointer-events: none;
+}
+/* The sprite lives at the top of <body>; every icon is an inline <svg> that
+   references a <symbol>. Without an explicit box the browser falls back to
+   300x150, so icons always get a sane default size and inherit text colour. */
+.ico-svg {
+  width: 1.15em; height: 1.15em; flex: 0 0 auto;
+  display: inline-block; vertical-align: -.16em;
+  fill: none; stroke: currentColor;
+  overflow: visible;
+}
+.ico-svg use { pointer-events: none; }
+
 /* ---------- layout ---------- */
 .wrap { width: min(100% - 2.5rem, var(--container)); margin-inline: auto; }
 .wrap-wide { width: min(100% - 2.5rem, 1440px); margin-inline: auto; }
@@ -148,7 +167,7 @@ h4, .h4 { font-size: 1.18rem; }
 }
 .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .btn:active { transform: translateY(0); }
-.btn svg, .btn .ico { width: 17px; height: 17px; flex: 0 0 auto; }
+.btn .ico-svg, .btn svg { width: 17px; height: 17px; flex: 0 0 auto; }
 .btn--copper { --btn-bg: var(--copper); --btn-bd: var(--copper); --btn-fg: #fff; }
 .btn--copper:hover { --btn-bg: #9d6425; --btn-bd: #9d6425; }
 .btn--ghost { --btn-bg: transparent; --btn-fg: var(--ink); --btn-bd: var(--line); }
@@ -585,13 +604,13 @@ input[type="range"] { width: 100%; accent-color: var(--copper); }
 .amenity { display: flex; align-items: center; gap: .7rem; padding: .85rem .95rem; border: 1px solid var(--line-soft); border-radius: var(--r); background: #fff; font-size: .85rem; font-weight: 600; transition: border-color .2s, transform .2s; }
 .amenity:hover { border-color: var(--line); transform: translateY(-2px); }
 .amenity .ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--copper-soft); color: #8a5619; flex: 0 0 auto; }
-.amenity .ico svg { width: 17px; height: 17px; }
+.amenity .ico .ico-svg, .amenity .ico svg { width: 17px; height: 17px; }
 
 /* brochure / download */
 .dl-row { display: flex; align-items: center; gap: .9rem; padding: .9rem 0; border-bottom: 1px solid var(--line-soft); }
 .dl-row:last-child { border-bottom: 0; }
 .dl-row .ico { width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--paper-2); display: grid; place-items: center; color: var(--copper); flex: 0 0 auto; }
-.dl-row .ico svg { width: 19px; height: 19px; }
+.dl-row .ico .ico-svg, .dl-row .ico svg { width: 19px; height: 19px; }
 .dl-row strong { display: block; font-size: .88rem; }
 .dl-row small { color: var(--muted); font-size: .74rem; }
 
@@ -666,7 +685,7 @@ input[type="range"] { width: 100%; accent-color: var(--copper); }
 .landmark-group { display: grid; gap: .5rem; }
 .landmark { display: flex; align-items: center; gap: .8rem; padding: .7rem .85rem; border: 1px solid var(--line-soft); border-radius: var(--r); background: #fff; font-size: .87rem; }
 .landmark .ico { width: 32px; height: 32px; border-radius: 8px; background: var(--moss-soft); color: var(--moss); display: grid; place-items: center; flex: 0 0 auto; }
-.landmark .ico svg { width: 16px; height: 16px; }
+.landmark .ico .ico-svg, .landmark .ico svg { width: 16px; height: 16px; }
 .landmark .dist { margin-left: auto; font-size: .78rem; font-weight: 700; color: var(--copper); white-space: nowrap; }
 .landmark .dist small { display: block; font-weight: 500; color: var(--muted); font-size: .68rem; text-align: right; }
 
@@ -888,7 +907,7 @@ body.has-hero .site-header:not(.is-solid) .btn--copper { --btn-fg: #fff; }
 /* ---------- value cards ---------- */
 .value-card { padding: 1.5rem; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--line-soft); display: grid; gap: .6rem; }
 .value-card .ico-round { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--copper-soft); color: #8a5619; }
-.value-card .ico-round svg { width: 20px; height: 20px; }
+.value-card .ico-round .ico-svg, .value-card .ico-round svg { width: 20px; height: 20px; }
 .value-card h3 { font-size: 1.05rem; margin: 0; }
 .value-card p { margin: 0; font-size: .88rem; color: var(--slate); }
 

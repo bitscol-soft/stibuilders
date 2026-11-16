@@ -83,6 +83,18 @@ class WebsiteSmokeTests(TestCase):
         res = self.client.get(reverse('website:units_json', args=[self.project.slug]))
         self.assertEqual(res.json()['units'][0]['label'], 'Type A')
 
+    def test_icons_render_as_svg_not_escaped_text(self):
+        res = self.client.get(reverse('website:home'))
+        html = res.content.decode()
+        self.assertNotIn('&lt;svg', html)
+        self.assertNotIn('&lt;use', html)
+        self.assertIn('<use href="#i-', html)
+        # every reference must point at a symbol that exists in the sprite
+        import re
+        defined = set(re.findall(r'<symbol id="([^"]+)"', html))
+        referenced = set(re.findall(r'<use href="#([^"]+)"', html))
+        self.assertTrue(referenced <= defined, referenced - defined)
+
     def test_sitemap_and_robots(self):
         self.assertEqual(self.client.get('/sitemap.xml').status_code, 200)
         self.assertEqual(self.client.get('/robots.txt').status_code, 200)

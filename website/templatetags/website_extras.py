@@ -1,5 +1,8 @@
 """Template helpers for the STI Builders website."""
 from django import template
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+
 from website import models as m
 
 register = template.Library()
@@ -20,10 +23,16 @@ ICON_ALIASES = {
 
 @register.simple_tag
 def icon(name, cls=''):
-    """Render an inline SVG reference to the sprite defined in _icons.html."""
+    """Render an inline SVG reference to the sprite defined in _icons.html.
+
+    The markup is marked safe so Django does not escape it; the values are
+    interpolated through format_html, which escapes ``cls`` for us.
+    """
     key = (name or '').strip().lower()
     symbol = key if key.startswith('i-') else ICON_ALIASES.get(key, 'i-sparkles')
-    return f'<svg class="ico {cls}" aria-hidden="true" focusable="false"><use href="#{symbol}"></use></svg>'
+    return format_html(
+        '<svg class="ico-svg {}" aria-hidden="true" focusable="false">'
+        '<use href="#{}"></use></svg>', cls, symbol)
 
 
 @register.filter
