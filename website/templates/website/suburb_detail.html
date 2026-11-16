@@ -1,0 +1,142 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ location.name }} apartments &amp; projects — {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ location.short_note|default:location.name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  {% if location.cover_image %}<img src="{{ location.cover_image.url }}" alt="{{ location.name }}" fetchpriority="high">
+  {% else %}<img src="{% static 'website/img/proj-uttara.jpg' %}" alt="{{ location.name }}" fetchpriority="high">{% endif %}
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span>
+      <a href="{% url 'website:suburb_list' %}" style="color:inherit">Suburbs</a><span>/</span>
+      <span>{{ location.name }}</span>
+    </nav>
+    <div class="spread mt-2" style="align-items:flex-end">
+      <div>
+        <span class="eyebrow on-dark">{{ location.zone|default:location.city }}</span>
+        <h1 class="display mt-1" style="font-size:clamp(2.2rem,5vw,4rem)">{{ location.name }}</h1>
+        <p class="lead" style="color:rgba(255,255,255,.82)">{{ location.short_note|default:"A neighbourhood profile with pricing, connectivity, landmarks and every STI project in the area." }}</p>
+      </div>
+      <div class="row">
+        <a class="btn btn--copper" href="{% url 'website:project_list' %}?suburb={{ location.slug }}">{% icon 'i-grid' %} {{ projects|length }} project{{ projects|length|pluralize }}</a>
+        <a class="btn btn--light" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Visit</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="analytics analytics--6">
+      <div class="metric"><b>৳ {{ location.avg_price_per_sqft|default:"—" }}</b><span>Avg. / sft</span></div>
+      <div class="metric {% if location.price_growth_yoy > 0 %}metric--up{% endif %}"><b>{% if location.price_growth_yoy %}+{{ location.price_growth_yoy }}%{% else %}—{% endif %}</b><span>12-mo growth</span></div>
+      <div class="metric"><b>{{ location.rental_yield|default:"—" }}{% if location.rental_yield %}%{% endif %}</b><span>Rental yield</span></div>
+      <div class="metric"><b>{{ location.demand_index|default:"—" }}</b><span>Demand index</span></div>
+      <div class="metric"><b>{{ location.livability_score|default:"—" }}</b><span>Livability</span></div>
+      <div class="metric"><b>{% if location.commute_minutes %}{{ location.commute_minutes }} <small class="xs muted">min</small>{% else %}—{% endif %}</b><span>{% t 'sub.commute' 'Commute' %} · Motijheel</span></div>
+    </div>
+
+    <div class="grid g-2 mt-4" style="gap:clamp(1.5rem,4vw,3rem);align-items:start">
+      <div>
+        <span class="eyebrow">The neighbourhood</span>
+        <h2 class="mt-1" style="font-size:clamp(1.5rem,2.6vw,2.1rem)">Living in {{ location.name }}</h2>
+        <div class="small muted mt-2">{{ location.description|safe|default:"<p>Neighbourhood notes will be published shortly.</p>" }}</div>
+        {% if location.highlight_1 or location.highlight_2 or location.highlight_3 %}
+        <ul class="check-list mt-2">
+          {% if location.highlight_1 %}<li>{% icon 'i-check' %} {{ location.highlight_1 }}</li>{% endif %}
+          {% if location.highlight_2 %}<li>{% icon 'i-check' %} {{ location.highlight_2 }}</li>{% endif %}
+          {% if location.highlight_3 %}<li>{% icon 'i-check' %} {{ location.highlight_3 }}</li>{% endif %}
+        </ul>
+        {% endif %}
+        <div class="grid g-2 mt-3" style="gap:.6rem">
+          <div class="panel" style="padding:1rem">
+            <div class="xs muted">Schools nearby</div>
+            <strong style="font-size:1.3rem">{{ location.schools_count|default:"—" }}</strong>
+          </div>
+          <div class="panel" style="padding:1rem">
+            <div class="xs muted">Hospitals</div>
+            <strong style="font-size:1.3rem">{{ location.hospitals_count|default:"—" }}</strong>
+          </div>
+          <div class="panel" style="padding:1rem">
+            <div class="xs muted">Shopping &amp; dining</div>
+            <strong style="font-size:1.3rem">{{ location.malls_count|default:"—" }}</strong>
+          </div>
+          <div class="panel" style="padding:1rem">
+            <div class="xs muted">Green &amp; open space</div>
+            <strong style="font-size:1.3rem">{{ location.green_space_pct|default:"—" }}%</strong>
+          </div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel" style="padding:0;overflow:hidden">
+          {% if map_src %}
+          <div class="map-panel" style="border:0;border-radius:0" data-map-panel>
+            <div class="map-canvas" style="height:100%;position:absolute;inset:0" aria-hidden="true"></div>
+            <iframe src="{{ map_src }}" title="Map of {{ location.name }}" loading="lazy"
+                    data-map-frame style="min-height:300px"></iframe>
+            <a class="map-fallback-link" href="https://maps.google.com/?q={{ location.latitude }},{{ location.longitude }}"
+               target="_blank" rel="noopener">{% icon 'i-map-pin' %} Open in Google Maps</a>
+          </div>
+          {% else %}
+          <div class="map-shell" style="border:0;border-radius:0;min-height:300px">
+            <div class="map-canvas" style="height:300px"></div>
+          </div>
+          {% endif %}
+        </div>
+        <div class="panel">
+          <h3 class="mb-2" style="font-size:1rem">Landmarks &amp; connectivity</h3>
+          <div class="landmark-group">
+            {% for l in landmarks|slice:":9" %}
+            <div class="landmark">
+              <span class="ico">{% icon l.category %}</span>
+              <span>{{ l.name }}</span>
+              <span class="dist">{{ l.distance_km }} km{% if l.drive_minutes %}<small>{{ l.drive_minutes }} min</small>{% endif %}</span>
+            </div>
+            {% empty %}
+            <p class="muted small">Landmark data coming soon.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">Available here</span>
+        <h2>STI projects in {{ location.name }}</h2>
+        {% if price_low %}<p class="small muted">From {{ price_low.price_display }} up to {{ price_high.price_display }}</p>{% endif %}
+      </div>
+      <a class="link-arrow" href="{% url 'website:project_list' %}?suburb={{ location.slug }}">Filter these projects {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="grid g-3">
+      {% for project in projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+      <div class="empty" style="grid-column:1/-1">
+        {% icon 'i-tower' %}<h3>No live projects here right now</h3>
+        <p class="muted">We have land in acquisition in this area — tell us what you need and we will call you first.</p>
+        <a class="btn btn--ink btn--sm" href="{% url 'website:contact' %}">Register interest</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if others %}
+<section class="section tight">
+  <div class="wrap-wide">
+    <h2 style="font-size:1.3rem">Explore nearby</h2>
+    <div class="row mt-2">
+      {% for o in others %}
+      <a class="chip chip--soft" href="{% url 'website:suburb_detail' o.slug %}" style="padding:.6rem 1rem">{% icon 'i-map-pin' %} {{ o.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

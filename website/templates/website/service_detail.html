@@ -1,0 +1,46 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ service.title }} — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero--compact">
+  {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.title }}" fetchpriority="high" decoding="async">
+  {% else %}<img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high" decoding="async">{% endif %}
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}">Home</a><span>/</span>
+      <a href="{% url 'website:services' %}">Services</a><span>/</span><span>{{ service.title }}</span>
+    </nav>
+    <span class="eyebrow on-dark">Service</span>
+    <h1 class="display mt-2">{{ service.title }}</h1>
+    <p class="lead">{{ service.summary }}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid" style="grid-template-columns:minmax(0,1.6fr) 340px;gap:clamp(1.5rem,4vw,3rem);align-items:start">
+      <div class="panel">
+        <div class="small">{{ service.body|safe }}</div>
+      </div>
+      <aside class="stack">
+        <div class="panel panel--ink">
+          <h3 style="font-size:1rem">Talk to this team</h3>
+          <p class="small" style="color:#b7c2c4">Tell us the brief and we will send the right person.</p>
+          <a class="btn btn--copper btn--sm btn--block" href="{% url 'website:contact' %}">{% icon 'i-send' %} Send a brief</a>
+          <a class="btn btn--light btn--sm btn--block mt-1" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+        </div>
+        {% if others %}
+        <div class="panel">
+          <h3 style="font-size:1rem" class="mb-2">Other services</h3>
+          <div class="footer-links">
+            {% for o in others %}<a href="{% url 'website:service_detail' o.slug %}">{{ o.title }} →</a>{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

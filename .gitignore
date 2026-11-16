@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Django
+# These are anchored to the repository root on purpose: an unanchored
+# "media/" also matches docs/media/ and docs/static/website/media/, which
+# silently kept the exported site's images out of the Pages deploy.
+/db.sqlite3
+/db.sqlite3-journal
+/staticfiles/
+/media/
+*.log
+.env
+*.env
+# Database dumps must never be committed: they carry user tables and
+# password hashes, and GitHub Pages serves the repo root publicly.
+*.sql
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+
+# static export scratch output
+dist/

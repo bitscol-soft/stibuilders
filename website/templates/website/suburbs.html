@@ -1,0 +1,140 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Suburb analytics &amp; insights — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <img src="{% static 'website/img/proj-purbachal.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>Suburbs</span>
+    </nav>
+    <h1 class="display mt-2" style="font-size:clamp(2.2rem,5vw,4rem)">Where the city is <em>moving</em></h1>
+    <p class="lead" style="color:rgba(255,255,255,.82)">Average price per square foot, twelve-month growth, rental yield and buyer demand for every neighbourhood we build in. Drawn from our own transaction desk and updated quarterly.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(1.5rem,4vw,3rem);align-items:start">
+      <div>
+        <span class="eyebrow">Average price / sft</span>
+        <h2 class="mt-1" style="font-size:clamp(1.5rem,2.6vw,2.1rem)">Price positioning by suburb</h2>
+        <div class="panel mt-2">
+          <div class="bars" data-bars='[{% for s in suburbs %}{"value": {{ s.price }}, "name": "{{ s.name }}"}{% if not forloop.last %},{% endif %}{% endfor %}]'>
+            {% for s in suburbs %}<div><i style="height:10%"></i><small>{{ s.name }}</small></div>{% endfor %}
+          </div>
+          <p class="xs muted mt-2" style="margin-bottom:0">BDT per sq ft, net sellable area, as of {% now "F Y" %}.</p>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Demand &amp; growth</span>
+        <h2 class="mt-1" style="font-size:clamp(1.5rem,2.6vw,2.1rem)">Which suburbs are heating up</h2>
+        <div class="stack mt-2">
+          {% for s in suburbs %}
+          <div class="panel" style="padding:1rem 1.15rem">
+            <div class="spread">
+              <strong>{{ s.name }}</strong>
+              <span class="chip {% if s.growth > 0 %}chip--moss{% else %}chip--soft{% endif %} xs">{% if s.growth > 0 %}+{% endif %}{{ s.growth }}% / yr</span>
+            </div>
+            <div class="score mt-1">
+              <div class="spread xs muted"><span>Buyer demand index</span><span>{{ s.demand }}/100</span></div>
+              <div class="score__bar"><i style="width:{{ s.demand }}%"></i></div>
+            </div>
+          </div>
+          {% empty %}
+          <p class="muted">Analytics will be published shortly.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">Neighbourhood guide</span><h2>Pick your suburb</h2></div>
+      <a class="link-arrow" href="{% url 'website:project_list' %}">Or browse every project {% icon 'i-arrow-right' %}</a>
+    </div>
+
+    <div class="stack" style="gap:1.25rem">
+      {% for loc in locations %}
+      <article class="card card--hover" data-reveal>
+        <div class="grid" style="grid-template-columns:340px minmax(0,1fr);gap:0">
+          <a href="{% url 'website:suburb_detail' loc.slug %}" style="display:block;min-height:240px;overflow:hidden">
+            {% if loc.cover_image %}<img src="{{ loc.cover_image.url }}" alt="{{ loc.name }}" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+            {% else %}<img src="{% static 'website/img/proj-uttara.jpg' %}" alt="{{ loc.name }}" style="width:100%;height:100%;object-fit:cover" loading="lazy">{% endif %}
+          </a>
+          <div class="card-body">
+            <div class="spread" style="align-items:flex-start">
+              <div>
+                <span class="xs muted" style="letter-spacing:.12em;text-transform:uppercase">{{ loc.zone|default:loc.city }}</span>
+                <h3 style="margin:.2rem 0 .3rem"><a href="{% url 'website:suburb_detail' loc.slug %}">{{ loc.name }}</a></h3>
+                {% if loc.short_note %}<p class="small muted" style="margin:0;max-width:56ch">{{ loc.short_note }}</p>{% endif %}
+              </div>
+              <span class="chip chip--soft">{{ loc.project_total }} project{{ loc.project_total|pluralize }}</span>
+            </div>
+
+            <div class="analytics mt-3">
+              <div class="metric">
+                <b>৳ {{ loc.avg_price_per_sqft|default:"—" }}</b>
+                <span>Avg. per sft</span>
+              </div>
+              <div class="metric {% if loc.price_growth_yoy > 0 %}metric--up{% endif %}">
+                <b>{% if loc.price_growth_yoy %}+{{ loc.price_growth_yoy }}%{% else %}—{% endif %}</b>
+                <span>12-mo growth</span>
+              </div>
+              <div class="metric">
+                <b>{% if loc.rental_yield %}{{ loc.rental_yield }}%{% else %}—{% endif %}</b>
+                <span>Rental yield</span>
+              </div>
+              <div class="metric">
+                <b>{{ loc.livability_score|default:"—" }}<small class="xs muted">/100</small></b>
+                <span>Livability</span>
+              </div>
+            </div>
+
+            <div class="row mt-3" style="gap:.4rem">
+              {% if loc.road_access %}<span class="chip">{% icon 'i-car' %} {{ loc.road_access }}</span>{% endif %}
+              {% if loc.schools_count %}<span class="chip">{% icon 'i-school' %} {{ loc.schools_count }} schools</span>{% endif %}
+              {% if loc.hospitals_count %}<span class="chip">{% icon 'i-hospital' %} {{ loc.hospitals_count }} hospitals</span>{% endif %}
+              {% if loc.commute_minutes %}<span class="chip">{% icon 'i-clock' %} {{ loc.commute_minutes }} min to Motijheel</span>{% endif %}
+            </div>
+
+            <div class="spread mt-3">
+              <div class="row">
+                {% if loc.min_price %}<span class="small"><span class="muted xs">From</span> <strong>{{ loc.min_price|short_money }}</strong></span>{% endif %}
+              </div>
+              <a class="btn btn--ghost btn--sm" href="{% url 'website:suburb_detail' loc.slug %}">Explore {{ loc.name }} {% icon 'i-arrow-right' %}</a>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty">{% icon 'i-map-pin' %}<h3>Suburb profiles coming soon</h3><p class="muted">We are compiling pricing and connectivity data for our active neighbourhoods.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="cta-band">
+      <img src="{% static 'website/img/interior-living.jpg' %}" alt="" loading="lazy">
+      <div class="cta-band__inner">
+        <div>
+          <span class="eyebrow on-dark">Not sure where to buy?</span>
+          <h2 class="mt-2">Tell us your commute, budget and school run.</h2>
+          <p>We will shortlist three addresses that actually fit your week — no obligation, no pressure.</p>
+        </div>
+        <div class="row">
+          <a class="btn btn--copper btn--lg" href="{% url 'website:contact' %}">Get a shortlist</a>
+          <a class="btn btn--light btn--lg" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a visit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

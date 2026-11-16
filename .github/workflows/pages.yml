@@ -1,0 +1,71 @@
+name: Publish static site to the Pages branch folder
+
+# GitHub Pages is configured as "Deploy from a branch" -> main -> /docs.
+# This job re-renders the Django site and commits the result into docs/ so that
+# every push to main republishes the preview automatically.
+#
+# The committed docs/ folder is the source of truth for Pages; this workflow
+# only keeps it fresh. Running it by hand regenerates docs/ on demand.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-static
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Test
+        run: python manage.py test website
+
+      - name: Migrate and seed
+        # db.sqlite3 is gitignored, so the schema has to be created first
+        run: |
+          python manage.py migrate --noinput
+          python manage.py seed_website
+
+      - name: Collect static assets
+        run: python manage.py collectstatic --noinput
+
+      - name: Build the static site into docs/
+        # Pages for this repository is set to "Deploy from a branch" with the
+        # branch ROOT as the folder, so the export lands at /<repo>/docs/ and
+        # every generated link has to carry that full prefix.
+        run: |
+          python manage.py export_static \
+            --out docs \
+            --base-path "/${GITHUB_REPOSITORY#*/}/docs/"
+          # Pages must not run Jekyll over the export
+          touch docs/.nojekyll
+
+      - name: Commit the refreshed export
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs
+          if git diff --staged --quiet; then
+            echo "docs/ already up to date"
+          else
+            git commit -m "Rebuild static preview in docs/ [skip ci]"
+            git push
+          fi

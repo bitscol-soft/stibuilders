@@ -1,0 +1,682 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ project.name }}, {{ project.location.name }} — {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ project.short_description|default:project.tagline|default:project.name }}{% endblock %}
+{% block og_title %}{{ project.name }} — {{ project.stage_label }} in {{ project.location.name }}{% endblock %}
+{% block og_description %}{{ project.short_description|default:project.tagline }}{% endblock %}
+{% block og_image %}{% if project.cover_image %}{{ project.cover_image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block body_class %}has-hero has-mobile-cta{% endblock %}
+
+{% block content %}
+<!-- ============ HERO ============ -->
+<section class="pd-hero">
+  <div class="pd-hero__media">
+    {% if project.cover_image %}
+      <img src="{{ project.cover_image.url }}" alt="{{ project.name }}, {{ project.location.name }}" fetchpriority="high">
+    {% else %}
+      <img src="{% static 'website/img/hero-tower.jpg' %}" alt="{{ project.name }}">
+    {% endif %}
+  </div>
+  <div class="pd-hero__inner">
+    <div class="wrap-wide">
+      <nav class="breadcrumb" style="color:rgba(255,255,255,.7)" aria-label="Breadcrumb">
+        <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span>
+        <a href="{% url 'website:project_list' %}" style="color:inherit">Projects</a><span>/</span>
+        <a href="{% url 'website:suburb_detail' project.location.slug %}" style="color:inherit">{{ project.location.name }}</a>
+      </nav>
+
+      <div class="row mt-2" style="gap:.5rem">
+        <span class="stage-pill" data-stage="{{ project.stage }}">{{ project.stage_label }}</span>
+        <span class="chip chip--glass">{{ project.category_label }}</span>
+        {% if project.rajuk_number %}<span class="chip chip--glass">{% icon 'i-check-circle' %} RAJUK {{ project.rajuk_number }}</span>{% endif %}
+      </div>
+
+      <h1 class="pd-hero__title serif">{{ project.name }}</h1>
+      {% if project.tagline %}<p class="lead" style="color:rgba(255,255,255,.82);max-width:52ch;margin:0">{{ project.tagline }}</p>{% endif %}
+
+      <div class="spread mt-3" style="align-items:flex-end;gap:1.5rem">
+        <div class="row" style="gap:.5rem;color:#fff">
+          <a class="btn btn--copper" href="{% url 'website:booking' %}?project={{ project.slug }}">{% icon 'i-calendar' %} Book a site visit</a>
+          <button class="btn btn--light" type="button" data-share="native" data-title="{{ project.name }} — {{ site.company_name }}" data-url="{{ request.build_absolute_uri }}">{% icon 'i-share' %} Share</button>
+          <button class="btn btn--light {% if is_saved %}is-on{% endif %}" type="button" data-save="{{ project.slug }}" aria-pressed="{{ is_saved|yesno:'true,false' }}">{% icon 'i-heart' %} Save</button>
+          {% if project.brochure %}<a class="btn btn--light" href="{{ project.brochure.url }}" download>{% icon 'i-download' %} Brochure</a>{% endif %}
+        </div>
+        <div class="chip chip--glass" style="padding:.7rem .9rem">
+          <div>
+            <small style="display:block;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7">Starting from</small>
+            <strong style="font-size:1.05rem">{{ project.price_display }}</strong>
+            {% if project.size_range %}<small style="opacity:.8"> · {{ project.size_range }}</small>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <dl class="pd-hero__facts">
+        <div class="pd-hero__fact"><dt>Location</dt><dd>{{ project.location.name }}</dd></div>
+        <div class="pd-hero__fact"><dt>Configuration</dt><dd>{{ project.bed_range|default:"—" }}</dd></div>
+        <div class="pd-hero__fact"><dt>Land area</dt><dd>{% if project.land_area %}{{ project.land_area }} {{ project.land_area_unit }}{% else %}—{% endif %}</dd></div>
+        <div class="pd-hero__fact"><dt>Floors</dt><dd>{% if project.basement_levels %}B + {% endif %}{{ project.floors|default:"—" }}</dd></div>
+        <div class="pd-hero__fact"><dt>Total units</dt><dd>{{ project.total_units|default:"—" }}</dd></div>
+        <div class="pd-hero__fact"><dt>Handover</dt><dd>{{ project.handover_date|date:"M Y"|default:"On request" }}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUBNAV ============ -->
+<nav class="pd-subnav" aria-label="Project sections">
+  <div class="wrap-wide pd-subnav__inner">
+    <a href="#overview" class="is-active">Overview</a>
+    <a href="#building">Building info</a>
+    <a href="#apartments">Apartments</a>
+    <a href="#amenities">Amenities</a>
+    <a href="#location">Location &amp; landmarks</a>
+    <a href="#design">Design &amp; drawings</a>
+    <a href="#milestones">Milestones</a>
+    <a href="#landshare">Land sharing</a>
+    <a href="#videos">Videos</a>
+    <a href="#profile">Profile &amp; brochure</a>
+    <a href="#social">Social</a>
+    <div class="pd-subnav__cta hide-sm">
+      <a class="btn btn--ghost btn--sm" href="{% url 'website:compare' %}?p={{ project.slug }}">{% icon 'i-sliders' %} Compare</a>
+      <a class="btn btn--ink btn--sm" href="#booking">{% icon 'i-calendar' %} Book visit</a>
+    </div>
+  </div>
+</nav>
+
+<section class="section tight" style="padding-top:1.75rem">
+  <div class="wrap-wide pd-layout">
+    <div>
+      <!-- ============ OVERVIEW ============ -->
+      <div class="pd-section" id="overview" style="padding-top:0">
+        <div class="spread" style="align-items:flex-start">
+          <div>
+            <span class="eyebrow">Overview</span>
+            <h2 class="mt-1">A closer reading of {{ project.name }}</h2>
+          </div>
+          <div class="chip chip--soft">{{ project.views }} views</div>
+        </div>
+
+        {% if project.gallery %}
+        <div class="mosaic mt-3" data-reveal>
+          {% for img in project.gallery|slice:":5" %}
+          <a href="{{ img.image.url }}" data-lightbox="project" data-caption="{{ img.caption }}" aria-label="Open image {{ forloop.counter }}">
+            <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.name }}" loading="lazy">
+          </a>
+          {% endfor %}
+          {% if project.gallery|length > 5 %}
+          <a href="{{ project.gallery.5.image.url }}" data-lightbox="project" data-caption="{{ project.gallery.5.caption }}" class="mosaic__more">
+            +{{ project.gallery|length|add:"-5" }} photos
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="grid g-2 mt-3" style="gap:1.25rem">
+          <div class="panel">
+            <h3 class="mb-2" style="font-size:1rem">The idea</h3>
+            <div class="small muted">{{ project.description|safe|default:"<p>Full project write-up will be published shortly.</p>" }}</div>
+          </div>
+          <div class="panel">
+            <h3 class="mb-2" style="font-size:1rem">At a glance</h3>
+            <dl class="spec-grid" style="margin:0">
+              {% for label, value in specs|slice:":8" %}
+              <div class="spec"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+              {% endfor %}
+            </dl>
+          </div>
+        </div>
+
+        {% if project.concept_note %}
+        <blockquote class="mt-3" style="margin:0;padding:1.25rem 1.4rem;border-left:3px solid var(--copper);background:#fff;border-radius:0 var(--r) var(--r) 0">
+          <p class="serif" style="font-size:1.15rem;margin:0;color:var(--ink-2)">“{{ project.concept_note }}”</p>
+          {% if project.architect %}<footer class="xs muted mt-2">— {{ project.architect }}, architect</footer>{% endif %}
+        </blockquote>
+        {% endif %}
+      </div>
+
+      <!-- ============ BUILDING INFO ============ -->
+      <div class="pd-section" id="building">
+        <span class="eyebrow">Building information</span>
+        <h2 class="mt-1">Structure, specification &amp; compliance</h2>
+        <div class="grid g-2 mt-2" style="gap:1.25rem">
+          <div class="panel">
+            <h3 class="mb-1" style="font-size:1rem">Project data</h3>
+            <dl class="spec-grid" style="margin:0">
+              {% for label, value in specs %}
+              <div class="spec"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+              {% endfor %}
+            </dl>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <h3 class="mb-2" style="font-size:1rem">Construction progress</h3>
+              <div class="spread" style="align-items:end">
+                <div>
+                  <div class="stat__num" style="font-size:2.4rem">{{ stage_progress }}<sup>%</sup></div>
+                  <div class="xs muted">Overall completion</div>
+                </div>
+                {% if project.next_milestone %}
+                <div style="text-align:right">
+                  <div class="xs muted">Next stage</div>
+                  <strong class="small">{{ project.next_milestone.title }}</strong>
+                  {% if project.next_milestone.target_date %}<div class="xs muted">{{ project.next_milestone.target_date|date:"M Y" }}</div>{% endif %}
+                </div>
+                {% endif %}
+              </div>
+              <div class="tl-bar mt-2" style="height:8px"><span style="width:{{ stage_progress }}%"></span></div>
+              <div class="row mt-3" style="gap:.4rem">
+                <span class="chip chip--moss">{% icon 'i-check' %} {{ project.approval_authority }} approved</span>
+                <span class="chip">{% icon 'i-shield' %} 10-year structural warranty</span>
+                {% if project.ownership %}<span class="chip">{{ project.ownership_label }}</span>{% endif %}
+              </div>
+            </div>
+            <div class="panel">
+              <h3 class="mb-2" style="font-size:1rem">What is included as standard</h3>
+              <ul class="check-list">
+                <li>{% icon 'i-check-circle' %} RCC frame with brick infill, designed to BNBC 2020</li>
+                <li>{% icon 'i-check-circle' %} Imported lift with generator back-up</li>
+                <li>{% icon 'i-check-circle' %} {{ project.parking_spaces|default:"Dedicated" }} covered parking spaces</li>
+                <li>{% icon 'i-check-circle' %} Water treatment plant &amp; underground reservoir</li>
+                <li>{% icon 'i-check-circle' %} Fire detection, hydrant &amp; extinguisher points</li>
+                <li>{% icon 'i-check-circle' %} CCTV at lobby, lifts and parking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ APARTMENTS ============ -->
+      <div class="pd-section" id="apartments">
+        <div class="spread" style="align-items:flex-end">
+          <div>
+            <span class="eyebrow">Apartments &amp; flats</span>
+            <h2 class="mt-1">Choose your layout</h2>
+            <p class="muted small">Sizes are net sellable area. Price includes finishing as per the specification below; registration, utility connection and car parking are charged separately.</p>
+          </div>
+          <div class="row">
+            <span class="chip chip--moss">{{ available_units }} available</span>
+            <span class="chip chip--soft">{{ apartments|length }} layouts listed</span>
+          </div>
+        </div>
+
+        {% if apartments %}
+        <div class="tabs tabs--underline mt-3" data-tabs="units">
+          <button class="tab is-active" data-tab="cards" type="button">Layout cards</button>
+          <button class="tab" data-tab="table" type="button">Full inventory</button>
+        </div>
+        <div data-tab-scope="units" class="mt-2">
+          <div data-pane="cards">
+            <div class="grid g-2" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+              {% for unit in apartments %}
+              {% include 'website/includes/unit_card.html' with project=project %}
+              {% endfor %}
+            </div>
+          </div>
+          <div data-pane="table" hidden>
+            <div class="panel" style="padding:0;overflow:hidden">
+              <div style="overflow-x:auto">
+                <table class="units-table">
+                  <thead>
+                    <tr>
+                      <th>Unit</th><th>Type</th><th>Size</th><th>Beds / Baths</th>
+                      <th>Floor</th><th>Facing</th><th>Price</th><th>Status</th><th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for unit in apartments %}
+                    <tr class="{% if unit.status == 'sold' %}is-sold{% endif %}">
+                      <td><a href="{% url 'website:apartment_detail' project.slug unit.pk %}"><span class="u-title">{{ unit.unit_no|default:unit.title }}</span><span class="u-sub">{{ unit.title }}</span></a></td>
+                      <td>{{ unit.get_unit_type_display }}</td>
+                      <td>{{ unit.size_sft|bdt }} {{ unit.area_unit }}</td>
+                      <td>{{ unit.beds }} / {{ unit.baths }}</td>
+                      <td>{{ unit.floor_no|default:"—" }}</td>
+                      <td>{{ unit.facing|default:"—" }}</td>
+                      <td class="u-price">{{ unit.price_display }}</td>
+                      <td><span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span></td>
+                      <td>
+                        <a class="btn btn--ghost btn--sm" href="{% url 'website:apartment_detail' project.slug unit.pk %}">View</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="empty mt-3">
+          {% icon 'i-layers' %}
+          <h3>Unit inventory being finalised</h3>
+          <p class="muted">Layouts and availability for this project will be published soon. Register your interest to receive the inventory first.</p>
+          <a class="btn btn--ink btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}">{% icon 'i-mail' %} Get the inventory</a>
+        </div>
+        {% endif %}
+
+        {% if features %}
+        <div class="panel mt-3">
+          <h3 class="mb-2" style="font-size:1rem">{% t 'pd.features' 'Apartment features & finishing' %}</h3>
+          <div class="grid g-3" style="gap:.4rem 1.25rem">
+            {% for f in features %}
+            <div class="feature-row">{% icon 'i-check' %}<span>{{ f.name }}</span></div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- ============ AMENITIES ============ -->
+      <div class="pd-section" id="amenities">
+        <span class="eyebrow">Amenities</span>
+        <h2 class="mt-1">What the building gives back</h2>
+        <div class="amenity-grid mt-2">
+          {% for a in amenities %}
+          <div class="amenity"><span class="ico">{% icon a.icon %}</span> <span>{{ a.name }}{% if a.note %}<small class="xs muted" style="display:block">{{ a.note }}</small>{% endif %}</span></div>
+          {% empty %}
+          <p class="muted">Amenity list will be published with the launch brochure.</p>
+          {% endfor %}
+        </div>
+        <div class="grid g-2 mt-3" style="gap:.75rem">
+          <img src="{% static 'website/img/proj-bashundhara.jpg' %}" alt="Landscaped lakeside amenity deck" class="rounded" style="height:240px;object-fit:cover" loading="lazy">
+          <img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="Landscaped entrance" class="rounded" style="height:240px;object-fit:cover" loading="lazy">
+        </div>
+      </div>
+
+      <!-- ============ LOCATION & LANDMARKS ============ -->
+      <div class="pd-section" id="location">
+        <span class="eyebrow">Location &amp; landmarks</span>
+        <h2 class="mt-1">The address, and what is around it</h2>
+        <p class="muted small">{{ project.address|default:project.location.name }}{% if project.plot_no %}, Plot {{ project.plot_no }}{% endif %}{% if project.block_no %}, Block {{ project.block_no }}{% endif %}</p>
+
+        <div class="panel mt-2" style="padding:0;overflow:hidden">
+          <div class="map-panel" style="min-height:380px;border:0;border-radius:0">
+            <iframe src="{{ project.map_src }}" title="Map of {{ project.name }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <div class="grid g-2 mt-3" style="gap:1.25rem">
+          <div>
+            <h3 class="mb-2" style="font-size:1rem">Nearby landmarks</h3>
+            <div class="stack" style="gap:1rem">
+              {% for group in landmark_groups %}
+              <div>
+                <div class="xs muted mb-1" style="letter-spacing:.1em;text-transform:uppercase">{{ group.label }}</div>
+                <div class="landmark-group">
+                  {% for l in group.items %}
+                  <div class="landmark">
+                    <span class="ico">{% icon group.key %}</span>
+                    <span>{{ l.name }}</span>
+                    <span class="dist">{{ l.distance_km }} km{% if l.drive_minutes %}<small>{{ l.drive_minutes }} min drive</small>{% endif %}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% empty %}
+              <p class="muted small">Landmark distances will be published shortly.</p>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <h3 class="mb-2" style="font-size:1rem">Connectivity</h3>
+              <dl class="spec-grid" style="grid-template-columns:1fr;margin:0">
+                <div class="spec"><dt>Road frontage</dt><dd>{{ project.road_width|default:"—" }}</dd></div>
+                <div class="spec"><dt>Plot / Block</dt><dd>{{ project.plot_no|default:"—" }} / {{ project.block_no|default:"—" }}</dd></div>
+                <div class="spec"><dt>Zone</dt><dd>{{ project.location.zone|default:project.location.city }}</dd></div>
+                <div class="spec"><dt>Commute to Motijheel</dt><dd>{% if project.location.commute_minutes %}{{ project.location.commute_minutes }} min{% else %}—{% endif %}</dd></div>
+              </dl>
+              <a class="link-arrow mt-2" href="{% url 'website:suburb_detail' project.location.slug %}">Suburb insights for {{ project.location.name }} {% icon 'i-arrow-right' %}</a>
+            </div>
+            <div class="panel panel--ink">
+              <h3 class="mb-1" style="font-size:1rem">Prefer to be driven?</h3>
+              <p class="small" style="color:#b7c2c4;margin:0 0 .9rem">We arrange a pick-up from your office or home for site visits inside Dhaka.</p>
+              <a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}">{% icon 'i-car' %} Arrange transport</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ DESIGN & DRAWINGS ============ -->
+      <div class="pd-section" id="design">
+        <span class="eyebrow">Design &amp; drawings</span>
+        <h2 class="mt-1">Plans, elevations &amp; sections</h2>
+        <p class="muted small">Drawings are indicative. Working drawings available on request from the sales desk.</p>
+        <div class="plan-grid mt-2">
+          {% for plan in plans %}
+          <figure class="plan-card">
+            <a class="plan-card__img" href="{% if plan.image %}{{ plan.image.url }}{% else %}{% static 'website/img/plans/floor-type-a.svg' %}{% endif %}" data-lightbox="plans" data-caption="{{ plan.title }}">
+              {% if plan.image %}<img src="{{ plan.image.url }}" alt="{{ plan.title }}" loading="lazy">
+              {% else %}<img src="{% static 'website/img/plans/floor-type-a.svg' %}" alt="{{ plan.title }}" loading="lazy">{% endif %}
+            </a>
+            <figcaption>
+              <span>{{ plan.title }}</span>
+              <span class="xs muted">{{ plan.area_sft|default:"" }}{% if plan.area_sft %} sft{% endif %}</span>
+            </figcaption>
+          </figure>
+          {% empty %}
+          <figure class="plan-card">
+            <a class="plan-card__img" href="{% static 'website/img/plans/floor-type-a.svg' %}" data-lightbox="plans" data-caption="Unit Type A — 1,850 sft">
+              <img src="{% static 'website/img/plans/floor-type-a.svg' %}" alt="Unit Type A floor plan" loading="lazy">
+            </a>
+            <figcaption><span>Unit Type A</span><span class="xs muted">1,850 sft</span></figcaption>
+          </figure>
+          <figure class="plan-card">
+            <a class="plan-card__img" href="{% static 'website/img/plans/floor-typical.svg' %}" data-lightbox="plans" data-caption="Typical floor plate">
+              <img src="{% static 'website/img/plans/floor-typical.svg' %}" alt="Typical floor plate" loading="lazy">
+            </a>
+            <figcaption><span>Typical floor plate</span><span class="xs muted">3 units</span></figcaption>
+          </figure>
+          <figure class="plan-card">
+            <a class="plan-card__img" href="{% static 'website/img/plans/site-plan.svg' %}" data-lightbox="plans" data-caption="Site & master plan">
+              <img src="{% static 'website/img/plans/site-plan.svg' %}" alt="Site plan" loading="lazy">
+            </a>
+            <figcaption><span>Site &amp; master plan</span><span class="xs muted">Land use</span></figcaption>
+          </figure>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- ============ MILESTONES ============ -->
+      <div class="pd-section" id="milestones">
+        <div class="spread" style="align-items:flex-end">
+          <div>
+            <span class="eyebrow">Project milestones</span>
+            <h2 class="mt-1">Where the build stands today</h2>
+          </div>
+          <div class="chip chip--moss">{{ stage_progress }}% complete</div>
+        </div>
+        <div class="timeline mt-3">
+          {% for m in milestones %}
+          <div class="tl-item {% if m.is_done %}is-done{% elif forloop.counter0 == 0 or m == project.next_milestone %}is-current{% endif %}">
+            <span class="when">
+              {% if m.completed_date %}Completed {{ m.completed_date|date:"M Y" }}
+              {% elif m.target_date %}Target {{ m.target_date|date:"M Y" }}
+              {% else %}Planned{% endif %}
+            </span>
+            <h4>{{ m.title }}</h4>
+            {% if m.description %}<p>{{ m.description }}</p>{% endif %}
+            <div class="tl-bar"><span style="width:{{ m.progress_pct }}%;background:{% if m.is_done %}var(--copper){% else %}var(--moss){% endif %}"></span></div>
+          </div>
+          {% empty %}
+          <p class="muted">Milestone reporting for this project begins at launch.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- ============ LAND SHARING ============ -->
+      <div class="pd-section" id="landshare">
+        <span class="eyebrow">Land sharing breakdown</span>
+        <h2 class="mt-1">How the built area is split</h2>
+        <p class="muted small">For land-sharing and joint-venture projects, the built area is divided between the land owner and STI Builders as below. Figures exclude parking and common areas.</p>
+        <div class="grid g-2 mt-2" style="gap:1.25rem">
+          <div class="panel">
+            <div class="donut">
+              <div class="donut__ring" style="--p:{{ land_share }}">
+                <span>{{ land_share }}%</span>
+              </div>
+              <div class="donut__legend">
+                <div><i style="background:var(--copper)"></i> Land owner share — {{ land_share }}%</div>
+                <div><i style="background:#e6ddcd"></i> Developer share — {{ dev_share }}%</div>
+                <div class="xs muted" style="margin-top:.35rem">Of net sellable built area</div>
+              </div>
+            </div>
+            {% if project.land_share_note %}<p class="small muted mt-2" style="margin-bottom:0">{{ project.land_share_note }}</p>{% endif %}
+          </div>
+          <div class="panel">
+            <h3 class="mb-2" style="font-size:1rem">Delivery schedule</h3>
+            <div class="pay-rows">
+              {% for st in project.payment_stages.all %}
+              <div class="pay-row">
+                <span>{{ st.title }}{% if st.timing %}<small class="xs muted" style="display:block">{{ st.timing }}</small>{% endif %}</span>
+                <strong style="text-align:right">{{ st.share_pct }}%</strong>
+                <span class="bar"><i style="width:{{ st.share_pct }}%"></i></span>
+              </div>
+              {% empty %}
+              <div class="pay-row"><span>Agreement signing</span><strong style="text-align:right">10%</strong><span class="bar"><i style="width:10%"></i></span></div>
+              <div class="pay-row"><span>On completion of piling</span><strong style="text-align:right">25%</strong><span class="bar"><i style="width:25%"></i></span></div>
+              <div class="pay-row"><span>Cast of 5th floor slab</span><strong style="text-align:right">30%</strong><span class="bar"><i style="width:30%"></i></span></div>
+              <div class="pay-row"><span>Finishing stage</span><strong style="text-align:right">25%</strong><span class="bar"><i style="width:25%"></i></span></div>
+              <div class="pay-row"><span>On handover</span><strong style="text-align:right">10%</strong><span class="bar"><i style="width:10%"></i></span></div>
+              {% endfor %}
+            </div>
+            <a class="link-arrow mt-3" href="{% url 'website:land_sharing' %}">Read the land-sharing process {% icon 'i-arrow-right' %}</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ VIDEOS ============ -->
+      <div class="pd-section" id="videos">
+        <span class="eyebrow">Project videos</span>
+        <h2 class="mt-1">Walk it before you visit it</h2>
+        {% if project.videos %}
+        <div class="video-grid mt-2">
+          <div class="video-frame">
+            <iframe src="{{ project.videos.0.embed }}" title="{{ project.name }} {{ project.videos.0.label }}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="video-list">
+            {% for v in project.videos|slice:"1:" %}
+            <button class="video-thumb" type="button" onclick="window.open('{{ v.url }}','_blank','noopener')">
+              {% if project.cover_image %}<img src="{{ project.cover_image.url }}" alt="" loading="lazy">{% endif %}
+              <span class="play">{% icon 'i-play' %}</span>
+              <span>{{ v.label }}</span>
+            </button>
+            {% endfor %}
+            {% if project.videos|length == 1 %}
+            <div class="panel" style="display:grid;place-content:center;text-align:center;min-height:150px">
+              <div>{% icon 'i-video' %}</div>
+              <p class="xs muted" style="margin:.5rem 0 0">More footage added as the build progresses.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% else %}
+        <div class="empty mt-2">
+          {% icon 'i-video' %}
+          <h3>Video walkthrough coming soon</h3>
+          <p class="muted">We publish a walkthrough and a drone film at every slab milestone.</p>
+          <a class="btn btn--ghost btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}">Request a preview</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- ============ PROFILE & BROCHURE ============ -->
+      <div class="pd-section" id="profile">
+        <span class="eyebrow">Project profile &amp; brochure</span>
+        <h2 class="mt-1">Take the details with you</h2>
+        <div class="grid g-2 mt-2" style="gap:1.25rem">
+          <div class="panel">
+            <div class="dl-row">
+              <span class="ico">{% icon 'i-file' %}</span>
+              <div style="flex:1">
+                <strong>Project brochure</strong>
+                <small>{{ project.brochure_note|default:"PDF · Floor plans, specification, payment plan" }}</small>
+              </div>
+              {% if project.brochure %}
+              <a class="btn btn--ink btn--sm" href="{{ project.brochure.url }}" download>{% icon 'i-download' %} Download</a>
+              {% else %}
+              <a class="btn btn--ghost btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}&kind=brochure">Request</a>
+              {% endif %}
+            </div>
+            <div class="dl-row">
+              <span class="ico">{% icon 'i-ruler' %}</span>
+              <div style="flex:1">
+                <strong>Floor plans (all units)</strong>
+                <small>PDF · Scaled drawings</small>
+              </div>
+              <a class="btn btn--ghost btn--sm" href="#design">View</a>
+            </div>
+            <div class="dl-row">
+              <span class="ico">{% icon 'i-shield' %}</span>
+              <div style="flex:1">
+                <strong>Approval documents</strong>
+                <small>RAJUK, environment clearance, utility</small>
+              </div>
+              <a class="btn btn--ghost btn--sm" href="{% url 'website:contact' %}">Request</a>
+            </div>
+          </div>
+          <div class="panel">
+            <h3 class="mb-2" style="font-size:1rem">Project profile</h3>
+            <dl class="spec-grid" style="grid-template-columns:1fr;margin:0">
+              <div class="spec"><dt>Developer</dt><dd>{{ site.company_name }}</dd></div>
+              <div class="spec"><dt>Project code</dt><dd>{{ project.code|default:project.slug|upper }}</dd></div>
+              <div class="spec"><dt>Architect</dt><dd>{{ project.architect|default:"In-house design studio" }}</dd></div>
+              <div class="spec"><dt>Structural consultant</dt><dd>{{ project.structural_consultant|default:"In-house engineering" }}</dd></div>
+              <div class="spec"><dt>Launch</dt><dd>{{ project.launch_date|date:"M Y"|default:"—" }}</dd></div>
+              <div class="spec"><dt>Handover</dt><dd>{{ project.handover_date|date:"M Y"|default:"On request" }}</dd></div>
+            </dl>
+            <a class="btn btn--ghost btn--sm mt-2" href="{{ project.get_absolute_url }}" onclick="window.print();return false;">{% icon 'i-file' %} Print this page</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SOCIAL ============ -->
+      <div class="pd-section" id="social">
+        <span class="eyebrow">Social &amp; sharing</span>
+        <h2 class="mt-1">Follow the build</h2>
+        <div class="grid g-2 mt-2" style="gap:1.25rem">
+          <div class="panel">
+            <h3 class="mb-1" style="font-size:1rem">Project channels</h3>
+            <p class="xs muted">Construction updates, handover days and buyer stories.</p>
+            <div class="row mt-2">
+              {% if project.facebook_url %}<a class="btn btn--ghost btn--sm" href="{{ project.facebook_url }}" target="_blank" rel="noopener">{% icon 'i-facebook' %} Facebook</a>
+              {% elif site.facebook %}<a class="btn btn--ghost btn--sm" href="{{ site.facebook }}" target="_blank" rel="noopener">{% icon 'i-facebook' %} Facebook</a>{% endif %}
+              {% if project.instagram_url %}<a class="btn btn--ghost btn--sm" href="{{ project.instagram_url }}" target="_blank" rel="noopener">{% icon 'i-instagram' %} Instagram</a>
+              {% elif site.instagram %}<a class="btn btn--ghost btn--sm" href="{{ site.instagram }}" target="_blank" rel="noopener">{% icon 'i-instagram' %} Instagram</a>{% endif %}
+              {% if project.youtube_url %}<a class="btn btn--ghost btn--sm" href="{{ project.youtube_url }}" target="_blank" rel="noopener">{% icon 'i-youtube' %} YouTube</a>
+              {% elif site.youtube %}<a class="btn btn--ghost btn--sm" href="{{ site.youtube }}" target="_blank" rel="noopener">{% icon 'i-youtube' %} YouTube</a>{% endif %}
+              {% if project.linkedin_url %}<a class="btn btn--ghost btn--sm" href="{{ project.linkedin_url }}" target="_blank" rel="noopener">{% icon 'i-linkedin' %} LinkedIn</a>{% endif %}
+            </div>
+            {% if project.social_hashtag %}<p class="xs muted mt-2" style="margin-bottom:0">Tag us with <strong>#{{ project.social_hashtag }}</strong></p>{% endif %}
+          </div>
+          <div class="panel">
+            <h3 class="mb-1" style="font-size:1rem">Share this project</h3>
+            <p class="xs muted">Send it to your family, your lawyer or your accountant.</p>
+            <div class="share-row mt-2">
+              <button type="button" data-share="facebook" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share on Facebook">{% icon 'i-facebook' %}</button>
+              <button type="button" data-share="whatsapp" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share on WhatsApp">{% icon 'i-whatsapp' %}</button>
+              <button type="button" data-share="twitter" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share on X">{% icon 'i-x-social' %}</button>
+              <button type="button" data-share="linkedin" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share on LinkedIn">{% icon 'i-linkedin' %}</button>
+              <button type="button" data-share="pinterest" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share on Pinterest">{% icon 'i-pinterest' %}</button>
+              <button type="button" data-share="email" data-url="{{ request.build_absolute_uri }}" data-title="{{ project.name }}" aria-label="Share by email">{% icon 'i-mail' %}</button>
+              <button type="button" data-share="copy" data-url="{{ request.build_absolute_uri }}" aria-label="Copy link">{% icon 'i-link' %}</button>
+            </div>
+            <div class="field mt-3">
+              <label for="shareLink">Direct link</label>
+              <div style="display:flex;gap:.4rem">
+                <input id="shareLink" class="input" type="text" value="{{ request.build_absolute_uri }}" readonly>
+                <button class="btn btn--ghost btn--sm" type="button" data-copy="{{ request.build_absolute_uri }}">{% icon 'i-link' %} Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ TESTIMONIALS ============ -->
+      {% if testimonials %}
+      <div class="pd-section">
+        <span class="eyebrow">Owners of this project</span>
+        <div class="grid g-2 mt-2" style="gap:1rem">
+          {% for t in testimonials|slice:":2" %}
+          <figure class="quote-card">
+            <span class="mark">"</span>
+            <blockquote>{{ t.quote }}</blockquote>
+            <figcaption>
+              {% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.name }}" loading="lazy">{% endif %}
+              <div><cite>{{ t.name }}</cite><small>{{ t.role }}</small></div>
+            </figcaption>
+          </figure>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ============ STICKY ASIDE ============ -->
+    <aside class="pd-aside">
+      <div class="panel panel--ink" id="booking">
+        <span class="eyebrow on-dark">Book a visit</span>
+        <h3 class="mt-2" style="font-size:1.25rem">See {{ project.name }} in person</h3>
+        <p class="small" style="color:#b7c2c4">Pick a slot and we will confirm on WhatsApp within one business day.</p>
+        <form method="post" action="{% url 'website:booking' %}">
+          {% csrf_token %}
+          <input type="hidden" name="project" value="{{ project.pk }}">
+          <input type="hidden" name="kind" value="visit">
+          <div class="field" style="margin-bottom:.6rem">
+            <input type="text" name="full_name" placeholder="Your name" required aria-label="Your name">
+          </div>
+          <div class="field" style="margin-bottom:.6rem">
+            <input type="tel" name="phone" placeholder="Mobile number" required aria-label="Mobile number">
+          </div>
+          <div class="field" style="margin-bottom:.75rem">
+            <input type="date" name="preferred_date" aria-label="Preferred date">
+          </div>
+          <button class="btn btn--copper btn--block" type="submit">{% icon 'i-calendar' %} Request a visit</button>
+          <p class="xs mt-2" style="color:#8fa1a4;margin-bottom:0">Or call <a href="tel:{{ site.hotline|default:site.phone }}" style="color:#fff">{{ site.hotline|default:site.phone }}</a></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h3 class="mb-2" style="font-size:1rem">Key facts</h3>
+        <dl class="spec-grid" style="grid-template-columns:1fr;margin:0">
+          <div class="spec"><dt>Starting price</dt><dd>{{ project.price_full }}</dd></div>
+          {% if project.price_per_sqft %}<div class="spec"><dt>Per {{ project.price_unit }}</dt><dd>৳ {{ project.price_per_sqft|bdt }}</dd></div>{% endif %}
+          {% if project.booking_amount %}<div class="spec"><dt>Booking money</dt><dd>{{ project.booking_amount|short_money }}</dd></div>{% endif %}
+          <div class="spec"><dt>Unit sizes</dt><dd>{{ project.size_range|default:"—" }}</dd></div>
+          <div class="spec"><dt>Available now</dt><dd>{{ available_units }} of {{ apartments|length }}</dd></div>
+          <div class="spec"><dt>Stage</dt><dd>{{ project.stage_label }}</dd></div>
+        </dl>
+        <div class="row mt-2" style="gap:.4rem">
+          <a class="btn btn--ink btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}" style="flex:1">{% icon 'i-key' %} Reserve a unit</a>
+        </div>
+        <button class="btn btn--ghost btn--sm btn--block mt-1" type="button" data-save="{{ project.slug }}" aria-pressed="{{ is_saved|yesno:'true,false' }}">
+          {% icon 'i-heart' %} {% if is_saved %}Saved{% else %}Save for later{% endif %}
+        </button>
+      </div>
+
+      <div class="panel" style="background:var(--paper-2)">
+        <div class="enquiry-mini">
+          <img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="">
+          <div>
+            <strong class="small">Talk to a project adviser</strong>
+            <div class="xs muted">{{ site.office_hours|default:"Sat – Thu · 10 AM – 7 PM" }}</div>
+          </div>
+        </div>
+        <div class="stack mt-2" style="gap:.5rem">
+          <a class="btn btn--ghost btn--sm btn--block" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+          <a class="btn btn--ghost btn--sm btn--block" href="https://wa.me/{{ site.whatsapp|default:'8801923505050' }}" target="_blank" rel="noopener">{% icon 'i-whatsapp' %} WhatsApp</a>
+          <a class="btn btn--ghost btn--sm btn--block" href="{% url 'website:contact' %}?project={{ project.slug }}">{% icon 'i-mail' %} Email the desk</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ SIMILAR ============ -->
+{% if similar %}
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <div class="title"><span class="eyebrow">Elsewhere</span><h2>Similar addresses</h2></div>
+      <a class="link-arrow" href="{% url 'website:project_list' %}?suburb={{ project.location.slug }}">All in {{ project.location.name }} {% icon 'i-arrow-right' %}</a>
+    </div>
+    <div class="grid g-3">
+      {% for project in similar %}{% include 'website/includes/project_card.html' %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close">{% icon 'i-x' %}</button>
+  <button class="lightbox__nav prev" id="lightboxPrev" type="button" aria-label="Previous">{% icon 'i-chevron-left' %}</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox__nav next" id="lightboxNext" type="button" aria-label="Next">{% icon 'i-chevron-right' %}</button>
+  <div class="lightbox__caption" id="lightboxCaption"></div>
+</div>
+
+<div class="mobile-cta">
+  <a class="btn btn--ghost" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} Call</a>
+  <a class="btn btn--copper" href="{% url 'website:booking' %}?project={{ project.slug }}">{% icon 'i-calendar' %} Book visit</a>
+</div>
+{% endblock %}

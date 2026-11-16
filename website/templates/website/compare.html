@@ -1,0 +1,52 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Compare projects — {{ site.company_name }}{% endblock %}
+
+{% block content %}
+{% banner 'website/img/proj-gulshan.jpg' eyebrow='Side by side' title='Compare up to four projects' sub='Price, size, configuration, parking, handover and construction progress in one table.' crumb='Compare' %}
+
+
+<section class="section tight" style="padding-top:0">
+  <div class="wrap-wide">
+    <form method="get" class="panel" style="display:flex;flex-wrap:wrap;gap:.6rem;align-items:end">
+      {% for i in "1234"|make_list %}
+      <div class="field" style="flex:1;min-width:180px">
+        <label>Project {{ i }}</label>
+        <select name="p">
+          <option value="">—</option>
+          {% for p in all_projects %}<option value="{{ p.slug }}" {% if p in projects %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+      <button class="btn btn--ink" type="submit">Compare</button>
+    </form>
+
+    {% if projects %}
+    <div class="compare-wrap mt-3">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th></th>
+            {% for p in projects %}
+            <th>
+              {% if p.cover_image %}<img src="{{ p.cover_image.url }}" alt="{{ p.name }}">{% endif %}
+              <a href="{{ p.get_absolute_url }}" style="font-size:.95rem">{{ p.name }}</a>
+              <div class="xs muted">{{ p.stage_label }}</div>
+            </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr><th>{{ row.label }}</th>{% for v in row.values %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+          <tr><th></th>{% for p in projects %}<td><a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}?project={{ p.slug }}">Book visit</a></td>{% endfor %}</tr>
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty mt-3">{% icon 'i-sliders' %}<h3>Pick two or more projects</h3><p class="muted">Use the selects above, or add projects from any listing page.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

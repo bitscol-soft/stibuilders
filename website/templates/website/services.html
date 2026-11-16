@@ -1,0 +1,88 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Services — {{ site.company_name }}{% endblock %}
+{% block body_class %}has-hero{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>Services</span>
+    </nav>
+    <h1 class="display mt-2" style="font-size:clamp(2.3rem,5vw,4rem)">One team,<br><em>land to keys.</em></h1>
+    <p class="lead" style="color:rgba(255,255,255,.82)">Development, construction, land sharing, interiors and post-handover care — delivered by people who are on our payroll, not a subcontractor's.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap-wide">
+    <div class="grid g-3">
+      {% for s in services %}
+      <article class="card card--hover" data-reveal>
+        {% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.title }}" style="width:100%;height:200px;object-fit:cover" loading="lazy">{% endif %}
+        <div class="card-body">
+          <span class="ico-round" style="width:42px;height:42px;border-radius:12px;background:var(--copper-soft);color:#8a5619;display:grid;place-items:center">{% icon s.icon %}</span>
+          <h3 class="mt-2" style="font-size:1.15rem">{{ s.title }}</h3>
+          <p class="small muted">{{ s.summary|default:s.body|striptags|truncatechars:140 }}</p>
+          <a class="link-arrow" href="{% url 'website:service_detail' s.slug %}">Read more {% icon 'i-arrow-right' %}</a>
+        </div>
+      </article>
+      {% empty %}
+      <article class="card card--hover">
+        <div class="card-body">
+          <span class="ico-round" style="width:42px;height:42px;border-radius:12px;background:var(--copper-soft);color:#8a5619;display:grid;place-items:center">{% icon 'i-building' %}</span>
+          <h3 class="mt-2">Apartment development</h3>
+          <p class="small muted">Feasibility, land purchase, design, RAJUK approval, construction and handover — as one contract.</p>
+        </div>
+      </article>
+      <article class="card card--hover">
+        <div class="card-body">
+          <span class="ico-round" style="width:42px;height:42px;border-radius:12px;background:var(--copper-soft);color:#8a5619;display:grid;place-items:center">{% icon 'i-layers' %}</span>
+          <h3 class="mt-2">Land sharing &amp; JV</h3>
+          <p class="small muted">We develop your land and hand back a defined share of apartments, with the split fixed in the deed.</p>
+        </div>
+      </article>
+      <article class="card card--hover">
+        <div class="card-body">
+          <span class="ico-round" style="width:42px;height:42px;border-radius:12px;background:var(--copper-soft);color:#8a5619;display:grid;place-items:center">{% icon 'i-lounge' %}</span>
+          <h3 class="mt-2">Interior &amp; fit-out</h3>
+          <p class="small muted">Turnkey interiors for apartments, offices and retail — designed by our studio, executed by our team.</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section paper2">
+  <div class="wrap-wide">
+    <div class="grid g-2" style="gap:clamp(2rem,5vw,4rem);align-items:center">
+      <div>
+        <span class="eyebrow">Why it matters</span>
+        <h2 class="mt-1">No handover gaps</h2>
+        <p class="lead mt-2">Most problems in Dhaka real estate happen in the seam between companies — when the developer, the contractor and the finishing team are three different firms. We keep all three in-house.</p>
+        <ul class="check-list mt-2">
+          <li>{% icon 'i-check-circle' %} One contract, one accountable project manager</li>
+          <li>{% icon 'i-check-circle' %} In-house structural engineers on site weekly</li>
+          <li>{% icon 'i-check-circle' %} Material samples approved by the buyer before order</li>
+          <li>{% icon 'i-check-circle' %} Three-year post-handover maintenance desk</li>
+        </ul>
+      </div>
+      <img src="{% static 'website/img/interior-kitchen.jpg' %}" alt="Interior finishing" class="rounded shadow" style="width:100%;height:380px;object-fit:cover" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="wrap-wide">
+    <div class="cta-band">
+      <img src="{% static 'website/img/proj-uttara.jpg' %}" alt="" loading="lazy">
+      <div class="cta-band__inner">
+        <div><span class="eyebrow on-dark">Have land?</span><h2 class="mt-2">Let's value it together.</h2><p>Send us the plot details and we will come back with a development proposal, timeline and share breakdown.</p></div>
+        <div class="row"><a class="btn btn--copper btn--lg" href="{% url 'website:land_sharing' %}">Land sharing explained</a><a class="btn btn--light btn--lg" href="{% url 'website:contact' %}?subject=land">Submit a plot</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

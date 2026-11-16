@@ -1,0 +1,317 @@
+{% load static website_extras %}<!DOCTYPE html>
+<html lang="{{ lang }}" data-theme="{{ theme }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.company_name }}{% if site.tagline %} — {{ site.tagline }}{% endif %}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}STI Builders Limited — apartments, commercial spaces and land-sharing developments across Dhaka. Explore ongoing, upcoming, ready and handed-over projects.{% endblock %}">
+  <meta name="theme-color" content="#0c1f26">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.company_name }}">
+  <meta property="og:title" content="{% block og_title %}{{ site.company_name }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Modern residential and commercial developments by STI Builders Limited, Dhaka.{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{% static 'website/img/hero-tower.jpg' %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="{% static 'website/img/logo-ink.png' %}">
+  <link rel="preload" as="image" href="{% static 'website/img/hero-tower.jpg' %}">
+  <link rel="stylesheet" href="{% static 'website/css/sti.css' %}">
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip-link" href="#main">Skip to content</a>
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preload" href="{% static 'website/img/icons.svg' %}" as="image" type="image/svg+xml">
+
+{% block header %}
+<header class="site-header" id="siteHeader">
+  <div class="wrap-wide site-header__inner">
+    <a href="{% url 'website:home' %}" class="brand" aria-label="{{ site.company_name }} home">
+      <img src="{% static 'website/img/logo-white.png' %}" alt="{{ site.company_name }}" class="brand__logo brand__logo--light">
+      <img src="{% static 'website/img/logo-ink.png' %}" alt="" class="brand__logo brand__logo--dark" aria-hidden="true">
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-item {% if request.resolver_match.url_name == 'project_list' %}is-active{% endif %}">
+        <button type="button" aria-expanded="false">Projects {% icon 'i-chevron-down' 'caret' %}</button>
+        <div class="nav-panel nav-panel--wide">
+          <div>
+            <p class="panel-label">By stage</p>
+            <a href="{% url 'website:project_list' %}?stage=ongoing">{% icon 'i-building' %} Ongoing <span class="badge-count" style="margin-left:auto">{{ stage_counts.ongoing }}</span></a>
+            <a href="{% url 'website:project_list' %}?stage=upcoming">{% icon 'i-sparkles' %} Upcoming <span class="badge-count" style="margin-left:auto">{{ stage_counts.upcoming }}</span></a>
+            <a href="{% url 'website:project_list' %}?stage=ready">{% icon 'i-key' %} Ready to Move <span class="badge-count" style="margin-left:auto">{{ stage_counts.ready }}</span></a>
+            <a href="{% url 'website:project_list' %}?stage=handover">{% icon 'i-check-circle' %} Handed Over <span class="badge-count" style="margin-left:auto">{{ stage_counts.handover }}</span></a>
+          </div>
+          <div>
+            <p class="panel-label">By suburb</p>
+            {% for loc in nav_locations %}
+            <a href="{% url 'website:suburb_detail' loc.slug %}">{% icon 'i-map-pin' %} {{ loc.name }}</a>
+            {% empty %}
+            <a href="{% url 'website:suburb_list' %}">{% icon 'i-map-pin' %} All suburbs</a>
+            {% endfor %}
+          </div>
+          <div>
+            <p class="panel-label">Featured</p>
+            {% for fp in footer_projects|slice:":3" %}
+            <a href="{{ fp.get_absolute_url }}">{% icon 'i-tower' %} {{ fp.name }}</a>
+            {% endfor %}
+            <a href="{% url 'website:project_list' %}">{% icon 'i-grid' %} All projects</a>
+            <a href="{% url 'website:compare' %}">{% icon 'i-sliders' %} Compare projects</a>
+          </div>
+          <div class="nav-panel__foot">
+            <span class="xs muted">Filter by stage, suburb, price, size, beds &amp; amenities</span>
+            <a href="{% url 'website:project_list' %}" class="link-arrow" style="font-size:.7rem">Browse all {% icon 'i-arrow-right' %}</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button type="button" aria-expanded="false">Buy &amp; Invest {% icon 'i-chevron-down' 'caret' %}</button>
+        <div class="nav-panel">
+          <a href="{% url 'website:land_sharing' %}">{% icon 'i-layers' %} Land Sharing</a>
+          <a href="{% url 'website:investors' %}">{% icon 'i-trending' %} Investment Desk</a>
+          <a href="{% url 'website:suburb_list' %}">{% icon 'i-chart' %} Suburb Analytics</a>
+          <a href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a Site Visit</a>
+          <a href="{% url 'website:faq' %}">{% icon 'i-info' %} Buyer FAQs</a>
+        </div>
+      </div>
+      <a href="{% url 'website:about' %}" class="{% if request.resolver_match.url_name == 'about' %}is-active{% endif %}">{% t 'nav.about' 'About' %}</a>
+      <a href="{% url 'website:services' %}" class="{% if request.resolver_match.url_name == 'services' %}is-active{% endif %}">{% t 'nav.services' 'Services' %}</a>
+      <a href="{% url 'website:gallery' %}" class="{% if request.resolver_match.url_name == 'gallery' %}is-active{% endif %}">{% t 'nav.gallery' 'Gallery' %}</a>
+      <a href="{% url 'website:news' %}" class="{% if request.resolver_match.url_name == 'news' %}is-active{% endif %}">{% t 'nav.news' 'News' %}</a>
+      <a href="{% url 'website:contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}is-active{% endif %}">{% t 'nav.contact' 'Contact' %}</a>
+    </nav>
+
+    <div class="nav-tools">
+      <!-- language + theme -->
+      <div class="pref-group" role="group" aria-label="Language">
+        <a class="pref-btn{% if not lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=en&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="en" title="English" lang="en">EN</a>
+        <a class="pref-btn{% if lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=bn&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="bn" title="বাংলা" lang="bn">বাং</a>
+      </div>
+      <button class="icon-btn" type="button" id="themeToggle" aria-label="Switch colour theme" title="Light / dark">
+        <span class="theme-ico theme-ico--sun">{% icon 'i-sun' %}</span>
+        <span class="theme-ico theme-ico--moon">{% icon 'i-moon' %}</span>
+      </button>
+      <button class="icon-btn" type="button" id="searchOpen" aria-label="{% t 'nav.search' 'Search projects' %}">{% icon 'i-search' %}</button>
+      <a class="icon-btn" href="{% url 'website:saved' %}" aria-label="{% t 'nav.saved' 'Saved projects' %}" style="position:relative">
+        {% icon 'i-heart' %}
+        <span class="icon-btn__count" id="savedCount" {% if not request.session.saved_projects %}hidden{% endif %}>{{ request.session.saved_projects|length }}</span>
+      </a>
+      <a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}" style="margin-left:.35rem">{% t 'nav.book' 'Book a visit' %}</a>
+      <button class="icon-btn nav-burger" type="button" id="drawerOpen" aria-label="{% t 'nav.menu' 'Open menu' %}">{% icon 'i-menu' %}</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer__scrim" data-close-drawer></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="drawer__head">
+      <img src="{% static 'website/img/logo-ink.png' %}" alt="{{ site.company_name }}">
+      <button class="icon-btn" type="button" data-close-drawer aria-label="{% t 'nav.close' 'Close menu' %}">{% icon 'i-x' %}</button>
+    </div>
+    <div class="drawer__body">
+      <button type="button" class="drawer__action" data-open-search>
+        {% icon 'i-search' %} {% t 'nav.search' 'Search projects' %}
+      </button>
+      <a href="{% url 'website:saved' %}">{% t 'nav.saved' 'Saved projects' %}
+        <small id="savedCountDrawer">{{ request.session.saved_projects|length|default:0 }}</small>
+      </a>
+      <a href="{% url 'website:home' %}">{% t 'nav.home' 'Home' %} {% icon 'i-chevron-right' %}</a>
+      <p class="drawer__group">Projects</p>
+      <a href="{% url 'website:project_list' %}">All projects <small>{{ stage_counts.all }}</small></a>
+      <a href="{% url 'website:project_list' %}?stage=ongoing">Ongoing <small>{{ stage_counts.ongoing }}</small></a>
+      <a href="{% url 'website:project_list' %}?stage=upcoming">Upcoming <small>{{ stage_counts.upcoming }}</small></a>
+      <a href="{% url 'website:project_list' %}?stage=ready">Ready to move <small>{{ stage_counts.ready }}</small></a>
+      <a href="{% url 'website:project_list' %}?stage=handover">Handed over <small>{{ stage_counts.handover }}</small></a>
+      <p class="drawer__group">Explore</p>
+      <a href="{% url 'website:suburb_list' %}">Suburb analytics {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:land_sharing' %}">Land sharing {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:investors' %}">Investors desk {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:compare' %}">Compare projects {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:saved' %}">Saved projects {% icon 'i-chevron-right' %}</a>
+      <p class="drawer__group">Company</p>
+      <a href="{% url 'website:about' %}">About us {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:services' %}">Services {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:gallery' %}">Gallery {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:news' %}">News &amp; insights {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:faq' %}">FAQs {% icon 'i-chevron-right' %}</a>
+      <a href="{% url 'website:contact' %}">Contact {% icon 'i-chevron-right' %}</a>
+    </div>
+    <div class="drawer__foot">
+      <a class="btn btn--copper btn--block" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} Book a site visit</a>
+      <a class="btn btn--ghost btn--block" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+      <div class="drawer__prefs">
+        <div class="pref-group">
+          <a class="pref-btn{% if not lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=en&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="en" lang="en">English</a>
+          <a class="pref-btn{% if lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=bn&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="bn" lang="bn">বাংলা</a>
+        </div>
+        <button class="pref-theme" type="button" data-theme-toggle>
+          <span class="theme-ico theme-ico--sun">{% icon 'i-sun' %}</span>
+          <span class="theme-ico theme-ico--moon">{% icon 'i-moon' %}</span>
+          <span data-theme-label>Dark mode</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="overlay-search" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="overlay-search__panel">
+    <div class="spread" style="margin-bottom:1rem">
+      <strong class="serif" style="font-size:1.35rem">Find your next address</strong>
+      <button class="icon-btn" type="button" data-close-search aria-label="Close search">{% icon 'i-x' %}</button>
+    </div>
+    <form action="{% url 'website:search' %}" method="get" role="search">
+      <input type="search" name="q" placeholder="Project name, suburb or address…" aria-label="Search" value="{{ request.GET.q|default:'' }}" autofocus>
+      <button class="btn btn--copper" type="submit" aria-label="Search">{% icon 'i-search' %}</button>
+    </form>
+    <div class="quick">
+      <span class="xs muted" style="width:100%;margin-top:.35rem">Popular</span>
+      {% for loc in nav_locations|slice:":5" %}
+      <a class="chip chip--soft" href="{% url 'website:search' %}?q={{ loc.name|urlencode }}">{{ loc.name }}</a>
+      {% endfor %}
+      <a class="chip chip--soft" href="{% url 'website:project_list' %}?stage=ongoing">Ongoing</a>
+      <a class="chip chip--soft" href="{% url 'website:project_list' %}?stage=ready">{% t 'stage.ready' 'Ready to move' %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<main id="main">
+  {% block content %}{% endblock %}
+</main>
+
+{% block footer %}
+<footer class="site-footer has-image">
+  <div class="site-footer__media" aria-hidden="true">
+    <img src="{% static 'website/img/footer-city.jpg' %}" alt="" decoding="async" fetchpriority="low" width="1800" height="700">
+  </div>
+
+  <div class="wrap-wide site-footer__inner">
+
+    <!-- 1. headline + contact rail -->
+    <div class="footer-top">
+      <div class="footer-top__lead">
+        <span class="eyebrow on-dark">{% t 'ft.eyebrow' 'Talk to a person' %}</span>
+        <h2 class="footer-top__title">{% t 'ft.headline' 'A flat is a big decision. Come and look at the concrete.' %}</h2>
+        <p class="footer-top__sub">{% t 'ft.sub' 'Our sales gallery in Uttara is open six days a week. Walk through the drawings, the payment plan and the site itself.' %}</p>
+      </div>
+      <div class="footer-top__contacts">
+        <a class="footer-tile" href="tel:{{ site.hotline|default:site.phone }}">
+          <span class="footer-tile__ico">{% icon 'i-phone' %}</span>
+          <span>
+            <small>{% t 'ft.hotline' 'Hotline' %}</small>
+            <b>{{ site.hotline|default:site.phone }}</b>
+          </span>
+        </a>
+        <a class="footer-tile" href="mailto:{{ site.email|default:'info@stibuilderslimited.com' }}">
+          <span class="footer-tile__ico">{% icon 'i-mail' %}</span>
+          <span>
+            <small>{% t 'ft.email' 'Email' %}</small>
+            <b>{{ site.email|default:"info@stibuilderslimited.com" }}</b>
+          </span>
+        </a>
+        <a class="footer-tile" href="{% url 'website:booking' %}">
+          <span class="footer-tile__ico">{% icon 'i-calendar' %}</span>
+          <span>
+            <small>{% t 'ft.visit' 'Site visit' %}</small>
+            <b>{% t 'ft.book_now' 'Book a slot' %}</b>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. link columns -->
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="{% static 'website/img/logo-white.png' %}" alt="{{ site.company_name }}" width="104" height="46">
+        <p>{{ site.about_short|default:"Building considered addresses across Dhaka since 2012 — apartments, commercial floors and land-sharing developments, delivered with structural integrity and quiet elegance." }}</p>
+        <div class="footer-social">
+          {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener" aria-label="Facebook">{% icon 'i-facebook' %}</a>{% endif %}
+          {% if site.instagram %}<a href="{{ site.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon 'i-instagram' %}</a>{% endif %}
+          {% if site.youtube %}<a href="{{ site.youtube }}" target="_blank" rel="noopener" aria-label="YouTube">{% icon 'i-youtube' %}</a>{% endif %}
+          {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn">{% icon 'i-linkedin' %}</a>{% endif %}
+          {% if site.whatsapp %}<a href="https://wa.me/{{ site.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp">{% icon 'i-whatsapp' %}</a>{% endif %}
+        </div>
+      </div>
+
+      <div>
+        <h4>{% t 'ft.explore' 'Explore' %}</h4>
+        <div class="footer-links">
+          <a href="{% url 'website:project_list' %}">{% t 'nav.all_projects' 'All projects' %}</a>
+          <a href="{% url 'website:project_list' %}?stage=ongoing">{% t 'stage.ongoing' 'Ongoing' %}</a>
+          <a href="{% url 'website:project_list' %}?stage=upcoming">{% t 'stage.upcoming' 'Upcoming' %}</a>
+          <a href="{% url 'website:project_list' %}?stage=ready">{% t 'stage.ready' 'Ready to move' %}</a>
+          <a href="{% url 'website:project_list' %}?stage=handover">{% t 'stage.handover' 'Handed over' %}</a>
+          <a href="{% url 'website:suburb_list' %}">{% t 'nav.suburbs' 'Suburb analytics' %}</a>
+          <a href="{% url 'website:compare' %}">{% t 'nav.compare' 'Compare projects' %}</a>
+        </div>
+      </div>
+
+      <div>
+        <h4>{% t 'ft.company' 'Company' %}</h4>
+        <div class="footer-links">
+          <a href="{% url 'website:about' %}">{% t 'nav.about' 'About STI Builders' %}</a>
+          <a href="{% url 'website:services' %}">{% t 'nav.services' 'Our services' %}</a>
+          <a href="{% url 'website:land_sharing' %}">{% t 'nav.land' 'Land sharing' %}</a>
+          <a href="{% url 'website:investors' %}">{% t 'nav.investors' 'Investor relations' %}</a>
+          <a href="{% url 'website:gallery' %}">{% t 'nav.gallery' 'Project gallery' %}</a>
+          <a href="{% url 'website:news' %}">{% t 'nav.news' 'News & insights' %}</a>
+          <a href="{% url 'website:faq' %}">{% t 'nav.faq' 'FAQs' %}</a>
+          <a href="{% url 'website:contact' %}">{% t 'nav.contact' 'Contact us' %}</a>
+        </div>
+      </div>
+
+      <div>
+        <h4>{% t 'ft.contact' 'Sales gallery' %}</h4>
+        <div class="footer-contact">
+          <div>{% icon 'i-map-pin' %}<span>{{ site.address|default:"House 41 (Flat A2), Sonargaon Janapath Road, Sector 12, Uttara Model Town, Dhaka 1230" }}</span></div>
+          <div>{% icon 'i-phone' %}<span><a href="tel:{{ site.phone }}">{{ site.phone }}</a>{% if site.phone_2 %} · <a href="tel:{{ site.phone_2 }}">{{ site.phone_2 }}</a>{% endif %}</span></div>
+          <div>{% icon 'i-clock' %}<span>{{ site.office_hours|default:"Saturday – Thursday · 10:00 AM – 7:00 PM" }}</span></div>
+        </div>
+        <div class="footer-lang">
+          <span class="xs">{% t 'ft.language' 'Language' %}</span>
+          <div class="pref-group">
+            <a class="pref-btn{% if not lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=en&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="en" lang="en">English</a>
+            <a class="pref-btn{% if lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=bn&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="bn" lang="bn">বাংলা</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. legal -->
+    <div class="footer-bottom">
+      <span>© {% now "Y" %} {{ site.company_name }}. {% t 'ft.rights' 'All rights reserved.' %} <span class="footer-bottom__reg">REHAB · RAJUK approved</span></span>
+      <nav aria-label="Legal">
+        <a href="{% url 'website:faq' %}">Terms &amp; conditions</a>
+        <a href="{% url 'website:faq' %}">Privacy policy</a>
+        <a href="{% url 'website:contact' %}">Sitemap</a>
+      </nav>
+    </div>
+
+    <!-- 4. credit -->
+    <p class="footer-credit">
+      {% t 'ft.credit_label' 'Designed, Developed &amp; Maintained By:' %}
+      <a href="https://www.bitscol.com" target="_blank" rel="noopener">BITSCOL</a>
+    </p>
+  </div>
+</footer>
+{% endblock %}
+
+<div class="fab-stack">
+  <a class="fab fab--wa" href="https://wa.me/{{ site.whatsapp|default:'8801923505050' }}" target="_blank" rel="noopener">
+    {% icon 'i-whatsapp' %}<span class="fab-label">WhatsApp</span>
+  </a>
+  <a class="fab" href="tel:{{ site.hotline|default:site.phone|default:'01923505050' }}">
+    {% icon 'i-phone' %}<span class="fab-label">Hotline</span>
+  </a>
+  <button class="fab fab--top" type="button" id="toTop" aria-label="Back to top">{% icon 'i-arrow-up' %}</button>
+</div>
+
+<script src="{% static 'website/js/sti.js' %}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

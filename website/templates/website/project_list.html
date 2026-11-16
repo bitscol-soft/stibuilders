@@ -1,0 +1,279 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Projects &amp; Listings — {{ site.company_name }}{% endblock %}
+{% block meta_description %}Browse ongoing, upcoming, ready-to-move and handed-over projects by STI Builders. Filter by suburb, budget, size, bedrooms, amenities and availability.{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero--compact">
+  <img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high">
+  <div class="wrap-wide">
+    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>{% t 'nav.projects' 'Projects' %}</span>
+    </nav>
+    <div class="spread mt-2" style="align-items:end;gap:1.5rem">
+      <div>
+        <span class="eyebrow on-dark">{% t 'pl.eyebrow' 'The portfolio' %}</span>
+        <h1 class="display mt-2" style="font-size:clamp(2.1rem,4.6vw,3.4rem)">{% t 'pl.title' 'Every STI address, in one place.' %}</h1>
+        <p class="lead" style="color:rgba(255,255,255,.82);max-width:62ch">{% t 'pl.sub' 'Filter by stage, suburb, budget, size, bedrooms, amenities or availability. Compare up to four projects side by side.' %}</p>
+      </div>
+      <div class="row hide-sm">
+        <a class="btn btn--ghost-light btn--sm" href="{% url 'website:compare' %}">{% icon 'i-sliders' %} {% t 'nav.compare' 'Compare' %}</a>
+        <a class="btn btn--ghost-light btn--sm" href="{% url 'website:suburb_list' %}">{% icon 'i-chart' %} {% t 'nav.suburbs' 'Suburb analytics' %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page-head" style="padding-top:clamp(1.5rem,3vw,2.5rem);padding-bottom:0">
+  <div class="wrap-wide">
+<div class="tabs mt-3" style="border-bottom:1px solid var(--line);padding-bottom:0">
+      <a class="tab {% if not active_filters.stage %}is-active{% endif %}" href="?" style="text-decoration:none">All <span class="xs muted">{{ stage_counts.all }}</span></a>
+      <a class="tab {% if active_filters.stage == 'ongoing' %}is-active{% endif %}" href="?stage=ongoing" style="text-decoration:none">{% t 'stage.ongoing' 'Ongoing' %} <span class="xs muted">{{ stage_counts.ongoing }}</span></a>
+      <a class="tab {% if active_filters.stage == 'upcoming' %}is-active{% endif %}" href="?stage=upcoming" style="text-decoration:none">{% t 'stage.upcoming' 'Upcoming' %} <span class="xs muted">{{ stage_counts.upcoming }}</span></a>
+      <a class="tab {% if active_filters.stage == 'ready' %}is-active{% endif %}" href="?stage=ready" style="text-decoration:none">{% t 'stage.ready' 'Ready to move' %} <span class="xs muted">{{ stage_counts.ready }}</span></a>
+      <a class="tab {% if active_filters.stage == 'handover' %}is-active{% endif %}" href="?stage=handover" style="text-decoration:none">{% t 'stage.handover' 'Handed over' %} <span class="xs muted">{{ stage_counts.handover }}</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap-wide" style="padding-top:1.25rem">
+  <div class="filter-drawer">
+    <!-- ============ FILTER SIDEBAR ============ -->
+    <aside class="filter-side" id="filterSide" aria-label="Filters">
+      <div class="filter-side__mobile-head" style="display:none;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--line-soft)">
+        <strong>Filters</strong>
+        <button class="icon-btn" type="button" id="filterClose" aria-label="Close filters">{% icon 'i-x' %}</button>
+      </div>
+
+      <form id="filterForm" method="get" action="{% url 'website:project_list' %}">
+        <div class="fgroup">
+          <div class="spread">
+            <strong class="xs" style="letter-spacing:.12em;text-transform:uppercase">Filters</strong>
+            {% if active_filters.q or active_filters.category or active_filters.suburb or active_filters.beds or active_filters.price_min or active_filters.amenity or active_filters.availability %}
+            <a class="xs" href="{% url 'website:project_list' %}{% if active_filters.stage %}?stage={{ active_filters.stage }}{% endif %}" style="color:var(--copper);font-weight:700">Reset all</a>
+            {% endif %}
+          </div>
+          <div class="field mt-2">
+            <label for="fq" class="sr-only">Keyword</label>
+            <input id="fq" type="search" name="q" value="{{ active_filters.q }}" placeholder="Project, suburb or road…">
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Stage {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <label class="fopt"><input type="radio" name="stage" value="" {% if not active_filters.stage %}checked{% endif %}> Any stage</label>
+            <label class="fopt"><input type="radio" name="stage" value="ongoing" {% if active_filters.stage == 'ongoing' %}checked{% endif %}> {% t 'stage.ongoing' 'Ongoing' %} <span class="count">{{ stage_counts.ongoing }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="upcoming" {% if active_filters.stage == 'upcoming' %}checked{% endif %}> {% t 'stage.upcoming' 'Upcoming' %} <span class="count">{{ stage_counts.upcoming }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="ready" {% if active_filters.stage == 'ready' %}checked{% endif %}> {% t 'stage.ready' 'Ready to move' %} <span class="count">{{ stage_counts.ready }}</span></label>
+            <label class="fopt"><input type="radio" name="stage" value="handover" {% if active_filters.stage == 'handover' %}checked{% endif %}> {% t 'stage.handover' 'Handed over' %} <span class="count">{{ stage_counts.handover }}</span></label>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Budget (BDT) {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <div class="range-row">
+              <input type="number" name="price_min" value="{{ active_filters.price_min }}" placeholder="Min" step="100000" min="0">
+              <span class="xs muted">to</span>
+              <input type="number" name="price_max" value="{{ active_filters.price_max }}" placeholder="Max" step="100000" min="0">
+            </div>
+            <div class="chip-select mt-2">
+              <label><input type="radio" name="budget_preset" onclick="setRange('price',0,9000000)"><span>Under 90 Lac</span></label>
+              <label><input type="radio" name="budget_preset" onclick="setRange('price',9000000,15000000)"><span>90L – 1.5 Cr</span></label>
+              <label><input type="radio" name="budget_preset" onclick="setRange('price',15000000,30000000)"><span>1.5 – 3 Cr</span></label>
+              <label><input type="radio" name="budget_preset" onclick="setRange('price',30000000,'')"><span>3 Cr +</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Size (sq ft) {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <div class="range-row">
+              <input type="number" name="size_min" value="{{ active_filters.size_min }}" placeholder="Min" step="50" min="0">
+              <span class="xs muted">to</span>
+              <input type="number" name="size_max" value="{{ active_filters.size_max }}" placeholder="Max" step="50" min="0">
+            </div>
+            <div class="chip-select mt-2">
+              <label><input type="radio" name="size_preset" onclick="setRange('size','','1250')"><span>Up to 1,250</span></label>
+              <label><input type="radio" name="size_preset" onclick="setRange('size','1250','1800')"><span>1,250 – 1,800</span></label>
+              <label><input type="radio" name="size_preset" onclick="setRange('size','1800','2500')"><span>1,800 – 2,500</span></label>
+              <label><input type="radio" name="size_preset" onclick="setRange('size','2500','')"><span>2,500 +</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Bedrooms {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <div class="chip-select">
+              <label><input type="radio" name="beds" value="" {% if not active_filters.beds %}checked{% endif %}><span>Any</span></label>
+              <label><input type="radio" name="beds" value="2" {% if active_filters.beds == '2' %}checked{% endif %}><span>2+</span></label>
+              <label><input type="radio" name="beds" value="3" {% if active_filters.beds == '3' %}checked{% endif %}><span>3+</span></label>
+              <label><input type="radio" name="beds" value="4" {% if active_filters.beds == '4' %}checked{% endif %}><span>4+</span></label>
+              <label><input type="radio" name="beds" value="5" {% if active_filters.beds == '5' %}checked{% endif %}><span>5+</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Property type {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <label class="fopt"><input type="checkbox" name="category" value="residential" {% is_filtered 'category' 'residential' as c1 %}{% if c1 %}checked{% endif %}> Residential</label>
+            <label class="fopt"><input type="checkbox" name="category" value="commercial" {% is_filtered 'category' 'commercial' as c2 %}{% if c2 %}checked{% endif %}> Commercial</label>
+            <label class="fopt"><input type="checkbox" name="category" value="mixed" {% is_filtered 'category' 'mixed' as c3 %}{% if c3 %}checked{% endif %}> Mixed use</label>
+            <label class="fopt"><input type="checkbox" name="category" value="land" {% is_filtered 'category' 'land' as c4 %}{% if c4 %}checked{% endif %}> Plot &amp; land sharing</label>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Suburb {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            {% for loc in locations %}
+            <label class="fopt"><input type="checkbox" name="suburb" value="{{ loc.slug }}" {% is_filtered 'suburb' loc.slug as sub %}{% if sub %}checked{% endif %}> {{ loc.name }} <span class="count">{{ loc.projects.count }}</span></label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Amenities {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            {% for a in amenities|slice:":10" %}
+            <label class="fopt"><input type="checkbox" name="amenity" value="{{ a.id }}" {% is_filtered 'amenity' a.id|stringformat:'s' as am %}{% if am %}checked{% endif %}> {{ a.name }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <button class="fgroup__head" type="button">Ownership &amp; availability {% icon 'i-chevron-down' %}</button>
+          <div class="fgroup__body">
+            <label class="fopt"><input type="radio" name="ownership" value="" {% if not active_filters.ownership %}checked{% endif %}> Any ownership</label>
+            <label class="fopt"><input type="radio" name="ownership" value="freehold" {% if active_filters.ownership == 'freehold' %}checked{% endif %}> Freehold</label>
+            <label class="fopt"><input type="radio" name="ownership" value="landshare" {% if active_filters.ownership == 'landshare' %}checked{% endif %}> Land sharing</label>
+            <label class="fopt"><input type="radio" name="ownership" value="joint" {% if active_filters.ownership == 'joint' %}checked{% endif %}> Joint venture</label>
+            <hr style="margin:1rem 0">
+            <label class="fopt"><input type="checkbox" name="availability" value="available" {% if active_filters.availability == 'available' %}checked{% endif %}> Only with available units</label>
+          </div>
+        </div>
+
+        <div class="row" style="gap:.5rem">
+          <button class="btn btn--ink btn--sm" type="submit" style="flex:1">Apply filters</button>
+          <a class="btn btn--ghost btn--sm" href="{% url 'website:project_list' %}">Clear</a>
+        </div>
+        <p class="xs muted mt-2" style="margin:0">Showing projects with published data. Prices are indicative and subject to revision.</p>
+      </form>
+    </aside>
+
+    <!-- ============ RESULTS ============ -->
+    <div>
+      <div class="filter-bar" style="padding-top:0">
+        <button class="btn btn--ghost btn--sm filter-open-mobile" type="button" id="filterOpen">{% icon 'i-filter' %} {% t 'filter.title' 'Filters' %}</button>
+        <div>
+          <strong style="font-size:1.05rem">{{ total_found }} project{{ total_found|pluralize }}</strong>
+          {% if total_found %}<span class="small muted"> · page {{ page }} of {{ total_pages }}</span>{% endif %}
+        </div>
+        <div class="spacer"></div>
+        <div class="segmented segmented--icon" role="group" aria-label="Layout">
+          <button type="button" data-view="grid" class="is-active" aria-label="Grid view" title="Grid view">{% icon 'i-grid' %}</button>
+          <button type="button" data-view="list" aria-label="List view" title="List view">{% icon 'i-list' %}</button>
+        </div>
+        <label class="xs muted" for="sort" style="margin-left:.35rem">Sort</label>
+        <select id="sort" class="input input--compact" onchange="location.href=this.value">
+          {% for value, label in sort_options %}
+          <option value="{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}sort={{ value }}" {% if active_filters.sort == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if active_filters.category or active_filters.suburb or active_filters.amenity or active_filters.beds or active_filters.price_min or active_filters.price_max or active_filters.size_min or active_filters.size_max or active_filters.q or active_filters.availability or active_filters.ownership %}
+      <div class="applied mb-3">
+        <span class="xs muted">Applied:</span>
+        {% if active_filters.q %}<span class="chip">“{{ active_filters.q }}” <a href="?{{ query_string }}" style="display:grid">{% icon 'i-x' %}</a></span>{% endif %}
+        {% if active_filters.price_min or active_filters.price_max %}<span class="chip">৳ {{ active_filters.price_min|default:"0"|bdt }} – {{ active_filters.price_max|default:"any"|bdt }} <a href="?{{ query_string }}" style="display:grid">{% icon 'i-x' %}</a></span>{% endif %}
+        {% if active_filters.size_min or active_filters.size_max %}<span class="chip">{{ active_filters.size_min|default:"0" }}–{{ active_filters.size_max|default:"any" }} sft <a href="?{{ query_string }}" style="display:grid">{% icon 'i-x' %}</a></span>{% endif %}
+        {% if active_filters.beds %}<span class="chip">{{ active_filters.beds }}+ bedrooms</span>{% endif %}
+        {% if active_filters.availability %}<span class="chip chip--moss">Available units</span>{% endif %}
+        {% for c in active_filters.category %}<span class="chip">{{ c|capfirst }}</span>{% endfor %}
+        {% for loc in active_filters.suburb %}<span class="chip">{{ loc }}</span>{% endfor %}
+        <a class="xs" href="{% url 'website:project_list' %}{% if active_filters.stage %}?stage={{ active_filters.stage }}{% endif %}" style="color:var(--copper);font-weight:700;margin-left:.25rem">Clear</a>
+      </div>
+      {% endif %}
+
+      <div class="grid grid-list-toggle" id="resultsGrid">
+        {% for project in projects %}{% include 'website/includes/project_card.html' %}{% empty %}
+        <div class="empty" style="grid-column:1/-1">
+          {% icon 'i-search' %}
+          <h3>No projects match these filters</h3>
+          <p class="muted">Try widening the budget or suburb. Or tell us what you need and we will call you when something matches.</p>
+          <div class="row" style="justify-content:center">
+            <a class="btn btn--ink btn--sm" href="{% url 'website:project_list' %}">Reset filters</a>
+            <a class="btn btn--ghost btn--sm" href="{% url 'website:contact' %}">Tell us your requirement</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if total_pages > 1 %}
+      <nav class="pagination" aria-label="Pagination">
+        {% if page > 1 %}<a href="?{{ query_string }}{% if query_string %}&{% endif %}page={{ page|add:'-1' }}" aria-label="Previous page">{% icon 'i-chevron-left' %}</a>{% endif %}
+        {% for p in page_range %}
+          {% if p == page %}<span class="is-active" aria-current="page">{{ p }}</span>
+          {% else %}<a href="?{{ query_string }}{% if query_string %}&{% endif %}page={{ p }}">{{ p }}</a>{% endif %}
+        {% endfor %}
+        {% if page < total_pages %}<a href="?{{ query_string }}{% if query_string %}&{% endif %}page={{ page|add:'1' }}" aria-label="Next page">{% icon 'i-chevron-right' %}</a>{% endif %}
+      </nav>
+      {% endif %}
+
+      <!-- map -->
+      <div class="mt-4">
+        <div class="spread mb-2">
+          <h2 style="font-size:1.25rem;margin:0">Projects on the map</h2>
+          <span class="xs muted">{{ projects|length }} shown on this page · hover a pin for details</span>
+        </div>
+        <div class="map-shell">
+          <div class="map-canvas" id="listMap"></div>
+          <div class="map-legend">
+            <span><i style="background:#2f7d5a"></i> {% t 'stage.ongoing' 'Ongoing' %}</span>
+            <span><i style="background:var(--copper)"></i> {% t 'stage.upcoming' 'Upcoming' %}</span>
+            <span><i style="background:#3b6ea5"></i> {% t 'stage.handover' 'Handed over' %}</span>
+            <span><i style="background:#1f8a70"></i> Ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ map_points|json_script:"listMapData" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function setRange(kind, min, max) {
+    var form = document.getElementById('filterForm');
+    form.querySelector('[name="' + kind + '_min"]').value = min;
+    form.querySelector('[name="' + kind + '_max"]').value = max;
+    form.submit();
+  }
+  (function(){
+    var data = JSON.parse(document.getElementById('listMapData').textContent || '[]');
+    var root = document.getElementById('listMap');
+    if (!root) return;
+    var latR = 0.055, lngR = 0.085;
+    data.forEach(function(p){
+      if (!p.lat || !p.lng) return;
+      var x = Math.max(3, Math.min(97, ((p.lng + 90.42) / lngR) * 100));
+      var y = Math.max(2, Math.min(96, ((23.95 - p.lat) / latR) * 100));
+      var a = document.createElement('a');
+      a.className = 'map-marker'; a.href = p.slug ? p.url : '#';
+      a.style.left = x + '%'; a.style.top = y + '%';
+      a.setAttribute('data-stage', p.stage);
+      a.innerHTML = '<span class="map-marker__dot"></span><span class="map-marker__card">' +
+        (p.image ? '<img src="' + p.image + '" alt="">' : '') +
+        '<b>' + p.name + '</b><small>' + p.stage + ' · ' + p.price + '</small></span>';
+      root.appendChild(a);
+    });
+  })();
+</script>
+{% endblock %}

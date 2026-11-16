@@ -1,0 +1,16 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}Page not found — {{ site.company_name }}{% endblock %}
+{% block content %}
+<section class="section" style="min-height:60vh;display:grid;place-items:center">
+  <div class="wrap-narrow center">
+    <span class="eyebrow no-rule">404</span>
+    <h1 class="display mt-2" style="font-size:clamp(2.4rem,6vw,4.4rem)">This address<br><em>doesn't exist.</em></h1>
+    <p class="lead" style="margin-inline:auto">The page may have moved with a project handover. Try the portfolio or the search.</p>
+    <div class="row" style="justify-content:center;margin-top:1.5rem">
+      <a class="btn btn--ink" href="{% url 'website:home' %}">Back home</a>
+      <a class="btn btn--ghost" href="{% url 'website:project_list' %}">Browse projects</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

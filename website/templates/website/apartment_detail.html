@@ -1,0 +1,316 @@
+{% extends 'website/base.html' %}
+{% load static website_extras %}
+{% block title %}{{ unit.label }} — {{ project.name }} — {{ site.company_name }}{% endblock %}
+{% block meta_description %}{{ unit.size_label }}, {{ unit.beds }} bedrooms, {{ unit.baths }} bathrooms in {{ project.name }}, {{ project.location.name }}. {{ unit.price_display }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero--compact unit-hero">
+  {% if project.cover_image %}<img src="{{ project.cover_image.url }}" alt="{{ project.name }}" fetchpriority="high" decoding="async">
+  {% else %}<img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high" decoding="async">{% endif %}
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}">{% t 'nav.home' 'Home' %}</a><span>/</span>
+      <a href="{% url 'website:project_list' %}">{% t 'nav.projects' 'Projects' %}</a><span>/</span>
+      <a href="{% url 'website:project_detail' project.slug %}">{{ project.name }}</a><span>/</span>
+      <span>{{ unit.unit_no|default:unit.title }}</span>
+    </nav>
+    <div class="row" style="gap:.4rem;margin-bottom:.6rem">
+      <span class="chip chip--glass">{{ project.get_stage_display }}</span>
+      <span class="chip chip--glass">{{ unit.get_unit_type_display }}</span>
+      <span class="chip chip--glass">{{ unit.status_label }}</span>
+    </div>
+    <h1 class="display">{{ unit.title|default:unit.label }}</h1>
+    <p class="lead">{{ project.name }} · {{ project.location.name }}{% if unit.floor_no %} · Floor {{ unit.floor_no }}{% endif %}</p>
+  </div>
+</section>
+
+<div class="pd-subnav">
+  <div class="wrap-wide pd-subnav__inner">
+    <a href="#overview">{% t 'unit.overview' 'Overview' %}</a>
+    <a href="#plan">{% t 'unit.plan' 'Floor plan' %}</a>
+    <a href="#spaces">{% t 'unit.spaces' 'Spaces' %}</a>
+    <a href="#finishing">{% t 'unit.finishing' 'Finishing' %}</a>
+    <a href="#payment">{% t 'unit.payment' 'Payment plan' %}</a>
+    <a href="#building">{% t 'unit.building' 'The building' %}</a>
+    <a href="#location">{% t 'unit.location' 'Location' %}</a>
+    <div class="pd-subnav__cta">
+      {% if unit.is_available %}
+      <a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">{% icon 'i-key' %} {% t 'unit.reserve' 'Reserve' %}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="wrap-wide pd-body">
+
+  <!-- ================= overview ================= -->
+  <section class="pd-section" id="overview">
+    <div class="unit-layout">
+      <div>
+        <span class="eyebrow">{% t 'unit.overview' 'Overview' %}</span>
+        <h2 class="mt-1">{{ unit.size_label }} {{ unit.get_unit_type_display|lower }}{% if unit.facing %} facing {{ unit.facing }}{% endif %}</h2>
+        <p class="lead">{{ unit.note|default:project.tagline }}</p>
+        <p class="muted">{% t 'unit.overview_body' 'This layout sits within a building of units sharing a single structural grid, so the walls you see on the plan are the walls you get. Net sellable area excludes the common areas, lift lobby and stair.' %}</p>
+
+        <dl class="spec-grid spec-grid--wide mt-3">
+          <div class="spec"><dt>{% t 'unit.size' 'Size' %}</dt><dd>{{ unit.size_label }}</dd></div>
+          {% if unit.balcony_sft %}<div class="spec"><dt>{% t 'unit.balcony' 'Balcony' %}</dt><dd>{{ unit.balcony_sft|bdt }} sft</dd></div>{% endif %}
+          <div class="spec"><dt>{% t 'unit.beds' 'Bedrooms' %}</dt><dd>{{ unit.beds }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.baths' 'Bathrooms' %}</dt><dd>{{ unit.baths }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.balconies' 'Balconies' %}</dt><dd>{{ unit.balconies }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.parking' 'Car parking' %}</dt><dd>{{ unit.parking }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.facing' 'Facing' %}</dt><dd>{{ unit.facing|default:"—" }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.floor' 'Floor' %}</dt><dd>{{ unit.floor_no|default:"—" }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.unit_no' 'Unit' %}</dt><dd>{{ unit.unit_no|default:"—" }}</dd></div>
+          <div class="spec"><dt>{% t 'unit.status' 'Status' %}</dt><dd><span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span></dd></div>
+        </dl>
+      </div>
+
+      <aside class="unit-buy">
+        <div class="unit-buy__price">
+          <div class="xs muted">{% t 'unit.price' 'Asking price' %}</div>
+          <div class="unit-buy__amount">{{ unit.price_display }}</div>
+          {% if unit.price_per_sqft %}<div class="xs muted">৳ {{ unit.price_per_sqft|bdt }} / {{ unit.area_unit }}</div>{% endif %}
+        </div>
+        {% if unit.booking_amount %}
+        <div class="unit-buy__row">
+          <span>{% t 'unit.booking' 'Booking money' %}</span>
+          <b>৳ {{ unit.booking_amount|bdt }}</b>
+        </div>
+        {% endif %}
+        {% if unit.size_per_bed %}
+        <div class="unit-buy__row">
+          <span>{% t 'unit.per_bed' 'Area per bedroom' %}</span>
+          <b>{{ unit.size_per_bed|bdt }} sft</b>
+        </div>
+        {% endif %}
+        <div class="unit-buy__actions">
+          {% if unit.is_available %}
+          <a class="btn btn--copper btn--block" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">{% icon 'i-key' %} {% t 'unit.reserve' 'Reserve this flat' %}</a>
+          {% else %}
+          <span class="btn btn--ghost btn--block" style="pointer-events:none;opacity:.65">{{ unit.status_label }}</span>
+          {% endif %}
+          <a class="btn btn--ghost btn--block" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
+        </div>
+        <p class="xs muted" style="margin:.5rem 0 0">{% t 'unit.price_note' 'Price includes finishing to the specification below. Registration, utility connections and parking are charged separately.' %}</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= floor plan ================= -->
+  <section class="pd-section" id="plan">
+    <span class="eyebrow">{% t 'unit.plan' 'Floor plan' %}</span>
+    <div class="spread" style="align-items:flex-end">
+      <h2 class="mt-1">{% t 'unit.plan_title' 'How the rooms are arranged' %}</h2>
+      {% if floor_plan and floor_plan.drawing_file %}
+      <a class="btn btn--ghost btn--sm" href="{{ floor_plan.drawing_file.url }}" download>{% icon 'i-download' %} {% t 'unit.download_plan' 'Download drawing' %}</a>
+      {% endif %}
+    </div>
+    <div class="unit-plan mt-2">
+      {% if unit.plan_image %}
+      <img src="{{ unit.plan_image }}" alt="Floor plan of {{ unit.label }}" loading="lazy">
+      {% else %}
+      <img src="{% static 'website/img/plans/floor-type-a.svg' %}" alt="Indicative floor plan of {{ unit.label }}" loading="lazy">
+      {% endif %}
+      <div class="unit-plan__meta">
+        <div>
+          <span class="xs muted">{% t 'unit.plan_scale' 'Drawing' %}</span>
+          <b>{% if unit.floor_plan %}{{ unit.title|default:unit.label }}{% elif floor_plan %}{{ floor_plan.title }}{% else %}Typical floor plan{% endif %}</b>
+          {% if not unit.floor_plan %}<small class="xs muted">Typical for this building</small>{% endif %}
+        </div>
+        <div><span class="xs muted">{% t 'unit.size' 'Size' %}</span><b>{{ unit.size_label }}</b></div>
+        <div><span class="xs muted">{% t 'unit.beds' 'Bedrooms' %}</span><b>{{ unit.beds }}</b></div>
+        <div><span class="xs muted">{% t 'unit.baths' 'Bathrooms' %}</span><b>{{ unit.baths }}</b></div>
+      </div>
+    </div>
+    <p class="xs muted mt-1">{% t 'unit.plan_note' 'Plans are indicative. Dimensions are in feet and inches; areas are net sellable. Furniture shown is for scale only.' %}</p>
+  </section>
+
+  <!-- ================= spaces ================= -->
+  <section class="pd-section" id="spaces">
+    <span class="eyebrow">{% t 'unit.spaces' 'Room by room' %}</span>
+    <h2 class="mt-1">{% t 'unit.spaces_title' 'What you get, room by room' %}</h2>
+    <div class="room-grid mt-2">
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-lounge' %}</span>
+        <h3>{% t 'room.living' 'Living & dining' %}</h3>
+        <p>{% t 'room.living_desc' 'A single open span off the entry, sized for a six-seat table and a full sofa set, with the balcony beyond.' %}</p>
+      </article>
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-bed' %}</span>
+        <h3>{% t 'room.master' 'Master bedroom' %}</h3>
+        <p>{% t 'room.master_desc' 'Attached bathroom and a built-in wardrobe niche, set on the quieter face of the flat.' %}</p>
+      </article>
+      {% if unit.beds > 2 %}
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-bed' %}</span>
+        <h3>{% t 'room.other_beds' 'Additional bedrooms' %}</h3>
+        <p>{{ unit.beds|add:"-1" }} more bedrooms, each able to take a queen bed with circulation space on both sides.</p>
+      </article>
+      {% endif %}
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-kitchen' %}</span>
+        <h3>{% t 'room.kitchen' 'Kitchen' %}</h3>
+        <p>{% t 'room.kitchen_desc' 'L-shaped counter with a service balcony or utility shaft, plumbed for a washing machine.' %}</p>
+      </article>
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-bath' %}</span>
+        <h3>{% t 'room.baths' 'Bathrooms' %}</h3>
+        <p>{{ unit.baths }} bathrooms — the master en-suite plus common facilities, all with exhaust ventilation.</p>
+      </article>
+      {% if unit.balconies %}
+      <article class="room-card">
+        <span class="room-card__ico">{% icon 'i-balcony' %}</span>
+        <h3>{% t 'room.balcony' 'Balconies' %}</h3>
+        <p>{{ unit.balconies }} balcony{{ unit.balconies|pluralize }}{% if unit.facing %} on the {{ unit.facing }} face{% endif %}, with MS railing and stone coping.</p>
+      </article>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- ================= finishing ================= -->
+  <section class="pd-section" id="finishing">
+    <span class="eyebrow">{% t 'unit.finishing' 'Finishing' %}</span>
+    <h2 class="mt-1">{% t 'unit.finishing_title' 'What is included in the price' %}</h2>
+    <div class="grid g-2 mt-2" style="gap:.4rem 2rem">
+      {% for f in project_features %}
+      <div class="feature-row">{% icon 'i-check' %}<span>{{ f.name }}</span></div>
+      {% endfor %}
+    </div>
+    {% if unit_only_features %}
+    <h3 class="mt-3" style="font-size:1rem">{% t 'unit.unit_extra' 'Specific to this unit' %}</h3>
+    <div class="row mt-1" style="gap:.4rem">
+      {% for f in unit_only_features %}<span class="chip chip--soft">{{ f.name }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- ================= payment ================= -->
+  <section class="pd-section" id="payment">
+    <span class="eyebrow">{% t 'unit.payment' 'Payment plan' %}</span>
+    <h2 class="mt-1">{% t 'unit.payment_title' 'When each payment falls due' %}</h2>
+    <p class="muted">{% t 'unit.payment_sub' 'Construction-linked, so you pay as the building rises. Percentages are of the flat price.' %}</p>
+    {% if unit.pricing %}
+    <div class="panel mt-2" style="padding:0;overflow:hidden">
+      <div style="overflow-x:auto">
+        <table class="units-table">
+          <thead><tr>
+            <th>{% t 'unit.stage' 'Stage' %}</th>
+            <th>{% t 'unit.trigger' 'When' %}</th>
+            <th>%</th>
+            <th>{% t 'unit.amount' 'Amount' %}</th>
+          </tr></thead>
+          <tbody>
+            {% for row in unit.pricing %}
+            <tr>
+              <td><span class="u-title">{{ row.name }}</span></td>
+              <td class="muted">{{ row.note }}</td>
+              <td>{{ row.pct }}%</td>
+              <td class="u-price">৳ {{ row.amount|bdt }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="xs muted mt-1">{% t 'unit.payment_note' 'Indicative schedule. The final schedule is fixed in the allotment letter and may be adjusted for your booking date.' %}</p>
+    {% if unit.pricing_is_projected %}
+    <p class="xs muted" style="margin-top:.6rem">
+      {% t 'unit.projected' 'Shown against this project’s entry price because this unit is no longer priced. Ask the desk for the schedule that applies to your booking.' %}
+    </p>
+    {% endif %}
+    {% else %}
+    <p class="muted mt-2">{% t 'unit.no_price' 'Pricing for this unit is available on request.' %}</p>
+    {% endif %}
+  </section>
+
+  <!-- ================= the building ================= -->
+  <section class="pd-section" id="building">
+    <span class="eyebrow">{% t 'unit.building' 'The building' %}</span>
+    <h2 class="mt-1">{{ project.name }}</h2>
+    <p class="lead">{{ project.tagline }}</p>
+    <dl class="spec-grid spec-grid--wide mt-2">
+      <div class="spec"><dt>{% t 'pd.location' 'Location' %}</dt><dd>{{ project.location.name }}</dd></div>
+      <div class="spec"><dt>{% t 'pd.floors' 'Floors' %}</dt><dd>{{ project.floors }}</dd></div>
+      <div class="spec"><dt>{% t 'pd.total_units' 'Total units' %}</dt><dd>{{ project.total_units }}</dd></div>
+      <div class="spec"><dt>{% t 'pd.handover' 'Handover' %}</dt><dd>{{ project.handover_date|date:"M Y"|default:"—" }}</dd></div>
+      <div class="spec"><dt>{% t 'pd.progress' 'Progress' %}</dt><dd>{{ project.completion_pct }}%</dd></div>
+      <div class="spec"><dt>{% t 'pd.architect' 'Architect' %}</dt><dd>{{ project.architect|default:"—" }}</dd></div>
+    </dl>
+    {% if milestones %}
+    <div class="timeline mt-3">
+      {% for m in milestones %}
+      <div class="tl-item{% if m.is_done %} is-done{% endif %}">
+        <span class="when">
+          {% if m.completed_date %}Completed {{ m.completed_date|date:"M Y" }}
+          {% elif m.target_date %}Target {{ m.target_date|date:"M Y" }}
+          {% else %}Planned{% endif %}
+        </span>
+        <h4>{{ m.title }}</h4>
+        {% if m.description %}<p>{{ m.description }}</p>{% endif %}
+        <div class="tl-bar"><span style="width:{{ m.progress_pct }}%;background:{% if m.is_done %}var(--copper){% else %}var(--moss){% endif %}"></span></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row mt-2">
+      <a class="btn btn--ghost btn--sm" href="{% url 'website:project_detail' project.slug %}">{% icon 'i-building' %} {% t 'unit.see_project' 'See the full project page' %}</a>
+    </div>
+  </section>
+
+  <!-- ================= location ================= -->
+  <section class="pd-section" id="location">
+    <span class="eyebrow">{% t 'unit.location' 'Location' %}</span>
+    <h2 class="mt-1">{% t 'unit.location_title' 'Getting there' %}</h2>
+    <p class="lead">{{ project.address }}</p>
+    {% if landmarks %}
+    <div class="grid g-3 mt-2" style="gap:.5rem 1.5rem">
+      {% for l in landmarks %}
+      <div class="feature-row">
+        {% icon l.get_category_display %}
+        <span>{{ l.name }}{% if l.distance_km %} <small class="muted">· {{ l.distance_km }} km</small>{% endif %}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row mt-2">
+      <a class="btn btn--ghost btn--sm" href="{% url 'website:suburb_detail' project.location.slug %}">{% icon 'i-chart' %} {% t 'unit.suburb' 'Suburb analytics' %}</a>
+      {% if project.map_latitude %}
+      <a class="btn btn--ghost btn--sm" href="https://maps.google.com/?q={{ project.map_latitude }},{{ project.map_longitude }}" target="_blank" rel="noopener">{% icon 'i-map-pin' %} {% t 'unit.directions' 'Open in maps' %}</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- ================= other units ================= -->
+  {% if similar %}
+  <section class="pd-section">
+    <div class="spread" style="align-items:flex-end">
+      <div>
+        <span class="eyebrow">{% t 'unit.others' 'Other layouts' %}</span>
+        <h2 class="mt-1">{% t 'unit.others_title' 'In the same building' %}</h2>
+      </div>
+      <div class="row">
+        {% if prev_unit %}<a class="btn btn--ghost btn--sm" href="{% url 'website:apartment_detail' project.slug prev_unit.pk %}">{% icon 'i-chevron-left' %} {{ prev_unit.title|default:prev_unit.label }}</a>{% endif %}
+        {% if next_unit %}<a class="btn btn--ghost btn--sm" href="{% url 'website:apartment_detail' project.slug next_unit.pk %}">{{ next_unit.title|default:next_unit.label }} {% icon 'i-chevron-right' %}</a>{% endif %}
+      </div>
+    </div>
+    <div class="grid g-3 mt-2">
+      {% for u in similar %}
+      <a class="unit-mini" href="{% url 'website:apartment_detail' project.slug u.pk %}">
+        <div class="unit-mini__top">
+          <b>{{ u.title|default:u.label }}</b>
+          <span class="status-dot" data-s="{{ u.status }}">{{ u.status_label }}</span>
+        </div>
+        <div class="unit-attrs">
+          <span>{% icon 'i-area' %} {{ u.size_label }}</span>
+          <span>{% icon 'i-bed' %} {{ u.beds }}</span>
+          <span>{% icon 'i-bath' %} {{ u.baths }}</span>
+        </div>
+        <div class="unit-mini__price">{{ u.price_display }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

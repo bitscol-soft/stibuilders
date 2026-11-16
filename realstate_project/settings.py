@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).lower() in ('1', 'true', 'yes', 'on')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +23,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!bt9+vi_cs-4mr7%2dq5ryv6+fqpljr&w4#2_2j^5j5&ycxsuw'
+#
+# The key is read from the environment so it never has to live in the repo.
+# The value below is a throwaway used only for local runs and the static site
+# export; set DJANGO_SECRET_KEY in production and treat any committed key as
+# already compromised.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'dev-only-insecure-key-change-me-4f8a2c9e6b1d7350a2c5e8b4d7f1069a',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env_bool('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+    if h.strip()
+]
 
 
 # Application definition
@@ -37,10 +52,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djangosecure',
+    'django.contrib.sitemaps',
     'realstateapp',
     'ckeditor',
     'property',
+    'website',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +66,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # PreviewFrameMiddleware sits BEFORE clickjacking on purpose: responses run
+    # in reverse order, so this way ours executes last and can strip the header
+    # after Django's middleware has added it.
+    'website.middleware.PreviewFrameMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -62,6 +82,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'website.context_processors.prefs',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -147,19 +168,28 @@ CKEDITOR_CONFIGS = {
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stibuilders_realstate_project_db',
-        'USER': 'stibuild_stibuilders',
-        'PASSWORD': 'l*N%z9?{canG',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+if os.environ.get('DATABASE_ENGINE', 'sqlite') == 'mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME', 'stibuilders_realstate_project_db'),
+            'USER': os.environ.get('DB_USER', 'root'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
     }
-} 
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -198,13 +228,46 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/stibuilders/public_html/static/'
-MEDIA_URL   ='/media/'
-MEDIA_ROOT  ='/home/stibuilders/public_html/static/realstateapp/media/'
+STATIC_ROOT = os.environ.get('STATIC_ROOT', str(BASE_DIR / 'staticfiles'))
+# Uploaded media lives inside the app's static tree so that a fresh clone (or a
+# preview sandbox) always renders the seeded imagery without a separate media
+# server. In production point MEDIA_ROOT/MEDIA_URL at object storage instead.
+MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', str(BASE_DIR / 'website' / 'static' / 'website' / 'media'))
+
+_extra_static = os.environ.get('EXTRA_STATIC_DIR')
+STATICFILES_DIRS = [_extra_static] if _extra_static else []
+
+# The live media library is served from the legacy static location during the
+# transition; keep it in MEDIAFILES_DIRS so image URLs resolve in development.
+LEGACY_MEDIA_ROOT = BASE_DIR / 'realstateapp' / 'static' / 'realstateapp' / 'media'
+
+LOGIN_URL = '/dashboard-login/'
 
 
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Allow the Arena preview host and any tunnel domain to reach the dev server.
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    o for o in os.environ.get(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://*.e2b.app,https://*.arena.site,https://*.arena.ai,'
+        'http://localhost:8000,http://127.0.0.1:8000'
+    ).split(',') if o
+]
+# The hosted preview serves the app inside a cross-origin iframe, so SAMEORIGIN
+# would blank it out. X_FRAME_OPTIONS stays at a VALID value (never 'ALLOWALL',
+# which is not a real directive) and website.middleware.PreviewFrameMiddleware
+# strips the header for public pages, leaving /admin/ protected.
+# Set DJANGO_FRAME_GUARD=1 on a public deployment to restore full clickjacking
+# protection everywhere.
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+FRAME_GUARD_ENABLED = env_bool('DJANGO_FRAME_GUARD', False)
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+MEDIA_LEGACY_PREFIX = 'realstateapp/media/'
 FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
