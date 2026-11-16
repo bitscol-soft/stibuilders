@@ -117,5 +117,13 @@ submission, shortlist toggling, JSON feeds, sitemap and money formatting.
   `MEDIA_ROOT` by the seeder so media URLs match production behaviour.
 * Legacy build (`realstateapp`, `property`) data is untouched; the old public URL
   patterns 301-redirect into the new information architecture.
+* Five of the seeded projects are recovered from the developer's own published
+  listing (stibuilderslimited.com, Wayback capture of 30 Apr 2024): STI Rose
+  Garden, South Palace, STI Bandan Residences, Apon Nibas and S.I. Palace. Their
+  names, stages, locations, apartment sizes and bed/bath counts are taken from
+  that listing; the legacy site's prices did not scale with its own quoted
+  sizes, so prices here are modelled at the same per-sqft band as the rest of
+  the Uttara stock.
+* The design & build imagery for those five is generated, not archival.
 * The proposal PDF referenced Laravel/React; this repository is Django, so the
   redesign ships as a Django app with server-rendered templates, zero build step.
