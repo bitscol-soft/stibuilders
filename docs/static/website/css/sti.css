@@ -1121,6 +1121,24 @@ tr:hover .row-go, a:hover > .row-go { background: var(--inverse); border-color: 
 .footer-bottom__reg { display: inline-block; margin-left: .5rem; padding-left: .6rem; border-left: 1px solid rgba(255,255,255,.18); }
 .footer-bottom nav { display: flex; flex-wrap: wrap; gap: 1rem; }
 .footer-bottom a { font-size: .74rem; }
+
+/* credit line: quiet, centred, and the BITSCOL mark is the only coloured word */
+.footer-credit {
+  margin: .9rem 0 0;
+  padding-top: .9rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+  text-align: center;
+  font-size: .72rem;
+  letter-spacing: .01em;
+  color: #7d8f91;
+}
+.footer-credit a {
+  color: var(--copper-2);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color .2s var(--ease);
+}
+.footer-credit a:hover { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
 @media (max-width: 560px) {
   .footer-bottom { flex-direction: column; align-items: flex-start; }
   .footer-bottom__reg { display: block; margin: .4rem 0 0; padding: 0; border: 0; }

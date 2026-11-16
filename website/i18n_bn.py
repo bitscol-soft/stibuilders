@@ -173,6 +173,7 @@ BN = {
     'ft.visit': 'সাইট ভিজিট',
     'ft.book_now': 'স্লট বুক করুন',
     'ft.language': 'ভাষা',
+    'ft.credit_label': 'ডিজাইন, ডেভেলপমেন্ট ও রক্ষণাবেক্ষণ:',
     'pd.architect': 'স্থপতি',
     'pd.floors': 'তলা সংখ্যা',
     'pd.progress': 'অগ্রগতি',
