@@ -54,6 +54,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # PreviewFrameMiddleware sits BEFORE clickjacking on purpose: responses run
+    # in reverse order, so this way ours executes last and can strip the header
+    # after Django's middleware has added it.
+    'website.middleware.PreviewFrameMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -239,10 +243,18 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     o for o in os.environ.get(
         'CSRF_TRUSTED_ORIGINS',
-        'https://*.e2b.app,http://localhost:8000,http://127.0.0.1:8000'
+        'https://*.e2b.app,https://*.arena.site,https://*.arena.ai,'
+        'http://localhost:8000,http://127.0.0.1:8000'
     ).split(',') if o
 ]
+# The hosted preview serves the app inside a cross-origin iframe, so SAMEORIGIN
+# would blank it out. X_FRAME_OPTIONS stays at a VALID value (never 'ALLOWALL',
+# which is not a real directive) and website.middleware.PreviewFrameMiddleware
+# strips the header for public pages, leaving /admin/ protected.
+# Set DJANGO_FRAME_GUARD=1 on a public deployment to restore full clickjacking
+# protection everywhere.
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+FRAME_GUARD_ENABLED = env_bool('DJANGO_FRAME_GUARD', False)
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 MEDIA_LEGACY_PREFIX = 'realstateapp/media/'

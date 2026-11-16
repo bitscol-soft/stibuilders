@@ -157,6 +157,20 @@ class WebsiteSmokeTests(TestCase):
         res = self.client.get(reverse('website:set_prefs'), {'lang': 'bn', 'next': 'https://evil.example/'})
         self.assertEqual(res['Location'], '/')
 
+    def test_public_pages_can_be_framed_for_the_preview(self):
+        # The hosted preview embeds the app in a cross-origin iframe, so public
+        # pages must not carry X-Frame-Options.
+        for url in (reverse('website:home'), reverse('website:project_list'),
+                    reverse('website:booking')):
+            with self.subTest(url=url):
+                res = self.client.get(url)
+                self.assertNotIn('X-Frame-Options', res.headers)
+                self.assertIn('frame-ancestors', res.headers.get('Content-Security-Policy', ''))
+
+    def test_admin_keeps_clickjacking_protection(self):
+        res = self.client.get('/admin/login/')
+        self.assertEqual(res.headers.get('X-Frame-Options'), 'SAMEORIGIN')
+
     def test_footer_uses_dark_image_band(self):
         res = self.client.get(reverse('website:home'))
         self.assertContains(res, 'site-footer has-image')
