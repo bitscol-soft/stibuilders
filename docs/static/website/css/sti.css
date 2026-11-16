@@ -1274,6 +1274,25 @@ body.has-hero .site-header:not(.is-solid) .btn--copper { --btn-fg: #fff; }
 .map-legend span { display: inline-flex; align-items: center; gap: .35rem; }
 .map-legend i { width: 8px; height: 8px; border-radius: 50%; display: block; }
 
+/* The illustrative map is a hand-drawn light surface; in the dark theme it
+   stayed bright and its white legend box made the labels illegible. Give it a
+   dark canvas and a matching legend. */
+:root[data-theme="dark"] .map-shell {
+  background: radial-gradient(120% 100% at 20% 0%, #16303a 0%, #12282f 42%, #10232a 60%, #0e1f25 100%);
+  border-color: var(--edge);
+}
+:root[data-theme="dark"] .map-canvas {
+  background-image:
+    linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+}
+:root[data-theme="dark"] .map-legend {
+  background: rgba(9,22,28,.86);
+  border-color: var(--edge);
+  color: var(--on-surface);
+}
+:root[data-theme="dark"] .map-shell .xs { color: var(--on-surface-soft); }
+
 /* ---------- tabs pane helper ---------- */
 [data-pane][hidden] { display: none !important; }
 
