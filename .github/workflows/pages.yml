@@ -48,10 +48,13 @@ jobs:
         run: python manage.py collectstatic --noinput
 
       - name: Build the static site into docs/
+        # Pages for this repository is set to "Deploy from a branch" with the
+        # branch ROOT as the folder, so the export lands at /<repo>/docs/ and
+        # every generated link has to carry that full prefix.
         run: |
           python manage.py export_static \
             --out docs \
-            --base-path "/${GITHUB_REPOSITORY#*/}/"
+            --base-path "/${GITHUB_REPOSITORY#*/}/docs/"
           # Pages must not run Jekyll over the export
           touch docs/.nojekyll
 
