@@ -180,7 +180,7 @@ class WebsiteSmokeTests(TestCase):
     def test_footer_uses_dark_image_band(self):
         res = self.client.get(reverse('website:home'))
         self.assertContains(res, 'site-footer has-image')
-        self.assertContains(res, 'footer-tower.jpg')
+        self.assertContains(res, 'footer-city.jpg')
 
     def test_legacy_redirects(self):
         res = self.client.get('/browse-all-property/')
@@ -299,9 +299,9 @@ class FooterConflictTests(TestCase):
     def test_footer_image_is_present_and_not_lazy(self):
         res = self.client.get(reverse('website:home'))
         html = res.content.decode()
-        self.assertIn('footer-tower.jpg', html)
+        self.assertIn('footer-city.jpg', html)
         # a lazy background can stay blank on tall footers that never scroll
-        self.assertNotRegex(html, r'footer-tower\.jpg[^>]*loading="lazy"')
+        self.assertNotRegex(html, r'footer-city\.jpg[^>]*loading="lazy"')
 
 
 class StaticExportTests(TestCase):
@@ -342,3 +342,147 @@ class StaticExportTests(TestCase):
             call_command('export_static', out=str(out), base_path='/stibuilders/',
                          stdout=buf, verbosity=0)
             self.assertIn('every internal link resolves', buf.getvalue())
+
+
+class ApartmentDetailTests(TestCase):
+    """Every flat gets its own page, not just a modal fragment."""
+
+    @classmethod
+    def setUpTestData(cls):
+        from django.core.management import call_command
+        call_command('seed_website', verbosity=0)
+
+    def _unit(self, **filters):
+        from website.models import Apartment
+        qs = Apartment.objects.filter(is_active=True).select_related('project')
+        return qs.filter(**filters).first() or qs.first()
+
+    def test_unit_page_renders_with_its_own_url(self):
+        unit = self._unit()
+        res = self.client.get(reverse('website:apartment_detail',
+                                      args=[unit.project.slug, unit.pk]))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, unit.size_label)
+        self.assertEqual(res.context['unit'].pk, unit.pk)
+
+    def test_unit_page_is_reachable_from_the_project_page(self):
+        unit = self._unit()
+        res = self.client.get(reverse('website:project_detail',
+                                      args=[unit.project.slug]))
+        expected = reverse('website:apartment_detail', args=[unit.project.slug, unit.pk])
+        self.assertContains(res, expected)
+
+    def test_unit_page_covers_the_required_detail(self):
+        unit = self._unit()
+        html = self.client.get(reverse('website:apartment_detail',
+                                       args=[unit.project.slug, unit.pk])).content.decode()
+        for section in ('id="overview"', 'id="plan"', 'id="spaces"', 'id="finishing"',
+                        'id="payment"', 'id="building"', 'id="location"'):
+            self.assertIn(section, html, f'missing {section}')
+        # beds, baths, size and features must all be visible text
+        self.assertIn(str(unit.beds), html)
+        self.assertIn(str(unit.baths), html)
+
+    def test_payment_schedule_sums_to_the_flat_price(self):
+        unit = self._unit(price__isnull=False)
+        schedule = unit.pricing
+        self.assertTrue(schedule)
+        self.assertEqual(sum(row['pct'] for row in schedule), 100)
+        self.assertEqual(sum(row['amount'] for row in schedule), int(unit.price))
+
+    def test_schedule_falls_back_to_the_project_entry_price(self):
+        from website.models import Apartment
+        unit = (Apartment.objects.filter(price__isnull=True,
+                                         project__price_from__isnull=False)
+                .select_related('project').first())
+        if unit is None:
+            self.skipTest('no unpriced unit with a project entry price')
+        self.assertTrue(unit.pricing_is_projected)
+        self.assertEqual(sum(r['amount'] for r in unit.pricing), int(unit.project.price_from))
+
+    def test_unknown_unit_is_404(self):
+        res = self.client.get(reverse('website:apartment_detail',
+                                      args=['sti-royal-tower', 999999]))
+        self.assertEqual(res.status_code, 404)
+
+    def test_unit_from_another_project_is_404(self):
+        from website.models import Apartment
+        unit = self._unit()
+        other = Apartment.objects.exclude(project=unit.project).first()
+        if other is None:
+            self.skipTest('only one project seeded')
+        res = self.client.get(reverse('website:apartment_detail',
+                                      args=[other.project.slug, unit.pk]))
+        self.assertEqual(res.status_code, 404)
+
+
+class HeaderPreferenceControlTests(TestCase):
+    """Both preference controls must stay usable at every width.
+
+    The language switch used to be display:none below 860px, so the site
+    silently lost its EN/BN toggle on phones and in narrow windows.
+    """
+
+    def test_language_switch_is_not_hidden_by_css(self):
+        import re
+        from pathlib import Path
+        from django.conf import settings
+        css = (Path(settings.BASE_DIR) / 'website' / 'static' / 'website'
+               / 'css' / 'sti.css').read_text(encoding='utf-8')
+        # find any rule that hides the header pref-group
+        for block in re.findall(r'\.nav-tools[^{]*\{[^}]*\}', css):
+            self.assertNotIn('pref-group', block.replace(' ', ''), 
+                             'a header rule still hides the language switch')
+
+    def test_both_controls_render_on_every_page(self):
+        for name in ('website:home', 'website:project_list', 'website:about'):
+            html = self.client.get(reverse(name)).content.decode()
+            self.assertIn('data-pref="lang"', html, f'{name} has no language switch')
+            self.assertRegex(html, r'id="themeToggle"', f'{name} has no theme switch')
+
+    def test_sticky_bars_use_theme_tokens(self):
+        """A hard-coded cream background made dark-mode links invisible."""
+        import re
+        from pathlib import Path
+        from django.conf import settings
+        css = (Path(settings.BASE_DIR) / 'website' / 'static' / 'website'
+               / 'css' / 'sti.css').read_text(encoding='utf-8')
+        for selector in ('.pd-subnav', '.site-header.is-solid'):
+            block = re.search(re.escape(selector) + r'[^{]*\{[^}]*\}', css)
+            self.assertIsNotNone(block, f'{selector} rule missing')
+            self.assertNotIn('rgba(251,249,245', block.group(0),
+                             f'{selector} hard-codes a light background')
+
+
+class BengaliCoverageTests(TestCase):
+    """No key should survive as English when the UI is in Bengali.
+
+    A key added to a template without a matching entry in i18n_bn falls back to
+    the English default, which is how the apartment page shipped half-English.
+    """
+
+    PAGES = ['website:home', 'website:project_list', 'website:about',
+             'website:faq', 'website:booking', 'website:apartment_detail']
+
+    def test_apartment_and_footer_keys_exist(self):
+        from website.i18n_bn import BN
+        for key in ('unit.overview', 'unit.plan', 'unit.spaces', 'unit.finishing',
+                    'unit.payment', 'unit.building', 'unit.location', 'unit.reserve',
+                    'unit.price', 'unit.booking', 'ft.eyebrow', 'ft.headline',
+                    'ft.hotline', 'ft.language', 'room.living', 'room.kitchen'):
+            self.assertIn(key, BN, f'missing Bengali string for {key}')
+            self.assertTrue(BN[key].strip(), f'empty Bengali string for {key}')
+
+    def test_template_keys_are_all_translated(self):
+        import re
+        from pathlib import Path
+        from django.conf import settings
+        from website.i18n_bn import BN
+        templates = (Path(settings.BASE_DIR) / 'website' / 'templates')
+        missing = set()
+        for path in templates.rglob('*.html'):
+            text = path.read_text(encoding='utf-8')
+            for key in re.findall(r"{%\s*t\s+'([^']+)'", text):
+                if key not in BN:
+                    missing.add(key)
+        self.assertEqual(missing, set(), f'untranslated keys: {sorted(missing)}')

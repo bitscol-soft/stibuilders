@@ -187,14 +187,48 @@
 {% block footer %}
 <footer class="site-footer has-image">
   <div class="site-footer__media" aria-hidden="true">
-    <img src="{% static 'website/img/footer-tower.jpg' %}" alt="" decoding="async" fetchpriority="low">
+    <img src="{% static 'website/img/footer-city.jpg' %}" alt="" decoding="async" fetchpriority="low" width="1800" height="700">
   </div>
 
   <div class="wrap-wide site-footer__inner">
+
+    <!-- 1. headline + contact rail -->
+    <div class="footer-top">
+      <div class="footer-top__lead">
+        <span class="eyebrow on-dark">{% t 'ft.eyebrow' 'Talk to a person' %}</span>
+        <h2 class="footer-top__title">{% t 'ft.headline' 'A flat is a big decision. Come and look at the concrete.' %}</h2>
+        <p class="footer-top__sub">{% t 'ft.sub' 'Our sales gallery in Uttara is open six days a week. Walk through the drawings, the payment plan and the site itself.' %}</p>
+      </div>
+      <div class="footer-top__contacts">
+        <a class="footer-tile" href="tel:{{ site.hotline|default:site.phone }}">
+          <span class="footer-tile__ico">{% icon 'i-phone' %}</span>
+          <span>
+            <small>{% t 'ft.hotline' 'Hotline' %}</small>
+            <b>{{ site.hotline|default:site.phone }}</b>
+          </span>
+        </a>
+        <a class="footer-tile" href="mailto:{{ site.email|default:'info@stibuilderslimited.com' }}">
+          <span class="footer-tile__ico">{% icon 'i-mail' %}</span>
+          <span>
+            <small>{% t 'ft.email' 'Email' %}</small>
+            <b>{{ site.email|default:"info@stibuilderslimited.com" }}</b>
+          </span>
+        </a>
+        <a class="footer-tile" href="{% url 'website:booking' %}">
+          <span class="footer-tile__ico">{% icon 'i-calendar' %}</span>
+          <span>
+            <small>{% t 'ft.visit' 'Site visit' %}</small>
+            <b>{% t 'ft.book_now' 'Book a slot' %}</b>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. link columns -->
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="{% static 'website/img/logo-white.png' %}" alt="{{ site.company_name }}">
-        <p>{{ site.about_short|default:"Building considered addresses across Dhaka since 2012 — apartments, commercial spaces and land-sharing developments delivered with structural integrity and quiet elegance." }}</p>
+        <img src="{% static 'website/img/logo-white.png' %}" alt="{{ site.company_name }}" width="104" height="46">
+        <p>{{ site.about_short|default:"Building considered addresses across Dhaka since 2012 — apartments, commercial floors and land-sharing developments, delivered with structural integrity and quiet elegance." }}</p>
         <div class="footer-social">
           {% if site.facebook %}<a href="{{ site.facebook }}" target="_blank" rel="noopener" aria-label="Facebook">{% icon 'i-facebook' %}</a>{% endif %}
           {% if site.instagram %}<a href="{{ site.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon 'i-instagram' %}</a>{% endif %}
@@ -203,6 +237,7 @@
           {% if site.whatsapp %}<a href="https://wa.me/{{ site.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp">{% icon 'i-whatsapp' %}</a>{% endif %}
         </div>
       </div>
+
       <div>
         <h4>{% t 'ft.explore' 'Explore' %}</h4>
         <div class="footer-links">
@@ -215,6 +250,7 @@
           <a href="{% url 'website:compare' %}">{% t 'nav.compare' 'Compare projects' %}</a>
         </div>
       </div>
+
       <div>
         <h4>{% t 'ft.company' 'Company' %}</h4>
         <div class="footer-links">
@@ -225,23 +261,31 @@
           <a href="{% url 'website:gallery' %}">{% t 'nav.gallery' 'Project gallery' %}</a>
           <a href="{% url 'website:news' %}">{% t 'nav.news' 'News & insights' %}</a>
           <a href="{% url 'website:faq' %}">{% t 'nav.faq' 'FAQs' %}</a>
-          <a href="{% url 'website:contact' %}">{% t 'nav.contact' 'Careers & contact' %}</a>
+          <a href="{% url 'website:contact' %}">{% t 'nav.contact' 'Contact us' %}</a>
         </div>
       </div>
+
       <div>
         <h4>{% t 'ft.contact' 'Sales gallery' %}</h4>
         <div class="footer-contact">
-          <div>{% icon 'i-map-pin' %}<span>{{ site.address|default:"House 41 (Flat A2), Road 12, Sonargaon Janapath, Sector 12, Uttara, Dhaka 1230" }}</span></div>
+          <div>{% icon 'i-map-pin' %}<span>{{ site.address|default:"House 41 (Flat A2), Sonargaon Janapath Road, Sector 12, Uttara Model Town, Dhaka 1230" }}</span></div>
           <div>{% icon 'i-phone' %}<span><a href="tel:{{ site.phone }}">{{ site.phone }}</a>{% if site.phone_2 %} · <a href="tel:{{ site.phone_2 }}">{{ site.phone_2 }}</a>{% endif %}</span></div>
-          <div>{% icon 'i-mail' %}<span><a href="mailto:{{ site.email }}">{{ site.email|default:"info@stibuilderslimited.com" }}</a></span></div>
-          <div>{% icon 'i-clock' %}<span>{{ site.office_hours|default:"Sat – Thu · 10:00 AM – 7:00 PM" }}</span></div>
+          <div>{% icon 'i-clock' %}<span>{{ site.office_hours|default:"Saturday – Thursday · 10:00 AM – 7:00 PM" }}</span></div>
         </div>
-        <a class="btn btn--light btn--sm" href="{% url 'website:booking' %}" style="margin-top:1.1rem">{% icon 'i-calendar' %} Book an appointment</a>
+        <div class="footer-lang">
+          <span class="xs">{% t 'ft.language' 'Language' %}</span>
+          <div class="pref-group">
+            <a class="pref-btn{% if not lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=en&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="en" lang="en">English</a>
+            <a class="pref-btn{% if lang_is_bn %} is-active{% endif %}" href="{% url 'website:set_prefs' %}?lang=bn&next={{ request.get_full_path|urlencode }}" data-pref="lang" data-value="bn" lang="bn">বাংলা</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- 3. legal -->
     <div class="footer-bottom">
-      <span>© {% now "Y" %} {{ site.company_name }}. {% t 'ft.rights' 'All rights reserved.' %}</span>
-      <nav>
+      <span>© {% now "Y" %} {{ site.company_name }}. {% t 'ft.rights' 'All rights reserved.' %} <span class="footer-bottom__reg">REHAB · RAJUK approved</span></span>
+      <nav aria-label="Legal">
         <a href="{% url 'website:faq' %}">Terms &amp; conditions</a>
         <a href="{% url 'website:faq' %}">Privacy policy</a>
         <a href="{% url 'website:contact' %}">Sitemap</a>

@@ -332,6 +332,44 @@ def apartment_modal(request, slug, pk):
                   {'unit': unit, 'project': project})
 
 
+def apartment_detail(request, slug, pk):
+    """A full page for one flat, not just a modal.
+
+    Each apartment gets its own URL so it can be shared, linked from the search
+    engine, and read on a phone without opening a dialog.
+    """
+    project = get_object_or_404(Project.objects.select_related('location'), slug=slug)
+    unit = get_object_or_404(
+        Apartment.objects.select_related('project', 'project__location')
+        .prefetch_related('features'), pk=pk, project=project)
+    siblings = list(project.apartments.filter(is_active=True)
+                    .select_related('project').order_by('order', 'size_sft', 'id'))
+    index = next((i for i, u in enumerate(siblings) if u.pk == unit.pk), None)
+    similar = [u for u in siblings if u.pk != unit.pk][:3]
+
+    milestones = project.milestones.all()
+    floor_plan = unit.floor_plan or next(
+        (p for p in project.floor_plans.all() if p.image), None)
+
+    ctx = site_context()
+    ctx.update({
+        'project': project,
+        'unit': unit,
+        'similar': similar,
+        'milestones': milestones,
+        'floor_plan': floor_plan,
+        'project_features': project.features.filter(status=True),
+        # a feature already listed under the building spec is not repeated as a
+        # unit-specific extra
+        'unit_only_features': unit.features.exclude(
+            pk__in=project.features.values('pk')),
+        'landmarks': project.location.landmarks.all()[:6] if project.location else [],
+        'prev_unit': siblings[index - 1] if index not in (None, 0) else None,
+        'next_unit': siblings[index + 1] if index is not None and index + 1 < len(siblings) else None,
+    })
+    return render(request, 'website/apartment_detail.html', ctx)
+
+
 def project_units_json(request, slug):
     project = get_object_or_404(Project, slug=slug)
     units = [{

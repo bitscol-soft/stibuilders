@@ -587,6 +587,80 @@ class Apartment(models.Model):
     def availability(self):
         return 'Available' if self.status == 'available' else self.get_status_display()
 
+    @property
+    def is_available(self):
+        return self.status == 'available'
+
+    @property
+    def plan_image(self):
+        """Floor plan to show, falling back to the project's typical plan."""
+        if self.floor_plan:
+            return self.floor_plan.url
+        for plan in self.project.floor_plans.all():
+            if plan.image:
+                return plan.image.url
+        return None
+
+    @property
+    def schedule_base(self):
+        """Price the payment schedule is calculated from.
+
+        Sold units often have no listed price, but a buyer still wants to know
+        how a flat at this size is paid for, so fall back to the project entry
+        price rather than showing nothing.
+        """
+        return self.price or self.project.price_from
+
+    @property
+    def pricing_is_projected(self):
+        return not self.price and bool(self.project.price_from)
+
+    @property
+    def pricing(self):
+        """Construction-linked payment schedule derived from the unit price.
+
+        Percentages follow the usual Bangladeshi apartment convention: a
+        booking deposit, then stage payments tied to the physical build.
+        """
+        base = self.schedule_base
+        if not base:
+            return []
+        stages = [
+            ('Booking money', 10, 'On signing the allotment letter'),
+            ('Agreement & handover of documents', 15, 'Within 30 days of booking'),
+            ('Piling & foundation complete', 15, 'Structural start on site'),
+            ('Ground floor slab cast', 10, 'Superstructure begins'),
+            ('Typical floors cast', 25, 'Apportioned across floors'),
+            ('Roof slab & brickwork', 10, 'Building watertight'),
+            ('Finishing & fittings', 10, 'Tiles, paint, joinery'),
+            ('Handover', 5, 'On keys and completion certificate'),
+        ]
+        out = []
+        for name, pct, note in stages:
+            amount = int(base) * pct // 100
+            out.append({'name': name, 'pct': pct, 'amount': amount, 'note': note})
+        return out
+
+    @property
+    def booking_amount(self):
+        if not self.schedule_base:
+            return None
+        return int(self.schedule_base) // 10
+
+    @property
+    def size_per_bed(self):
+        if not self.beds:
+            return None
+        return round(self.size_sft / self.beds)
+
+    @property
+    def features_by_group(self):
+        """Features grouped for display, so the page reads as sections."""
+        groups = {}
+        for feature in self.features.all():
+            groups.setdefault(feature.get_group_display() if hasattr(feature, 'get_group_display') else 'Features', []).append(feature)
+        return groups
+
 
 class Booking(models.Model):
     """Site-visit / unit booking request collected from the public site."""

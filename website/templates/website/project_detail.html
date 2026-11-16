@@ -225,7 +225,7 @@
                   <tbody>
                     {% for unit in apartments %}
                     <tr class="{% if unit.status == 'sold' %}is-sold{% endif %}">
-                      <td><span class="u-title">{{ unit.unit_no|default:unit.title }}</span><span class="u-sub">{{ unit.title }}</span></td>
+                      <td><a href="{% url 'website:apartment_detail' project.slug unit.pk %}"><span class="u-title">{{ unit.unit_no|default:unit.title }}</span><span class="u-sub">{{ unit.title }}</span></a></td>
                       <td>{{ unit.get_unit_type_display }}</td>
                       <td>{{ unit.size_sft|bdt }} {{ unit.area_unit }}</td>
                       <td>{{ unit.beds }} / {{ unit.baths }}</td>
@@ -234,9 +234,7 @@
                       <td class="u-price">{{ unit.price_display }}</td>
                       <td><span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span></td>
                       <td>
-                        {% if unit.status == 'available' %}
-                        <a class="btn btn--ghost btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">Reserve</a>
-                        {% endif %}
+                        <a class="btn btn--ghost btn--sm" href="{% url 'website:apartment_detail' project.slug unit.pk %}">View</a>
                       </td>
                     </tr>
                     {% endfor %}

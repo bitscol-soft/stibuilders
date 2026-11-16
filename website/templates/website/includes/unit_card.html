@@ -1,9 +1,10 @@
 {% load static website_extras %}
 <article class="unit-card" data-reveal>
+  <a class="unit-card__link" href="{% url 'website:apartment_detail' project.slug unit.pk %}" aria-label="{{ unit.label }} — view details"></a>
   <div class="unit-card__top">
     <div>
       <div class="xs muted" style="letter-spacing:.1em;text-transform:uppercase">{{ unit.get_unit_type_display }}</div>
-      <h4 style="margin:.15rem 0 0;font-size:1.05rem">{{ unit.title|default:unit.label }}</h4>
+      <h4 style="margin:.15rem 0 0;font-size:1.05rem"><a href="{% url 'website:apartment_detail' project.slug unit.pk %}" style="color:inherit">{{ unit.title|default:unit.label }}</a></h4>
       {% if unit.unit_no %}<div class="xs muted">Unit {{ unit.unit_no }}{% if unit.floor_no %} · Floor {{ unit.floor_no }}{% endif %}</div>{% endif %}
     </div>
     <span class="status-dot" data-s="{{ unit.status }}">{{ unit.status_label }}</span>
@@ -39,7 +40,7 @@
         {% if unit.price_per_sqft %}<div class="xs muted">৳ {{ unit.price_per_sqft|bdt }} / {{ unit.area_unit }}</div>{% endif %}
       </div>
       {% if unit.status == 'available' %}
-      <a class="btn btn--copper btn--sm" href="{% url 'website:booking' %}?project={{ project.slug }}&unit={{ unit.pk }}">Reserve</a>
+      <a class="btn btn--ghost btn--sm" href="{% url 'website:apartment_detail' project.slug unit.pk %}">Details</a>
       {% else %}
       <span class="btn btn--ghost btn--sm" style="pointer-events:none;opacity:.6">{{ unit.status_label }}</span>
       {% endif %}

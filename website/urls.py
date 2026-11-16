@@ -11,7 +11,8 @@ urlpatterns = [
     path('projects/compare/', views.compare_projects, name='compare'),
     path('compare/', views.compare_projects, name='compare_short'),
     path('projects/<slug:slug>/', views.project_detail, name='project_detail'),
-    path('projects/<slug:slug>/unit/<int:pk>/', views.apartment_modal, name='unit_modal'),
+    path('projects/<slug:slug>/unit/<int:pk>/', views.apartment_detail, name='apartment_detail'),
+    path('projects/<slug:slug>/unit/<int:pk>/card/', views.apartment_modal, name='apartment_card'),
     path('projects/<slug:slug>/units.json', views.project_units_json, name='units_json'),
 
     path('suburbs/', views.suburb_list, name='suburb_list'),

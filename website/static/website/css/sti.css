@@ -433,7 +433,7 @@ body.has-hero .site-header.is-solid { box-shadow: 0 6px 30px -22px rgba(12,31,38
 .site-header__inner { display: flex; align-items: center; gap: 1.25rem; height: var(--nav-h); }
 .site-header .brand { display: flex; align-items: center; gap: .75rem; flex: 0 0 auto; }
 .site-header .brand img { height: 46px; width: auto; }
-.site-header.is-solid { background: rgba(251,249,245,.92); backdrop-filter: saturate(140%) blur(14px); border-bottom-color: var(--line-soft); box-shadow: 0 6px 30px -22px rgba(12,31,38,.5); }
+.site-header.is-solid { background: var(--glass); backdrop-filter: saturate(140%) blur(14px); border-bottom-color: var(--line-soft); box-shadow: 0 6px 30px -22px rgba(12,31,38,.5); }
 body.has-hero .site-header:not(.is-solid) { color: #fff; }
 
 .nav { display: flex; align-items: center; gap: .15rem; margin-left: auto; }
@@ -496,16 +496,27 @@ body.has-hero .site-header:not(.is-solid) .icon-btn:hover { background: rgba(255
   .nav-tools { margin-left: auto; }
 }
 /* Phones: drop the decorative tools so the bar never wraps or overflows.
-   Search and the shortlist live in the drawer instead. */
+   Search and the shortlist live in the drawer instead.
+
+   The language switch and the theme switch stay: hiding the language control
+   below 860px meant the site silently lost its EN/BN toggle on phones and in
+   narrow windows. Both are compact enough to keep. */
 @media (max-width: 860px) {
   :root { --nav-h: 66px; }
-  .site-header__inner { gap: .5rem; }
-  .nav-tools { gap: .25rem; }
+  .site-header__inner { gap: .4rem; }
+  .nav-tools { gap: .2rem; }
   .nav-tools #searchOpen,
-  .nav-tools a[aria-label="Saved projects"],
-  .nav-tools .pref-group { display: none; }
+  .nav-tools a[aria-label="Saved projects"] { display: none; }
   .nav-tools .btn { padding: .5rem .85rem; font-size: .78rem; }
   .brand__logo { height: 38px; }
+  .pref-group { padding: 1px; }
+  .pref-btn { min-width: 27px; height: 24px; padding: 0 .35rem; }
+}
+@media (max-width: 560px) {
+  /* the book-a-visit button moves into the drawer/mobile bar, so the two
+     preference controls get the room instead */
+  .nav-tools > .btn { display: none; }
+  .nav-tools .icon-btn { width: 34px; height: 34px; }
 }
 @media (max-width: 460px) {
   .nav-tools .btn { padding: .46rem .7rem; font-size: .74rem; }
@@ -716,7 +727,14 @@ input[type="range"] { width: 100%; accent-color: var(--copper); }
 .pd-hero__fact { display: grid; gap: .1rem; }
 .pd-hero__fact dt { font-size: .64rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
 .pd-hero__fact dd { margin: 0; font-size: 1.02rem; font-weight: 700; }
-.pd-subnav { position: sticky; top: var(--nav-h); z-index: 800; background: rgba(251,249,245,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-soft); }
+/* Use the theme surface token, not a hard-coded cream: in dark mode this bar
+   kept a light background while its links turned near-white (invisible). */
+.pd-subnav {
+  position: sticky; top: var(--nav-h); z-index: 800;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+}
 .pd-subnav__inner { display: flex; align-items: center; gap: .3rem; overflow-x: auto; scrollbar-width: none; }
 .pd-subnav__inner::-webkit-scrollbar { display: none; }
 .pd-subnav a { padding: .95rem .9rem; font-size: .8rem; font-weight: 700; color: var(--slate); white-space: nowrap; border-bottom: 2px solid transparent; }
@@ -970,91 +988,132 @@ tr:hover .row-go, a:hover > .row-go { background: var(--inverse); border-color: 
 /* ---------- footer ---------- */
 
 /* ================= footer =================
-   A cinematic photo band sits behind the whole footer. The image itself is
-   slightly desaturated and the scrim is a soft diagonal gradient rather than a
-   flat wash, so the architecture stays visible while link text keeps contrast. */
+   A full-bleed dusk photograph of Dhaka sits behind the whole footer. The veil
+   is a diagonal gradient rather than a flat wash so the skyline stays legible
+   while every piece of text keeps AA contrast. */
 .site-footer {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   background: #06121a;
   color: #a9b7b9;
-  padding: clamp(2.5rem, 5vw, 4rem) 0 1.5rem;
+  padding: clamp(2.75rem, 5vw, 4.5rem) 0 1.5rem;
 }
-.site-footer__media {
-  position: absolute; inset: 0; z-index: 0;
-  overflow: hidden;
-}
+.site-footer__media { position: absolute; inset: 0; z-index: 0; }
 .site-footer__media img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: center 46%;
-  /* the scrim already darkens; over-darkening the photo killed it on tall
-     mobile footers where only a flat wall of building was visible */
-  filter: saturate(.86) brightness(.80) contrast(1.06);
-  transform: scale(1.03);
+  object-fit: cover; object-position: center 42%;
+  filter: saturate(.85) brightness(.78) contrast(1.05);
+  transform: scale(1.02);
 }
-/* A translucent veil rather than a flat wash: the architecture stays legible
-   while link text keeps AA contrast against the darkest parts of the photo. */
 .site-footer::before {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(118deg, rgba(6,18,26,.90) 0%, rgba(6,18,26,.70) 38%, rgba(6,18,26,.58) 62%, rgba(6,18,26,.86) 100%),
-    linear-gradient(180deg, rgba(6,18,26,.42) 0%, rgba(6,18,26,.22) 42%, rgba(6,18,26,.78) 100%);
+    linear-gradient(112deg, rgba(5,15,22,.94) 0%, rgba(5,15,22,.76) 32%, rgba(5,15,22,.58) 62%, rgba(5,15,22,.88) 100%),
+    linear-gradient(180deg, rgba(5,15,22,.52) 0%, rgba(5,15,22,.24) 34%, rgba(5,15,22,.80) 100%);
 }
-.site-footer__cta,
 .site-footer__inner { position: relative; z-index: 2; }
 
-/* --- link columns --- */
+/* ---- 1. headline + contact rail ---- */
+.footer-top {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+  padding-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  border-bottom: 1px solid rgba(255,255,255,.16);
+}
+.footer-top__title {
+  color: #fff; margin: .55rem 0 .7rem;
+  font-size: clamp(1.4rem, 2.7vw, 2.15rem);
+  line-height: 1.2; max-width: 24ch;
+}
+.footer-top__sub { margin: 0; color: #a7b6b8; font-size: .9rem; max-width: 46ch; }
+.footer-top__contacts { display: grid; gap: .6rem; }
+@media (max-width: 860px) { .footer-top { grid-template-columns: minmax(0, 1fr); } }
+
+.footer-tile {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .7rem .95rem;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: var(--r-md, 12px);
+  background: rgba(255,255,255,.05);
+  backdrop-filter: blur(6px);
+  color: #dbe4e5;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.footer-tile:hover { background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.34); transform: translateX(3px); }
+.footer-tile__ico {
+  display: grid; place-items: center; flex: 0 0 auto;
+  width: 32px; height: 32px; border-radius: 9px;
+  background: rgba(179,116,47,.22); color: var(--copper-2, #e0a35e);
+}
+.footer-tile__ico svg { width: 15px; height: 15px; }
+.footer-tile small { display: block; font-size: .64rem; letter-spacing: .13em; text-transform: uppercase; color: #8b9b9d; }
+.footer-tile b { display: block; font-size: .88rem; color: #fff; font-weight: 700; }
+
+/* ---- 2. link columns ---- */
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1.25fr;
-  gap: clamp(1.5rem, 3vw, 3.25rem);
+  grid-template-columns: 1.6fr .9fr .9fr 1.2fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
 }
+@media (max-width: 980px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+
 .site-footer h4 {
-  color: #fff; font-size: .7rem; font-weight: 800;
-  letter-spacing: .17em; text-transform: uppercase;
-  margin-bottom: 1rem; opacity: .72;
+  color: #fff; font-size: .66rem; font-weight: 800;
+  letter-spacing: .18em; text-transform: uppercase;
+  margin-bottom: .9rem; opacity: .66;
 }
-.site-footer a { color: #aab8ba; font-size: .86rem; transition: color .2s, transform .2s; }
+.site-footer a { color: #aab8ba; font-size: .85rem; transition: color .2s, transform .2s; }
 .site-footer a:hover { color: #fff; }
-.footer-links { display: grid; gap: .5rem; }
-.footer-links a { display: inline-flex; align-items: center; gap: .35rem; }
+.footer-links { display: grid; gap: .45rem; }
+.footer-links a { display: inline-flex; align-items: center; gap: .35rem; width: fit-content; }
 .footer-links a:hover { transform: translateX(2px); }
-.footer-brand img { height: 46px; width: auto; margin-bottom: .95rem; }
-.footer-brand p { font-size: .86rem; max-width: 34ch; color: #9fb0b2; margin: 0; }
-.footer-contact { display: grid; gap: .6rem; font-size: .86rem; }
-.footer-contact div { display: flex; gap: .6rem; align-items: flex-start; }
-.footer-contact .ico-svg { width: 15px; height: 15px; color: var(--copper-2); flex: 0 0 auto; margin-top: .25rem; }
+
+.footer-brand img { height: 44px; width: auto; margin-bottom: .85rem; }
+.footer-brand p { font-size: .85rem; max-width: 32ch; color: #9dadaf; margin: 0; line-height: 1.65; }
 .footer-social { display: flex; gap: .4rem; margin-top: 1rem; }
 .footer-social a {
-  width: 34px; height: 34px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.2);
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18);
   display: grid; place-items: center;
   backdrop-filter: blur(6px);
   transition: background .2s, border-color .2s, transform .2s;
 }
 .footer-social a:hover { background: var(--copper); border-color: var(--copper); transform: translateY(-2px); }
-.footer-social .ico-svg { width: 14px; height: 14px; }
+.footer-social .ico-svg { width: 13px; height: 13px; }
 
+.footer-contact { display: grid; gap: .55rem; font-size: .84rem; }
+.footer-contact div { display: flex; gap: .55rem; align-items: flex-start; }
+.footer-contact .ico-svg { width: 14px; height: 14px; color: var(--copper-2, #e0a35e); flex: 0 0 auto; margin-top: .22rem; }
+.footer-contact a { font-size: .84rem; }
+
+.footer-lang { display: flex; align-items: center; gap: .6rem; margin-top: 1.1rem; }
+.footer-lang .xs { color: #8b9b9d; font-size: .7rem; }
+.footer-lang .pref-group { border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.07); }
+.footer-lang .pref-btn { color: #b9c6c7; }
+.footer-lang .pref-btn.is-active { background: #fff; color: #0c1f26; }
+
+/* ---- 3. legal ---- */
 .footer-bottom {
-  margin-top: clamp(1.75rem, 3vw, 2.5rem);
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(255,255,255,.12);
-  display: flex; flex-wrap: wrap; gap: .6rem 1.5rem;
-  justify-content: space-between;
-  font-size: .76rem; color: #8fa1a3;
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(255,255,255,.13);
+  display: flex; flex-wrap: wrap; gap: .5rem 1.5rem;
+  justify-content: space-between; align-items: center;
+  font-size: .74rem; color: #87989a;
 }
+.footer-bottom__reg { display: inline-block; margin-left: .5rem; padding-left: .6rem; border-left: 1px solid rgba(255,255,255,.18); }
 .footer-bottom nav { display: flex; flex-wrap: wrap; gap: 1rem; }
-@media (max-width: 980px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .site-footer__cta { flex-direction: column; align-items: flex-start; }
-}
+.footer-bottom a { font-size: .74rem; }
 @media (max-width: 560px) {
-  .footer-grid { grid-template-columns: 1fr; }
-  .site-footer__cta-actions .btn { flex: 1 1 auto; justify-content: center; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .footer-bottom__reg { display: block; margin: .4rem 0 0; padding: 0; border: 0; }
 }
-
-@media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
 
 /* ---------- floating actions ---------- */
 .fab-stack { position: fixed; right: 1rem; bottom: 1rem; z-index: 850; display: grid; gap: .5rem; justify-items: end; }
@@ -1069,7 +1128,7 @@ tr:hover .row-go, a:hover > .row-go { background: var(--inverse); border-color: 
 /* sticky mobile action bar on project detail */
 .mobile-cta { display: none; }
 @media (max-width: 780px) {
-  .mobile-cta { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; position: fixed; inset: auto 0 0; z-index: 880; padding: .6rem .8rem calc(.6rem + env(safe-area-inset-bottom)); background: rgba(251,249,245,.96); backdrop-filter: blur(10px); border-top: 1px solid var(--line); }
+  .mobile-cta { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; position: fixed; inset: auto 0 0; z-index: 880; padding: .6rem .8rem calc(.6rem + env(safe-area-inset-bottom)); background: var(--glass); backdrop-filter: blur(10px); border-top: 1px solid var(--line); }
   body.has-mobile-cta { padding-bottom: 68px; }
   .fab-stack { bottom: 5rem; }
 }
@@ -1411,3 +1470,62 @@ html[lang="bn"] .link-arrow { letter-spacing: .02em; text-transform: none; }
 @media (max-width: 560px) {
   .site-footer { padding-top: 2.25rem; }
 }
+
+/* ---------- apartment / flat detail ---------- */
+.unit-hero .display { max-width: 24ch; }
+.pd-body { padding-bottom: clamp(2rem, 4vw, 3rem); }
+
+.unit-layout {
+  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr);
+  gap: clamp(1.5rem, 3vw, 3rem); align-items: start;
+}
+@media (max-width: 900px) { .unit-layout { grid-template-columns: minmax(0, 1fr); } }
+
+.spec-grid--wide { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+/* price / reserve card */
+.unit-buy {
+  position: sticky; top: calc(var(--nav-h) + 4.2rem);
+  display: grid; gap: .75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--edge); border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm, 0 8px 24px rgba(12,31,38,.06));
+}
+.unit-buy__price { padding-bottom: .75rem; border-bottom: 1px solid var(--line-soft); }
+.unit-buy__amount { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw, 1.9rem); line-height: 1.15; color: var(--on-surface); }
+.unit-buy__row { display: flex; justify-content: space-between; gap: 1rem; font-size: .84rem; color: var(--slate); }
+.unit-buy__row b { color: var(--on-surface); }
+.unit-buy__actions { display: grid; gap: .45rem; margin-top: .35rem; }
+@media (max-width: 900px) { .unit-buy { position: static; } }
+
+/* floor plan viewer */
+.unit-plan { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 0; border: 1px solid var(--edge); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
+.unit-plan img { width: 100%; height: 100%; min-height: 260px; object-fit: contain; background: var(--surface-2); padding: 1.25rem; }
+.unit-plan__meta { display: grid; gap: .9rem; padding: 1.25rem; border-left: 1px solid var(--line-soft); align-content: start; }
+.unit-plan__meta b { display: block; font-size: .95rem; color: var(--on-surface); }
+@media (max-width: 760px) {
+  .unit-plan { grid-template-columns: minmax(0, 1fr); }
+  .unit-plan__meta { border-left: 0; border-top: 1px solid var(--line-soft); grid-template-columns: 1fr 1fr; }
+}
+
+/* room cards */
+.room-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+.room-card { padding: 1.1rem 1.15rem; border: 1px solid var(--edge); border-radius: var(--r-lg); background: var(--surface); transition: border-color .2s, transform .2s; }
+.room-card:hover { border-color: var(--copper); transform: translateY(-2px); }
+.room-card__ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--copper-soft); color: var(--copper); margin-bottom: .6rem; }
+.room-card__ico svg { width: 17px; height: 17px; }
+.room-card h3 { margin: 0 0 .3rem; font-size: .98rem; }
+.room-card p { margin: 0; font-size: .85rem; color: var(--slate); line-height: 1.55; }
+
+/* compact unit tiles */
+.unit-mini { display: grid; gap: .55rem; padding: 1rem 1.1rem; border: 1px solid var(--edge); border-radius: var(--r-lg); background: var(--surface); color: inherit; transition: border-color .2s, transform .2s; }
+.unit-mini:hover { border-color: var(--copper); transform: translateY(-2px); }
+.unit-mini__top { display: flex; justify-content: space-between; align-items: center; gap: .6rem; }
+.unit-mini__price { font-weight: 800; font-size: .95rem; color: var(--copper); }
+
+/* make the whole layout card clickable */
+.unit-card { position: relative; }
+.unit-card__link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.unit-card__link:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+.unit-card .btn, .unit-card .pcard__foot a { position: relative; z-index: 3; }

@@ -50,6 +50,7 @@ BILINGUAL_THEMED = [
 # Detail routes are discovered from the database.
 DETAIL_PREFIXES = [
     ('/projects/{}/', 'projects/{}/index.html'),
+    ('/projects/{}/unit/{}/', 'projects/{}/unit/{}/index.html'),
     ('/suburbs/{}/', 'suburbs/{}/index.html'),
     ('/services/{}/', 'services/{}/index.html'),
     ('/news/{}/', 'news/{}/index.html'),
@@ -90,8 +91,10 @@ class Command(BaseCommand):
         # ---- discover detail routes -------------------------------------
         routes = [r for r, _ in BILINGUAL_THEMED]
         for prefix, _ in DETAIL_PREFIXES:
-            for slug in self._slugs(prefix):
-                routes.append(prefix.format(slug))
+            for slugs in self._slugs(prefix):
+                if not isinstance(slugs, tuple):
+                    slugs = (slugs,)
+                routes.append(prefix.format(*slugs))
 
         # ---- render every page, every theme, every language -------------
         rendered = 0
@@ -151,7 +154,14 @@ class Command(BaseCommand):
 
     # ------------------------------------------------------------------
     def _slugs(self, prefix):
+        """Slugs to expand a detail-route template. Unit pages are nested, so
+        they are returned already prepared as (project_slug, unit_pk) pairs."""
         from website import models as m
+        if prefix == '/projects/{}/unit/{}/':
+            return list(m.Apartment.objects
+                        .filter(is_active=True)
+                        .select_related('project')
+                        .values_list('project__slug', 'pk'))
         mapping = {
             '/projects/{}/': m.Project,
             '/suburbs/{}/': m.Location,
