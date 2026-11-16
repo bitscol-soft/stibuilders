@@ -4,16 +4,17 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-hero" style="padding-bottom:2.5rem">
-  {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.title }}" fetchpriority="high">
-  {% else %}<img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high">{% endif %}
+<section class="page-hero page-hero--compact">
+  {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.title }}" fetchpriority="high" decoding="async">
+  {% else %}<img src="{% static 'website/img/proj-banani.jpg' %}" alt="" fetchpriority="high" decoding="async">{% endif %}
   <div class="wrap-wide">
-    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
-      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span>
-      <a href="{% url 'website:services' %}" style="color:inherit">Services</a><span>/</span><span>{{ service.title }}</span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}">Home</a><span>/</span>
+      <a href="{% url 'website:services' %}">Services</a><span>/</span><span>{{ service.title }}</span>
     </nav>
-    <h1 class="display mt-2" style="font-size:clamp(2.2rem,4.8vw,3.6rem)">{{ service.title }}</h1>
-    <p class="lead" style="color:rgba(255,255,255,.82)">{{ service.summary }}</p>
+    <span class="eyebrow on-dark">Service</span>
+    <h1 class="display mt-2">{{ service.title }}</h1>
+    <p class="lead">{{ service.summary }}</p>
   </div>
 </section>
 

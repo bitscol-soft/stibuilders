@@ -253,3 +253,92 @@ class IconSizingTests(TestCase):
         html = res.content.decode()
         self.assertNotIn('<svg class="ico-svg " aria-hidden', html)
         self.assertIn('width="18" height="18"', html)
+
+
+class BannerCoverageTests(TestCase):
+    """Every interior page must carry the shared title banner.
+
+    Banners used to be hand-rolled per template, so some pages had a photo and
+    most had none. They now come from one tag, and this keeps it that way.
+    """
+
+    BANNER_PAGES = [
+        'website:project_list', 'website:services', 'website:about',
+        'website:gallery', 'website:news', 'website:contact', 'website:faq',
+        'website:booking', 'website:investors', 'website:suburb_list',
+        'website:land_sharing', 'website:compare', 'website:saved',
+    ]
+
+    def test_every_interior_page_has_a_banner_image(self):
+        for name in self.BANNER_PAGES:
+            with self.subTest(page=name):
+                res = self.client.get(reverse(name))
+                self.assertEqual(res.status_code, 200)
+                html = res.content.decode()
+                self.assertIn('page-hero', html, f'{name} has no banner')
+                self.assertRegex(
+                    html, r'<section class="page-hero[^"]*">\s*<img src="[^"]+\.(jpg|jpeg|png)"',
+                    f'{name} banner has no image')
+
+
+class FooterConflictTests(TestCase):
+    """The footer must not repeat the call-to-action band.
+
+    home/about/services/land-sharing/suburbs already render a .cta-band above
+    the footer. A second one inside the footer made "Next step / Come and see
+    the site" appear twice, which read as two overlapping sections.
+    """
+
+    def test_footer_does_not_repeat_the_cta_band(self):
+        res = self.client.get(reverse('website:home'))
+        html = res.content.decode()
+        self.assertEqual(html.count('Come see a site before you decide'), 1)
+        self.assertEqual(html.count('Come and see the site before you decide'), 0)
+        self.assertEqual(html.count('site-footer__cta'), 0)
+
+    def test_footer_image_is_present_and_not_lazy(self):
+        res = self.client.get(reverse('website:home'))
+        html = res.content.decode()
+        self.assertIn('footer-tower.jpg', html)
+        # a lazy background can stay blank on tall footers that never scroll
+        self.assertNotRegex(html, r'footer-tower\.jpg[^>]*loading="lazy"')
+
+
+class StaticExportTests(TestCase):
+    """The GitHub Pages build is part of the deliverable, so it is tested."""
+
+    def test_export_produces_theme_and_language_variants(self):
+        import tempfile
+        from pathlib import Path
+        from django.core.management import call_command
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'dist'
+            call_command('export_static', out=str(out), base_path='/stibuilders/',
+                         verbosity=0)
+            # the router plus one file per theme/language combination
+            self.assertTrue((out / 'index.html').exists())
+            for theme in ('light', 'dark'):
+                for lang in ('en', 'bn'):
+                    self.assertTrue(
+                        (out / f'{theme}-{lang}.html').exists(),
+                        f'missing {theme}-{lang}.html')
+            router = (out / 'index.html').read_text()
+            self.assertIn('location.replace', router)
+            # assets are rewritten under the repo prefix
+            page = (out / 'light-en.html').read_text()
+            self.assertIn('/stibuilders/static/', page)
+            self.assertNotIn('"/media/', page)
+
+    def test_export_has_no_unresolved_internal_links(self):
+        import io
+        import tempfile
+        from pathlib import Path
+        from django.core.management import call_command
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'dist'
+            buf = io.StringIO()
+            call_command('export_static', out=str(out), base_path='/stibuilders/',
+                         stdout=buf, verbosity=0)
+            self.assertIn('every internal link resolves', buf.getvalue())

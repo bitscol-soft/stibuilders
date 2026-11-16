@@ -3,17 +3,9 @@
 {% block title %}{% if q %}“{{ q }}” — search{% else %}Search{% endif %} — {{ site.company_name }}{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Search</span></nav>
-    <h1 class="mt-2">{% if q %}Results for “{{ q }}”{% else %}Search the portfolio{% endif %}</h1>
-    <p class="lead">{{ count }} project{{ count|pluralize }} matched.</p>
-    <form method="get" class="mt-2" style="display:flex;gap:.5rem;max-width:620px">
-      <input class="input" type="search" name="q" value="{{ q }}" placeholder="Project, suburb or road…">
-      <button class="btn btn--copper" type="submit">{% icon 'i-search' %}</button>
-    </form>
-  </div>
-</section>
+{% banner 'website/img/proj-banani.jpg' compact=True eyebrow='Search' title='Search the portfolio' sub='Type a project name, suburb or road.' crumb='Search' %}
+
+
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
     <div class="grid g-3">

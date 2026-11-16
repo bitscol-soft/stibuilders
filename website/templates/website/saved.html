@@ -3,14 +3,9 @@
 {% block title %}Saved projects — {{ site.company_name }}{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Saved</span></nav>
-    <span class="eyebrow mt-2" style="display:inline-flex">Shortlist</span>
-    <h1 class="mt-2">Your saved projects</h1>
-    <p class="lead">{{ projects|length }} project{{ projects|length|pluralize }} on this device. Send the shortlist to our desk and we will book the visits together.</p>
-  </div>
-</section>
+{% banner 'website/img/hero-gallery.jpg' eyebrow='Shortlist' title='Your saved projects' sub='Projects saved on this device. Send the shortlist to our desk and we will book the visits together.' crumb='Saved' %}
+
+
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
     {% if projects %}

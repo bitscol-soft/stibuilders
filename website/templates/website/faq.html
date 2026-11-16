@@ -4,14 +4,9 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>FAQs</span></nav>
-    <span class="eyebrow mt-2" style="display:inline-flex">Help centre</span>
-    <h1 class="mt-2">Questions we get asked most</h1>
-    <p class="lead">Buying, booking, land sharing, payments and handover — answered plainly. If yours is not here, call the hotline.</p>
-  </div>
-</section>
+{% banner 'website/img/hero-contact.jpg' eyebrow='Help centre' title='Questions we get asked most' sub='Buying, booking, land sharing, payments and handover — answered plainly. If yours is not here, call the hotline.' crumb='FAQs' %}
+
+
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
     <div class="grid" style="grid-template-columns:minmax(0,1fr) 320px;gap:clamp(1.25rem,3vw,2.5rem);align-items:start">

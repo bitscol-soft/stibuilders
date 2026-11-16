@@ -214,3 +214,41 @@ def bn_num(context, value):
 @register.filter
 def bn_digits(value):
     return str(value).translate(BN_DIGITS)
+
+@register.simple_tag
+def banner(image, eyebrow='', title='', sub='', crumb='', parent='', parent_url='',
+           alt='', compact=False):
+    """Render the standard title banner used across every interior page.
+
+    Pages previously hand-rolled their own header markup, so banners drifted:
+    some had an image, most had none. One tag keeps the treatment identical.
+    """
+    from django.templatetags.static import static
+    from django.urls import reverse
+    from django.utils.html import escape
+
+    def e(value):
+        return escape(value or '')
+
+    parts = [
+        '<section class="page-hero{}">'.format(' page-hero--compact' if compact else ''),
+        '<img src="{}" alt="{}" fetchpriority="high" decoding="async">'.format(
+            e(static(image)), e(alt)),
+        '<div class="wrap-wide">',
+        '<nav class="breadcrumb" aria-label="Breadcrumb">',
+        '<a href="{}">Home</a>'.format(reverse('website:home')),
+    ]
+    if parent and parent_url:
+        parts.append('<span>/</span><a href="{}">{}</a>'.format(e(parent_url), e(parent)))
+    if crumb:
+        parts.append('<span>/</span><span>{}</span>'.format(e(crumb)))
+    parts.append('</nav>')
+    if eyebrow:
+        parts.append('<span class="eyebrow on-dark">{}</span>'.format(e(eyebrow)))
+    if title:
+        parts.append('<h1 class="display mt-2">{}</h1>'.format(e(title)))
+    if sub:
+        parts.append('<p class="lead">{}</p>'.format(e(sub)))
+    parts.append('</div></section>')
+    return format_html(''.join(parts))
+

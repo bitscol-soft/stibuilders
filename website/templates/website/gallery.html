@@ -4,17 +4,10 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-head">
+{% banner 'website/img/hero-gallery.jpg' eyebrow='Gallery' title='Sites, slabs and finished rooms' sub='Construction progress, handovers, interiors and our community work — photographed as we build.' crumb='Gallery' compact=True %}
+<section class="page-head" style="padding-top:0">
   <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Gallery</span></nav>
-    <div class="spread mt-2" style="align-items:end">
-      <div>
-        <span class="eyebrow">Gallery</span>
-        <h1 class="mt-2">Sites, slabs and finished rooms</h1>
-        <p class="lead">{{ total }} image{{ total|pluralize }} — construction progress, handovers, interiors and our community work.</p>
-      </div>
-    </div>
-    <div class="tabs mt-3" data-tabs="gallery">
+<div class="tabs mt-3" data-tabs="gallery">
       <a class="tab {% if not active_group %}is-active{% endif %}" href="{% url 'website:gallery' %}">All</a>
       {% for value, label in groups %}
       <a class="tab {% if active_group == value %}is-active{% endif %}" href="?group={{ value }}">{{ label }}</a>

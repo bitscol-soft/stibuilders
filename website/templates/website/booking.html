@@ -5,14 +5,15 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-hero" style="padding-bottom:2.5rem">
+<section class="page-hero page-hero--compact">
   <img src="{% static 'website/img/proj-gulshan.jpg' %}" alt="" fetchpriority="high">
   <div class="wrap-wide">
-    <nav class="breadcrumb" style="color:rgba(255,255,255,.72)" aria-label="Breadcrumb">
-      <a href="{% url 'website:home' %}" style="color:inherit">Home</a><span>/</span><span>Book a visit</span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}">Home</a><span>/</span><span>Book a visit</span>
     </nav>
+    <span class="eyebrow on-dark">Reserve</span>
     <h1 class="display mt-2" style="font-size:clamp(2.2rem,5vw,3.6rem)">Book a site visit<br><em>or reserve a unit.</em></h1>
-    <p class="lead" style="color:rgba(255,255,255,.82)">Three quick steps. Our sales desk confirms every request on WhatsApp within one business day — including transport if you need it.</p>
+    <p class="lead">Three quick steps. Our sales desk confirms every request on WhatsApp within one business day — including transport if you need it.</p>
   </div>
 </section>
 

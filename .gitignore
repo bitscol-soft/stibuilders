@@ -16,3 +16,6 @@ media/
 .DS_Store
 .idea/
 .vscode/
+
+# static export output (built in CI by .github/workflows/pages.yml)
+dist/

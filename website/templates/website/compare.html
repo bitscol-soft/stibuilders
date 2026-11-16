@@ -3,14 +3,9 @@
 {% block title %}Compare projects — {{ site.company_name }}{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Compare</span></nav>
-    <span class="eyebrow mt-2" style="display:inline-flex">Side by side</span>
-    <h1 class="mt-2">Compare up to four projects</h1>
-    <p class="lead">Price, size, configuration, parking, handover and construction progress in one table.</p>
-  </div>
-</section>
+{% banner 'website/img/proj-gulshan.jpg' eyebrow='Side by side' title='Compare up to four projects' sub='Price, size, configuration, parking, handover and construction progress in one table.' crumb='Compare' %}
+
+
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
     <form method="get" class="panel" style="display:flex;flex-wrap:wrap;gap:.6rem;align-items:end">

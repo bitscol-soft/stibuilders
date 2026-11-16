@@ -187,19 +187,7 @@
 {% block footer %}
 <footer class="site-footer has-image">
   <div class="site-footer__media" aria-hidden="true">
-    <img src="{% static 'website/img/footer-tower.jpg' %}" alt="" loading="lazy" decoding="async">
-  </div>
-
-  <!-- call to action sits on the photo, above the link columns -->
-  <div class="wrap-wide site-footer__cta">
-    <div>
-      <span class="eyebrow on-dark">{% t 'ft.cta.eyebrow' 'Next step' %}</span>
-      <h2 class="site-footer__headline">{% t 'ft.cta.title' 'Come and see the site before you decide.' %}</h2>
-    </div>
-    <div class="site-footer__cta-actions">
-      <a class="btn btn--copper" href="{% url 'website:booking' %}">{% icon 'i-calendar' %} {% t 'cta.book' 'Book a visit' %}</a>
-      <a class="btn btn--ghost-light" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
-    </div>
+    <img src="{% static 'website/img/footer-tower.jpg' %}" alt="" decoding="async" fetchpriority="low">
   </div>
 
   <div class="wrap-wide site-footer__inner">

@@ -4,17 +4,10 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-head">
+{% banner 'website/img/hero-news.jpg' eyebrow='Journal' title='News, handovers & insight' sub='Construction milestones, delivery announcements and plain-language notes on buying property in Dhaka.' crumb='News' compact=True %}
+<section class="page-head" style="padding-top:0">
   <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>News</span></nav>
-    <div class="spread mt-2" style="align-items:end">
-      <div>
-        <span class="eyebrow">Journal</span>
-        <h1 class="mt-2">News, handovers &amp; insight</h1>
-        <p class="lead">Construction milestones, delivery announcements and plain-language notes on buying property in Dhaka.</p>
-      </div>
-    </div>
-    <div class="tabs mt-3">
+<div class="tabs mt-3">
       <a class="tab {% if not active_kind %}is-active{% endif %}" href="{% url 'website:news' %}">All</a>
       {% for value, label in kinds %}
       <a class="tab {% if active_kind == value %}is-active{% endif %}" href="?kind={{ value }}">{{ label }}</a>

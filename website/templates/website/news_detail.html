@@ -5,12 +5,17 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide" style="max-width:900px">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><a href="{% url 'website:news' %}">News</a><span>/</span><span>{{ post.get_kind_display }}</span></nav>
-    <span class="eyebrow mt-2" style="display:inline-flex">{{ post.get_kind_display }}</span>
-    <h1 class="display mt-2" style="font-size:clamp(1.9rem,4vw,3rem)">{{ post.title }}</h1>
-    <p class="muted small">{{ post.published_at|date:"j F Y" }} · {{ post.read_minutes }} min read{% if post.project %} · {{ post.project.name }}{% endif %}</p>
+<section class="page-hero page-hero--compact">
+  {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" fetchpriority="high" decoding="async">
+  {% else %}<img src="{% static 'website/img/hero-news.jpg' %}" alt="" fetchpriority="high" decoding="async">{% endif %}
+  <div class="wrap-wide">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'website:home' %}">Home</a><span>/</span>
+      <a href="{% url 'website:news' %}">News</a><span>/</span><span>{{ post.get_kind_display }}</span>
+    </nav>
+    <span class="eyebrow on-dark">{{ post.get_kind_display }}</span>
+    <h1 class="display mt-2" style="max-width:26ch">{{ post.title }}</h1>
+    <p class="lead">{{ post.published_at|date:"j F Y" }} · {{ post.read_minutes }} min read{% if post.project %} · {{ post.project.name }}{% endif %}</p>
   </div>
 </section>
 <section class="section tight" style="padding-top:0">

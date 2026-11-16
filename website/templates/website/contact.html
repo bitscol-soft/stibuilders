@@ -4,22 +4,9 @@
 {% block body_class %}has-hero{% endblock %}
 
 {% block content %}
-<section class="page-head">
-  <div class="wrap-wide">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{% url 'website:home' %}">Home</a><span>/</span><span>Contact</span></nav>
-    <div class="spread mt-2" style="align-items:end">
-      <div>
-        <span class="eyebrow">Contact</span>
-        <h1 class="mt-2">Tell us what you need.</h1>
-        <p class="lead">A project adviser answers every enquiry — buying, land sharing, investment or a career. Weekdays 10 AM to 7 PM.</p>
-      </div>
-      <div class="row">
-        <a class="btn btn--copper" href="tel:{{ site.hotline|default:site.phone }}">{% icon 'i-phone' %} {{ site.hotline|default:site.phone }}</a>
-        <a class="btn btn--ghost" href="https://wa.me/{{ site.whatsapp|default:'8801923505050' }}" target="_blank" rel="noopener">{% icon 'i-whatsapp' %} WhatsApp</a>
-      </div>
-    </div>
-  </div>
-</section>
+{% banner 'website/img/hero-contact.jpg' eyebrow='Contact' title='Tell us what you need.' sub='A project adviser answers every enquiry — buying, land sharing, investment or a career. Weekdays 10 AM to 7 PM.' crumb='Contact' %}
+
+
 
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
