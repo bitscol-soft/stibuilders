@@ -24,7 +24,7 @@
 <body class="{% block body_class %}{% endblock %}">
 <a class="skip-link" href="#main">Skip to content</a>
 <script>document.documentElement.classList.add('js');</script>
-{% include 'website/partials/_icons.html' %}
+<link rel="preload" href="{% static 'website/img/icons.svg' %}" as="image" type="image/svg+xml">
 
 {% block header %}
 <header class="site-header" id="siteHeader">

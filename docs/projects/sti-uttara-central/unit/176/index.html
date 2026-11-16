@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loading…</title>
+<script>
+/* Static export: pick the page variant matching the visitor's saved
+   theme and language before anything paints, then replace this document.
+   There is no server here, so localStorage is the source of truth. */
+(function () {
+  function read(key, allowed, fallback) {
+    var value = null;
+    try { value = localStorage.getItem(key); } catch (e) {}
+    return allowed.indexOf(value) >= 0 ? value : fallback;
+  }
+  /* language: saved choice, else the browser's preference */
+  var lang = null;
+  try { lang = localStorage.getItem('sti_lang'); } catch (e) {}
+  if (lang !== 'en' && lang !== 'bn') {
+    lang = (navigator.language || 'en').toLowerCase().indexOf('bn') === 0 ? 'bn' : 'en';
+  }
+  var theme = read('sti_theme', ['light', 'dark'], 'light');
+  location.replace(theme + '-' + lang + '.html');
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=light-en.html"></noscript>
+</head>
+<body></body>
+</html>

@@ -37,7 +37,8 @@ def icon(name, cls=''):
     # CSS rules override these attributes, so explicit sizes still win.
     return format_html(
         '<svg class="ico-svg {}" width="18" height="18" viewBox="0 0 24 24" '
-        'aria-hidden="true" focusable="false"><use href="#{}"></use></svg>', cls, symbol)
+        'aria-hidden="true" focusable="false"><use href="/static/website/img/icons.svg#{}"></use></svg>',
+        cls, symbol)
 
 
 @register.filter

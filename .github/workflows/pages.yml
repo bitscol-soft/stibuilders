@@ -1,10 +1,11 @@
-name: Deploy static preview to GitHub Pages
+name: Publish static site to the Pages branch folder
 
-# Builds a static snapshot of the Django site and publishes it to GitHub Pages.
-# Pages only serves static files, so `manage.py export_static` renders every
-# public route through the real views (each theme x language), rewrites links
-# for the /<repo>/ prefix, and copies the assets. Booking/enquiry POSTs and the
-# admin need a real server and are not part of this preview.
+# GitHub Pages is configured as "Deploy from a branch" -> main -> /docs.
+# This job re-renders the Django site and commits the result into docs/ so that
+# every push to main republishes the preview automatically.
+#
+# The committed docs/ folder is the source of truth for Pages; this workflow
+# only keeps it fresh. Running it by hand regenerates docs/ on demand.
 
 on:
   push:
@@ -12,16 +13,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: publish-static
+  cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,38 +35,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
+      - name: Test
         run: python manage.py test website
 
-      - name: Migrate database
-        # a fresh clone has no db.sqlite3 (it is gitignored), so the schema has
-        # to be created before the seeder can write anything
-        run: python manage.py migrate --noinput
-
-      - name: Seed demo content
-        run: python manage.py seed_website
+      - name: Migrate and seed
+        # db.sqlite3 is gitignored, so the schema has to be created first
+        run: |
+          python manage.py migrate --noinput
+          python manage.py seed_website
 
       - name: Collect static assets
         run: python manage.py collectstatic --noinput
 
-      - name: Export static site
+      - name: Build the static site into docs/
         run: |
           python manage.py export_static \
-            --out dist \
+            --out docs \
             --base-path "/${GITHUB_REPOSITORY#*/}/"
+          # Pages must not run Jekyll over the export
+          touch docs/.nojekyll
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit the refreshed export
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs
+          if git diff --staged --quiet; then
+            echo "docs/ already up to date"
+          else
+            git commit -m "Rebuild static preview in docs/ [skip ci]"
+            git push
+          fi

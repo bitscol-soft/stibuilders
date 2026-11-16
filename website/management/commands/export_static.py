@@ -60,6 +60,32 @@ THEMES = ('light', 'dark')
 LANGS = ('en', 'bn')
 
 
+def _minify(html):
+    """Conservative HTML minify for the committed export.
+
+    GitHub Pages serves a branch, so every exported page is stored in git.
+    Theme x language variants multiply the page count, so trimming redundant
+    markup whitespace keeps the repository small without touching anything
+    inside <pre>, <textarea>, <script> or <style>.
+    """
+    protected = []
+
+    def stash(match):
+        protected.append(match.group(0))
+        return f"\x00{len(protected) - 1}\x00"
+
+    html = re.sub(r'<(pre|textarea|script|style)\b.*?</\1>', stash, html, flags=re.S | re.I)
+    html = re.sub(r'<!--(?!\[if).*?-->', '', html, flags=re.S)
+    html = re.sub(r'>\s+<', '><', html)
+    html = re.sub(r'\s{2,}', ' ', html)
+    html = html.replace('> <', '><')
+
+    def restore(match):
+        return protected[int(match.group(1))]
+
+    return re.sub(r'\x00(\d+)\x00', restore, html)
+
+
 def _slugify_path(path):
     """Turn /a/b/ into the file that should hold it on disk."""
     clean = path.strip('/')
@@ -241,7 +267,7 @@ class Command(BaseCommand):
         target = out / _slugify_path(route)
         target.parent.mkdir(parents=True, exist_ok=True)
         variant = target.with_name(f'{theme}-{lang}.html')
-        variant.write_text(html, encoding='utf-8')
+        variant.write_text(_minify(html), encoding='utf-8')
         self.written.append(variant)
 
     def _write_router(self, out, route):
