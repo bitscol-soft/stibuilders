@@ -74,6 +74,7 @@
   --edge-soft: #efeae0;
   --glass: rgba(251,249,245,.94);
   --map-line: rgba(12,31,38,.10);
+  --band: #0c1f26;              /* deliberately dark bands, in BOTH themes */
 
   /* "Hind Siliguri" sits at the end of both stacks: it is the only bundled
      face with Bengali coverage, so the ৳ sign and any Bengali string resolve
@@ -125,6 +126,7 @@
   --edge-soft: #223135;
   --glass: rgba(11,26,31,.92);
   --map-line: rgba(255,255,255,.14);
+  --band: #081a20;
 
   --copper: #cf8f45;
   --copper-2: #dfa869;
@@ -263,12 +265,21 @@ h4, .h4 { font-size: 1.18rem; }
 
 /* ---------- layout ---------- */
 .wrap { width: min(100% - 2.5rem, var(--container)); margin-inline: auto; }
-.wrap-wide { width: min(100% - 2.5rem, 1440px); margin-inline: auto; }
+.wrap-wide { width: min(100% - 2.5rem, 1320px); margin-inline: auto; }
 .wrap-narrow { width: min(100% - 2.5rem, 880px); margin-inline: auto; }
+/* Give the page a wider gutter so content never sits flush against the
+   viewport edge on tablet and phone. */
+.wrap, .wrap-wide, .wrap-narrow {
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  box-sizing: border-box;
+}
+@media (max-width: 560px) {
+  .wrap, .wrap-wide, .wrap-narrow { width: 100%; max-width: 100%; }
+}
 .section { padding: clamp(3.5rem, 7vw, 6.5rem) 0; }
 .section.tight { padding: clamp(2.5rem, 4vw, 4rem) 0; }
 .section.paper2 { background: var(--surface-2); }
-.section.ink { background: var(--ink); color: #e8e3d9; }
+.section.ink { background: var(--band); color: #e8e3d9; }
 .section.ink h1, .section.ink h2, .section.ink h3, .section.ink h4 { color: #fff; }
 .section.ink .lead, .section.ink .muted { color: #b7c2c4; }
 .section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem 3rem; margin-bottom: clamp(1.8rem, 3vw, 3rem); }
@@ -403,7 +414,7 @@ h4, .h4 { font-size: 1.18rem; }
 .pcard__price small { display: block; font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .15rem; }
 .pcard__go { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink); transition: background .25s, color .25s, border-color .25s, transform .25s; }
 .pcard__go svg { width: 15px; height: 15px; }
-.pcard:hover .pcard__go { background: var(--ink); color: #fff; border-color: var(--ink); transform: rotate(-45deg); }
+.pcard:hover .pcard__go { background: var(--inverse); color: var(--on-inverse); border-color: var(--inverse); transform: rotate(-45deg); }
 
 /* stat blocks */
 .stat { display: grid; gap: .3rem; }
@@ -743,7 +754,7 @@ input[type="range"] { width: 100%; accent-color: var(--copper); }
 .pd-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(1.5rem, 3vw, 3.25rem); align-items: start; }
 .pd-aside { position: sticky; top: 5.5rem; display: grid; gap: 1rem; }
 .panel { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--r-lg); padding: clamp(1.15rem, 2vw, 1.6rem); color: var(--on-surface); }
-.panel--ink { background: var(--ink); color: #dfe6e4; border-color: var(--ink); }
+.panel--ink { background: var(--band); color: #dfe6e4; border-color: var(--band); }
 .panel--ink h3, .panel--ink h4 { color: #fff; }
 .panel + .panel { margin-top: 0; }
 .panel__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
@@ -1202,6 +1213,10 @@ html.js [data-reveal].is-in { opacity: 1; transform: none; }
   .pd-hero__media { display: none; }
 }
 
+/* [hidden] must win over component display rules such as .pcard{display:flex},
+   otherwise JS filtering on the static search page cannot hide a card. */
+[hidden] { display: none !important; }
+
 /* ---------- brand logo crossfade ---------- */
 .brand { position: relative; }
 .brand__logo { transition: opacity .3s var(--ease); }
@@ -1213,6 +1228,10 @@ body.has-hero .site-header:not(.is-solid) .brand__logo--light { opacity: 1; }
 body.has-hero .site-header:not(.is-solid) .brand__logo--dark { opacity: 0; }
 .site-header.is-solid .brand__logo--light { opacity: 0; }
 .site-header.is-solid .brand__logo--dark { opacity: 1; }
+/* In the dark theme the sticky header is dark, so the ink logo disappears on
+   it. Keep the white lockup visible once the bar turns solid. */
+:root[data-theme="dark"] .site-header.is-solid .brand__logo--light { opacity: 1; }
+:root[data-theme="dark"] .site-header.is-solid .brand__logo--dark { opacity: 0; }
 body.has-hero .site-header:not(.is-solid) { color: #fff; }
 body.has-hero .site-header:not(.is-solid) .btn--copper { --btn-fg: #fff; }
 

@@ -8,6 +8,7 @@
 
 <section class="section tight" style="padding-top:0">
   <div class="wrap-wide">
+    <div id="searchEmpty" class="empty" style="grid-column:1/-1" hidden>{% icon 'i-search' %}<h3>No matches</h3><p class="muted">We could not find a project for that search. Try a suburb like “Uttara” or browse everything.</p><a class="btn btn--ink btn--sm" href="{% url 'website:project_list' %}">All projects</a></div>
     <div class="grid g-3">
       {% for project in projects %}{% include 'website/includes/project_card.html' %}{% empty %}
       <div class="empty" style="grid-column:1/-1">{% icon 'i-search' %}<h3>No matches</h3><p class="muted">Try a suburb like “Uttara” or a project name. Or browse everything.</p><a class="btn btn--ink btn--sm" href="{% url 'website:project_list' %}">All projects</a></div>
@@ -15,4 +16,28 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/* The static export has no server to run the ?q= filter, so resolve it here:
+   match against the rendered cards and hide the ones that do not fit. */
+(function () {
+  var q = new URLSearchParams(location.search).get('q');
+  if (!q) return;
+  q = q.trim().toLowerCase();
+  if (!q) return;
+  var cards = document.querySelectorAll('#resultsGrid .pcard, .grid .pcard');
+  var shown = 0;
+  cards.forEach(function (card) {
+    var hit = card.textContent.toLowerCase().indexOf(q) !== -1;
+    card.hidden = !hit;
+    if (hit) shown++; else card.setAttribute('data-filtered', '1');
+  });
+  var empty = document.getElementById('searchEmpty');
+  if (empty) empty.hidden = shown > 0;
+  var field = document.querySelector('input[type="search"], input[name="q"]');
+  if (field && !field.value) field.value = q;
+})();
+</script>
 {% endblock %}

@@ -45,6 +45,7 @@ BILINGUAL_THEMED = [
     ('/land-sharing/', 'land-sharing/index.html'),
     ('/projects/compare/', 'projects/compare/index.html'),
     ('/saved/', 'saved/index.html'),
+    ('/search/', 'search/index.html'),
 ]
 
 # Detail routes are discovered from the database.
@@ -356,7 +357,8 @@ class Command(BaseCommand):
     lang = (navigator.language || 'en').toLowerCase().indexOf('bn') === 0 ? 'bn' : 'en';
   }
   var theme = read('sti_theme', ['light', 'dark'], 'light');
-  location.replace(theme + '-' + lang + '.html');
+  /* carry the query string through: the static search page filters on ?q= */
+  location.replace(theme + '-' + lang + '.html' + location.search + location.hash);
 })();
 </script>
 <noscript><meta http-equiv="refresh" content="0; url=light-en.html"></noscript>
