@@ -48,6 +48,16 @@ BILINGUAL_THEMED = [
 ]
 
 # Detail routes are discovered from the database.
+# Query-driven listings become real pages on a static host, otherwise the
+# stage tabs would link to ?stage=ongoing on a static file and silently show
+# everything.
+QUERY_PAGES = [
+    ('/projects/?stage=ongoing', 'projects/ongoing'),
+    ('/projects/?stage=upcoming', 'projects/upcoming'),
+    ('/projects/?stage=ready', 'projects/ready'),
+    ('/projects/?stage=handover', 'projects/handover'),
+]
+
 DETAIL_PREFIXES = [
     ('/projects/{}/', 'projects/{}/index.html'),
     ('/projects/{}/unit/{}/', 'projects/{}/unit/{}/index.html'),
@@ -132,6 +142,21 @@ class Command(BaseCommand):
                         continue
                     self._write_variant(out, route, theme, lang, html)
                     rendered += 1
+
+        # ---- query-driven listing pages ---------------------------------
+        for url, folder in QUERY_PAGES:
+            for theme in THEMES:
+                for lang in LANGS:
+                    html = self._render(url, theme, lang)
+                    if html is None:
+                        continue
+                    target = out / folder / f'{theme}-{lang}.html'
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text(_minify(self._rewrite_lang_links(html, theme, lang)),
+                                      encoding='utf-8')
+            shim = out / folder / 'index.html'
+            shim.parent.mkdir(parents=True, exist_ok=True)
+            shim.write_text(self._shim_code('', 1), encoding='utf-8')
 
         # ---- index.html shims + base variants ---------------------------
         for route in routes:
@@ -240,6 +265,9 @@ class Command(BaseCommand):
             html = html.replace(f'"/{kind}/', f'"{base}/{kind}/')
             html = html.replace(marker, f'"{base}/{kind}/')
         html = html.replace('url(/static/', 'url({}/static/'.format(base))
+        for stage in ('ongoing', 'upcoming', 'ready', 'handover'):
+            html = html.replace(f'{base}/projects/?stage={stage}',
+                                f'{base}/projects/{stage}/')
         # 3. absolute site origin
         html = re.sub(r'https?://(127\.0\.0\.1|localhost)(:\d+)?', '', html)
         return html

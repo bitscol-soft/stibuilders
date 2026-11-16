@@ -85,16 +85,29 @@ class WebsiteSmokeTests(TestCase):
         self.assertEqual(res.json()['units'][0]['label'], 'Type A')
 
     def test_icons_render_as_svg_not_escaped_text(self):
+        """Icons must be real <svg><use> markup pointing at the shared sprite.
+
+        The sprite lives in one cached file (website/img/icons.svg) rather than
+        being inlined into every page: it was 24 KB repeated on all 400+
+        exported pages.
+        """
+        import re
+        from pathlib import Path
+        from django.conf import settings
+
         res = self.client.get(reverse('website:home'))
         html = res.content.decode()
         self.assertNotIn('&lt;svg', html)
         self.assertNotIn('&lt;use', html)
-        self.assertIn('<use href="#i-', html)
-        # every reference must point at a symbol that exists in the sprite
-        import re
-        defined = set(re.findall(r'<symbol id="([^"]+)"', html))
-        referenced = set(re.findall(r'<use href="#([^"]+)"', html))
-        self.assertTrue(referenced <= defined, referenced - defined)
+        self.assertIn('<use href="/static/website/img/icons.svg#i-', html)
+
+        sprite = (Path(settings.BASE_DIR) / 'website' / 'static' / 'website'
+                  / 'img' / 'icons.svg').read_text(encoding='utf-8')
+        defined = set(re.findall(r'<symbol id="([^"]+)"', sprite))
+        self.assertGreater(len(defined), 50, 'sprite looks empty')
+        referenced = set(re.findall(r'icons\.svg#([^"]+)"', html))
+        missing = referenced - defined
+        self.assertEqual(missing, set(), f'icons referenced but not in sprite: {missing}')
 
     def test_sitemap_and_robots(self):
         self.assertEqual(self.client.get('/sitemap.xml').status_code, 200)
