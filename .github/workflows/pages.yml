@@ -39,6 +39,11 @@ jobs:
       - name: Run tests
         run: python manage.py test website
 
+      - name: Migrate database
+        # a fresh clone has no db.sqlite3 (it is gitignored), so the schema has
+        # to be created before the seeder can write anything
+        run: python manage.py migrate --noinput
+
       - name: Seed demo content
         run: python manage.py seed_website
 
